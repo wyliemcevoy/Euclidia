@@ -13,6 +13,8 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import euclid.two.dim.model.EuVector;
+import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.world.WorldState;
 
 public class ConsoleRenderer extends Thread
@@ -30,19 +32,19 @@ public class ConsoleRenderer extends Thread
 	private int scale = 1;
 	private ArrayBlockingQueue<WorldState> rendererQueue;
 	private WorldState currentState;
-	
+
 	public ConsoleRenderer(ArrayBlockingQueue<WorldState> rendererQueue)
 	{
 		this.rendererQueue = rendererQueue;
 		config = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 		consoleFrame = new ConsoleFrame(width, height);
 		consoleFrame.addWindowListener(new FrameClose());
-		
+
 		// Canvas
 		canvas = new Canvas(config);
 		canvas.setSize(width * scale, height * scale);
 		consoleFrame.add(canvas, 0);
-		
+
 		// Background & Buffer
 		background = create(width, height, false);
 		canvas.createBufferStrategy(2);
@@ -50,24 +52,27 @@ public class ConsoleRenderer extends Thread
 		{
 			strategy = canvas.getBufferStrategy();
 		} while (strategy == null);
-		
+
 	}
-	
+
 	// create a hardware accelerated image
-	public final BufferedImage create(final int width, final int height, final boolean alpha) {
+	public final BufferedImage create(final int width, final int height, final boolean alpha)
+	{
 		return config.createCompatibleImage(width, height, alpha ? Transparency.TRANSLUCENT : Transparency.OPAQUE);
 	}
-	
+
 	private class FrameClose extends WindowAdapter
 	{
 		@Override
-		public void windowClosing(final WindowEvent e) {
+		public void windowClosing(final WindowEvent e)
+		{
 			isRunning = false;
 		}
 	}
-	
+
 	// Screen and buffer stuff
-	private Graphics2D getBuffer() {
+	private Graphics2D getBuffer()
+	{
 		if (graphics == null)
 		{
 			try
@@ -80,8 +85,9 @@ public class ConsoleRenderer extends Thread
 		}
 		return graphics;
 	}
-	
-	private boolean updateScreen() {
+
+	private boolean updateScreen()
+	{
 		graphics.dispose();
 		graphics = null;
 		try
@@ -89,26 +95,27 @@ public class ConsoleRenderer extends Thread
 			strategy.show();
 			Toolkit.getDefaultToolkit().sync();
 			return (!strategy.contentsLost());
-			
+
 		} catch (NullPointerException e)
 		{
 			return true;
-			
+
 		} catch (IllegalStateException e)
 		{
 			return true;
 		}
 	}
-	
-	public void run() {
+
+	public void run()
+	{
 		backgroundGraphics = (Graphics2D) background.getGraphics();
 		long fpsWait = (long) (1.0 / 30 * 1000);
-		
+
 		main: while (isRunning)
 		{
 			long renderStart = System.nanoTime();
 			updateGame();
-			
+
 			// Update Graphics
 			do
 			{
@@ -117,8 +124,7 @@ public class ConsoleRenderer extends Thread
 				{
 					break main;
 				}
-				renderGame(backgroundGraphics); // this calls your draw method
-				// thingy
+				renderGame(backgroundGraphics);
 				if (scale != 1)
 				{
 					bg.drawImage(background, 0, 0, width * scale, height * scale, 0, 0, width, height, null);
@@ -128,7 +134,7 @@ public class ConsoleRenderer extends Thread
 				}
 				bg.dispose();
 			} while (!updateScreen());
-			
+
 			// Better do some FPS limiting here
 			long renderTime = (System.nanoTime() - renderStart) / 1000000;
 			try
@@ -140,18 +146,39 @@ public class ConsoleRenderer extends Thread
 				break;
 			}
 			renderTime = (System.nanoTime() - renderStart) / 1000000;
-			
+
 		}
 		consoleFrame.dispose();
 	}
-	
-	public void updateGame() {
-		// update game logic here
+
+	public void updateGame()
+	{
+		try
+		{
+			if (rendererQueue.size() > 0)
+			{
+				currentState = rendererQueue.take();
+			}
+		} catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
 	}
-	
-	public void renderGame(Graphics2D g) {
+
+	public void renderGame(Graphics2D g)
+	{
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, width, height);
+		drawWorldState(g);
 	}
-	
+
+	public void drawWorldState(Graphics2D g)
+	{
+		for (GameSpaceObject gso : currentState.getFish())
+		{
+			EuVector pos = gso.getPosition();
+			g.setColor(Color.WHITE);
+			g.drawRect((int) (pos.getX() - 2), (int) (pos.getY() - 2), 4, 4);
+		}
+	}
 }

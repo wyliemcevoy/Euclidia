@@ -1,6 +1,6 @@
 package euclid.two.dim;
 
-public class Renderer
+public abstract class Renderer
 {
-	
+
 }
