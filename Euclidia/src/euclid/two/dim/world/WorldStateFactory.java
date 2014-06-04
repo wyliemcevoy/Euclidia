@@ -11,7 +11,7 @@ public class WorldStateFactory
 	public WorldState createRandomWorldState()
 	{
 		WorldState worldState = new WorldState();
-		Fish target = new Fish(new EuVector(50, 50));
+		Fish target = new Fish(new EuVector(250, 250));
 		Random rand = new Random();
 		for (int i = 0; i < 50; i++)
 		{

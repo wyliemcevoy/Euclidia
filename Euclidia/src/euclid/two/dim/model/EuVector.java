@@ -90,4 +90,9 @@ public class EuVector
 	{
 		return "(" + x + "," + y + ")";
 	}
+
+	public double getMagnitude()
+	{
+		return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+	}
 }
