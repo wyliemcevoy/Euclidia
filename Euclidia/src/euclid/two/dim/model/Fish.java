@@ -17,6 +17,7 @@ public class Fish extends GameSpaceObject
 	public Fish(EuVector position)
 	{
 		this.position = position;
+		this.futurePosition = new EuVector(position);
 		this.velocity = new EuVector(0, 0);
 		this.mass = 10;
 		this.sb = new StandStill();
@@ -26,4 +27,5 @@ public class Fish extends GameSpaceObject
 	{
 		super(copy);
 	}
+
 }

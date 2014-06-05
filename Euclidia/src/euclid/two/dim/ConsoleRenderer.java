@@ -149,6 +149,8 @@ public class ConsoleRenderer extends Thread
 
 		}
 		consoleFrame.dispose();
+
+		System.exit(1);
 	}
 
 	public void updateGame()

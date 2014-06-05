@@ -45,7 +45,7 @@ public class Flock extends SteeringBehavior
 			}
 		}
 
-		desiredVelocity = desiredVelocity.multipliedBy(target.getPosition().subtract(self.getPosition()).getMagnitude() / 50000);
+		desiredVelocity = desiredVelocity.multipliedBy(target.getPosition().subtract(self.getPosition()).getMagnitude() / 25000);
 
 		if (i > 0)
 		{

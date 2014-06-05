@@ -1,9 +1,10 @@
 package euclid.two.dim.model;
 
-public abstract class GameSpaceObject implements Cloneable
+public abstract class GameSpaceObject
 {
 	protected double radius;
 	protected EuVector position;
+	protected EuVector futurePosition;
 	protected EuVector velocity;
 	protected static final double maxSpeed = 10;
 	protected SteeringBehavior sb;
