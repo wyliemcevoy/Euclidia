@@ -6,7 +6,8 @@ public abstract class GameSpaceObject
 	protected EuVector position;
 	protected EuVector futurePosition;
 	protected EuVector velocity;
-	protected static final double maxSpeed = 10;
+	protected EuVector futureVelocity;
+	protected static final double maxSpeed = 30;
 	protected SteeringBehavior sb;
 	protected double mass;
 
@@ -54,18 +55,23 @@ public abstract class GameSpaceObject
 	public void update(double timeStep)
 	{
 		EuVector steeringForce = sb.calculate();
-		System.out.println(steeringForce);
 		EuVector acceleration = steeringForce.dividedBy(mass);
-		velocity = velocity.add(acceleration.multipliedBy(timeStep));
-		velocity.truncate(maxSpeed);
-		position = position.add(velocity.multipliedBy(timeStep / 100));
-		toroidify(500, 500);
+		futureVelocity = velocity.add(acceleration.multipliedBy(timeStep));
+		futureVelocity.truncate(maxSpeed);
+		futurePosition = position.add(futureVelocity.multipliedBy(timeStep / 100));
 	}
 
 	private void toroidify(int width, int height)
 	{
-		position.setX(position.getX() % width);
-		position.setY(position.getY() % height);
+		futurePosition.setX(futurePosition.getX() % width);
+		futurePosition.setY(futurePosition.getY() % height);
+	}
+
+	public void travelToTheFuture()
+	{
+		position = new EuVector(futurePosition);
+		velocity = new EuVector(futureVelocity);
+		toroidify(500, 500);
 	}
 
 }

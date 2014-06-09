@@ -28,6 +28,7 @@ public class Flock extends SteeringBehavior
 	{
 		EuVector desiredVelocity = (target.getPosition().subtract(self.getPosition())).normalize().multipliedBy(self.getMaxSpeed());
 		desiredVelocity = desiredVelocity.subtract(self.getVelocity());
+		double distToTarget = target.getPosition().subtract(self.getPosition()).getMagnitude();
 
 		EuVector repulsion = new EuVector(0, 0);
 		EuVector averageVelocity = new EuVector(0, 0);
@@ -35,16 +36,32 @@ public class Flock extends SteeringBehavior
 		for (GameSpaceObject gso : worldState.getFish())
 		{
 			EuVector dist = gso.getPosition().subtract(self.getPosition());
-			double magnitude = Math.pow(dist.getX(), 2) + Math.pow(dist.getY(), 2);
-			if (magnitude > .1 && magnitude < 500)
+			double magnitude = dist.getMagnitude();
+			if (magnitude > .1 && magnitude < 10)
 			{
-				repulsion = repulsion.add(dist.dividedBy(-1 * magnitude / 50));
+				repulsion = repulsion.add(dist.dividedBy(-1 / (magnitude * 10)));
 				averageVelocity = averageVelocity.add(gso.getVelocity());
 				i++;
-				System.out.println("REPP { " + repulsion);
 			}
 		}
+		System.out.println(repulsion);
 
+		if (i > 0)
+		{
+			averageVelocity = averageVelocity.dividedBy(i);
+		}
+
+		//desiredVelocity.add(repulsion);
+		desiredVelocity.add(averageVelocity);
+		if (distToTarget < 50 && distToTarget > 0)
+		{
+			desiredVelocity = desiredVelocity.dividedBy(distToTarget / 50);
+		}
+
+		return desiredVelocity;
+		/*
+		
+		System.out.println(desiredVelocity);
 		desiredVelocity = desiredVelocity.multipliedBy(target.getPosition().subtract(self.getPosition()).getMagnitude() / 25000);
 
 		if (i > 0)
@@ -52,12 +69,12 @@ public class Flock extends SteeringBehavior
 			averageVelocity = averageVelocity.dividedBy(i);
 			System.out.println("averageVelocity " + averageVelocity);
 
-			return desiredVelocity.add(repulsion).dividedBy(averageVelocity.getMagnitude());
+			return desiredVelocity.add(repulsion);//.dividedBy(averageVelocity.getMagnitude());
 		} else
 		{
 
 		}
-
-		return desiredVelocity.add(repulsion);
+		
+		return desiredVelocity.add(repulsion);*/
 	}
 }

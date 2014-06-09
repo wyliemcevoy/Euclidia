@@ -25,6 +25,11 @@ public class WorldState
 		{
 			fishi.update(timeStep);
 		}
+
+		for (GameSpaceObject fishi : fish)
+		{
+			fishi.travelToTheFuture();
+		}
 	}
 
 	/**

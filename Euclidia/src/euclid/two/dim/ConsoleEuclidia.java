@@ -2,8 +2,6 @@ package euclid.two.dim;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
-import javax.swing.SwingUtilities;
-
 import euclid.two.dim.world.WorldState;
 import euclid.two.dim.world.WorldStateFactory;
 
@@ -25,14 +23,8 @@ public class ConsoleEuclidia
 		updateEngine.setWorldState(state);
 		rendererQueue.add(state);
 
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				consoleRenderer = new ConsoleRenderer(rendererQueue);
-				consoleRenderer.start();
-			}
-		});
+		consoleRenderer = new ConsoleRenderer(rendererQueue);
+		consoleRenderer.start();
 
 		try
 		{
