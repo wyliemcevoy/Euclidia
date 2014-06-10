@@ -1,5 +1,10 @@
 package euclid.two.dim.model;
 
+import java.awt.Color;
+import java.util.Random;
+
+import euclid.two.dim.Configuration;
+
 public abstract class GameSpaceObject
 {
 	protected double radius;
@@ -7,18 +12,26 @@ public abstract class GameSpaceObject
 	protected EuVector futurePosition;
 	protected EuVector velocity;
 	protected EuVector futureVelocity;
-	protected static final double maxSpeed = 30;
+	protected static final double maxSpeed = Configuration.maxSpeed;
 	protected SteeringBehavior sb;
 	protected double mass;
+	protected Color color;
 
 	public GameSpaceObject()
 	{
+		Random rand = new Random();
+		color = new Color(rand.nextInt(250), rand.nextInt(250), rand.nextInt(250));
+	}
 
+	public Color getColor()
+	{
+		return color;
 	}
 
 	public GameSpaceObject(GameSpaceObject copy)
 	{
 		this.position = new EuVector(copy.getPosition());
+		this.color = copy.getColor();
 		//this.sb = new SteeringBehavior(copy.getSteeringBehavior());
 	}
 
@@ -71,7 +84,27 @@ public abstract class GameSpaceObject
 	{
 		position = new EuVector(futurePosition);
 		velocity = new EuVector(futureVelocity);
-		toroidify(500, 500);
+		toroidify(Configuration.width, Configuration.height);
+	}
+
+	public void separate()
+	{
+		// TODO Auto-generated method stub
+	}
+
+	public EuVector getFuturePosition()
+	{
+		return futurePosition;
+	}
+
+	public void setFuturePosition(EuVector futurePosition)
+	{
+		this.futurePosition = futurePosition;
+	}
+
+	public void separate2()
+	{
+
 	}
 
 }

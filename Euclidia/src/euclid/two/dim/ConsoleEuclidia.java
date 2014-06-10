@@ -15,15 +15,15 @@ public class ConsoleEuclidia
 	{
 
 		rendererQueue = new ArrayBlockingQueue<WorldState>(5);
-		consoleRenderer = new ConsoleRenderer(rendererQueue);
+		InputManager inputManager = new InputManager();
+		updateEngine = new UpdateEngine(rendererQueue, inputManager);
 
-		updateEngine = new UpdateEngine(rendererQueue);
-		WorldStateFactory f = new WorldStateFactory();
+		WorldStateFactory f = new WorldStateFactory(inputManager);
 		WorldState state = f.createRandomWorldState();
 		updateEngine.setWorldState(state);
 		rendererQueue.add(state);
 
-		consoleRenderer = new ConsoleRenderer(rendererQueue);
+		consoleRenderer = new ConsoleRenderer(rendererQueue, inputManager);
 		consoleRenderer.start();
 
 		try

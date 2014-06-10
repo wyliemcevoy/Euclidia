@@ -9,10 +9,12 @@ public class UpdateEngine extends Thread
 	private ArrayBlockingQueue<WorldState> rendererQueue;
 	private WorldState worldStateN;
 	private long now, then;
+	private InputManager inputManager;
 
-	public UpdateEngine(ArrayBlockingQueue<WorldState> rendererQueue)
+	public UpdateEngine(ArrayBlockingQueue<WorldState> rendererQueue, InputManager inputManager)
 	{
 		this.rendererQueue = rendererQueue;
+		this.inputManager = inputManager;
 	}
 
 	public void setWorldState(WorldState worldState)
@@ -26,17 +28,10 @@ public class UpdateEngine extends Thread
 		then = System.currentTimeMillis();
 		while (true)
 		{
-			try
-			{
-				Thread.sleep(100);
-			} catch (InterruptedException e)
-			{
-				e.printStackTrace();
-			}
 
-			System.out.println("Update thread : ");
 			then = now;
 			now = System.currentTimeMillis();
+			inputManager.updatePaths();
 			long timeStep = now - then;
 			worldStateN.update(timeStep);
 			WorldState nPlusOne = worldStateN.deepCopy();

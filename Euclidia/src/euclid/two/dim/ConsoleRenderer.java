@@ -27,13 +27,13 @@ public class ConsoleRenderer extends Thread
 	private Graphics2D backgroundGraphics;
 	private Graphics2D graphics;
 	private ConsoleFrame consoleFrame;
-	private int width = 500;
-	private int height = 500;
+	private int width = Configuration.width;
+	private int height = Configuration.height;
 	private int scale = 1;
 	private ArrayBlockingQueue<WorldState> rendererQueue;
 	private WorldState currentState;
 
-	public ConsoleRenderer(ArrayBlockingQueue<WorldState> rendererQueue)
+	public ConsoleRenderer(ArrayBlockingQueue<WorldState> rendererQueue, InputManager inputManager)
 	{
 		this.rendererQueue = rendererQueue;
 		config = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
@@ -44,6 +44,7 @@ public class ConsoleRenderer extends Thread
 		canvas = new Canvas(config);
 		canvas.setSize(width * scale, height * scale);
 		consoleFrame.add(canvas, 0);
+		canvas.addMouseListener(inputManager);
 
 		// Background & Buffer
 		background = create(width, height, false);
@@ -179,8 +180,9 @@ public class ConsoleRenderer extends Thread
 		for (GameSpaceObject gso : currentState.getFish())
 		{
 			EuVector pos = gso.getPosition();
-			g.setColor(Color.WHITE);
-			g.drawRect((int) (pos.getX() - 2), (int) (pos.getY() - 2), 4, 4);
+			g.setColor(gso.getColor());
+			g.fillRect((int) (pos.getX() - 2), (int) (pos.getY() - 2), 4, 4);
+
 		}
 	}
 }

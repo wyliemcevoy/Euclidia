@@ -1,5 +1,7 @@
 package euclid.two.dim.behavior;
 
+import euclid.two.dim.Configuration;
+import euclid.two.dim.Path;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.SteeringBehavior;
@@ -8,43 +10,43 @@ import euclid.two.dim.world.WorldState;
 public class Flock extends SteeringBehavior
 {
 	private WorldState worldState;
-	private GameSpaceObject target;
+	private Path path;
 	private GameSpaceObject self;
 
-	public Flock(WorldState worldState, GameSpaceObject target, GameSpaceObject self)
+	public Flock(WorldState worldState, Path path, GameSpaceObject self)
 	{
 		this.worldState = worldState;
-		this.target = target;
+		this.path = path;
 		this.self = self;
 	}
 
-	public void setTarget(GameSpaceObject target)
+	public void setPath(Path path)
 	{
-		this.target = target;
+		this.path = path;
 	}
 
 	@Override
 	public EuVector calculate()
 	{
-		EuVector desiredVelocity = (target.getPosition().subtract(self.getPosition())).normalize().multipliedBy(self.getMaxSpeed());
+		path.haveArrived(self.getPosition());
+		EuVector desiredVelocity = (path.getTarget().subtract(self.getPosition())).normalize().multipliedBy(self.getMaxSpeed());
 		desiredVelocity = desiredVelocity.subtract(self.getVelocity());
-		double distToTarget = target.getPosition().subtract(self.getPosition()).getMagnitude();
+		double distToTarget = path.getTarget().subtract(self.getPosition()).getMagnitude();
 
-		EuVector repulsion = new EuVector(0, 0);
 		EuVector averageVelocity = new EuVector(0, 0);
 		int i = 0;
+
 		for (GameSpaceObject gso : worldState.getFish())
 		{
 			EuVector dist = gso.getPosition().subtract(self.getPosition());
 			double magnitude = dist.getMagnitude();
 			if (magnitude > .1 && magnitude < 10)
 			{
-				repulsion = repulsion.add(dist.dividedBy(-1 / (magnitude * 10)));
+				//repulsion = repulsion.add(dist.dividedBy(-1 / (magnitude * 10)));
 				averageVelocity = averageVelocity.add(gso.getVelocity());
 				i++;
 			}
 		}
-		System.out.println(repulsion);
 
 		if (i > 0)
 		{
@@ -53,9 +55,10 @@ public class Flock extends SteeringBehavior
 
 		//desiredVelocity.add(repulsion);
 		desiredVelocity.add(averageVelocity);
+
 		if (distToTarget < 50 && distToTarget > 0)
 		{
-			desiredVelocity = desiredVelocity.dividedBy(distToTarget / 50);
+			desiredVelocity = desiredVelocity.dividedBy(distToTarget / (Configuration.maxSpeed * 4));
 		}
 
 		return desiredVelocity;
@@ -77,4 +80,5 @@ public class Flock extends SteeringBehavior
 		
 		return desiredVelocity.add(repulsion);*/
 	}
+
 }

@@ -30,6 +30,16 @@ public class WorldState
 		{
 			fishi.travelToTheFuture();
 		}
+
+		for (GameSpaceObject fishi : fish)
+		{
+			fishi.separate();
+		}
+
+		for (GameSpaceObject fishi : fish)
+		{
+			fishi.travelToTheFuture();
+		}
 	}
 
 	/**
