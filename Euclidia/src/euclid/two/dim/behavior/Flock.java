@@ -4,14 +4,12 @@ import euclid.two.dim.Configuration;
 import euclid.two.dim.Path;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
-import euclid.two.dim.model.SteeringBehavior;
 import euclid.two.dim.world.WorldState;
 
 public class Flock extends SteeringBehavior
 {
 	private WorldState worldState;
 	private Path path;
-	private GameSpaceObject self;
 
 	public Flock(WorldState worldState, Path path, GameSpaceObject self)
 	{
@@ -28,7 +26,12 @@ public class Flock extends SteeringBehavior
 	@Override
 	public EuVector calculate()
 	{
-		path.haveArrived(self.getPosition());
+		if (path.haveArrived(self.getPosition()) && path.size() == 1)
+		{
+			self.setVelocity(new EuVector(0, 0));
+			self.setSteeringBehavior(new StandStill());
+			return new EuVector(0, 0);
+		}
 		EuVector desiredVelocity = (path.getTarget().subtract(self.getPosition())).normalize().multipliedBy(self.getMaxSpeed());
 		desiredVelocity = desiredVelocity.subtract(self.getVelocity());
 		double distToTarget = path.getTarget().subtract(self.getPosition()).getMagnitude();
@@ -80,5 +83,4 @@ public class Flock extends SteeringBehavior
 		
 		return desiredVelocity.add(repulsion);*/
 	}
-
 }

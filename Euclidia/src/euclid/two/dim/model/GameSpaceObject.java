@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.Random;
 
 import euclid.two.dim.Configuration;
+import euclid.two.dim.behavior.SteeringBehavior;
 
 public abstract class GameSpaceObject
 {
@@ -38,6 +39,11 @@ public abstract class GameSpaceObject
 	public SteeringBehavior getSteeringBehavior()
 	{
 		return sb;
+	}
+
+	public void setSteeringBehavior(SteeringBehavior steeringBehavior)
+	{
+		this.sb = steeringBehavior;
 	}
 
 	public double getMaxSpeed()

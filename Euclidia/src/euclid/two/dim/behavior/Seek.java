@@ -2,7 +2,6 @@ package euclid.two.dim.behavior;
 
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
-import euclid.two.dim.model.SteeringBehavior;
 
 public class Seek extends SteeringBehavior
 {

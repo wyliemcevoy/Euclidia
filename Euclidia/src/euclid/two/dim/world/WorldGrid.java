@@ -1,8 +1,10 @@
 package euclid.two.dim.world;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import euclid.two.dim.Configuration;
+import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
 
 public class WorldGrid
@@ -10,7 +12,7 @@ public class WorldGrid
 	private WorldGridCell[][] grid;
 	private int rows;
 	private int cols;
-	
+
 	public WorldGrid()
 	{
 		rows = Configuration.width / Configuration.gridSize;
@@ -18,7 +20,7 @@ public class WorldGrid
 		grid = new WorldGridCell[cols][rows];
 		intialize();
 	}
-	
+
 	private void intialize()
 	{
 		for (int x = 0; x < rows; x++)
@@ -29,14 +31,41 @@ public class WorldGrid
 			}
 		}
 	}
-	
-	public List<GameSpaceObject> get(int worldSpaceX, int worldSpaceY)
+
+	public List<GameSpaceObject> get(double worldSpaceX, double worldSpaceY)
 	{
-		int gridSpaceX = worldSpaceX / Configuration.gridSize;
-		int gridSpaceY = worldSpaceY / Configuration.gridSize;
+		int gridSpaceX = (int) worldSpaceX / Configuration.gridSize;
+		int gridSpaceY = (int) worldSpaceY / Configuration.gridSize;
 		return grid[gridSpaceY][gridSpaceX].getContents();
 	}
-	
+
+	public List<GameSpaceObject> get(double radius, EuVector center)
+	{
+		ArrayList<GameSpaceObject> results = new ArrayList<GameSpaceObject>();
+		int minGridX = (int) Math.max(Math.floor(center.getX() - radius), 0);
+		int maxGridX = (int) Math.min(Math.ceil(center.getX() + radius), rows);
+		int minGridY = (int) Math.max(Math.floor(center.getX() - radius), 0);
+		;
+		int maxGridY = (int) Math.min(Math.ceil(center.getY() + radius), rows);
+
+		for (int x = minGridX; x < maxGridX; x++)
+		{
+			for (int y = minGridY; y < maxGridY; y++)
+			{
+				ArrayList<GameSpaceObject> contents = grid[y][x].getContents();
+				for (GameSpaceObject gso : contents)
+				{
+					if (gso.getPosition().subtract(center).getMagnitude() < radius)
+					{
+						results.add(gso);
+					}
+				}
+			}
+		}
+
+		return results;
+	}
+
 	public void add(GameSpaceObject gso)
 	{
 		int gridSpaceX = (int) Math.floor(gso.getPosition().getX() / Configuration.gridSize);

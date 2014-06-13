@@ -8,15 +8,18 @@ import euclid.two.dim.model.GameSpaceObject;
 public class WorldState
 {
 	private ArrayList<GameSpaceObject> fish;
+	private WorldGrid worldGrid;
 
 	public WorldState()
 	{
 		this.setFish(new ArrayList<GameSpaceObject>());
+		this.worldGrid = new WorldGrid();
 	}
 
 	public void addObject(GameSpaceObject gso)
 	{
 		fish.add(gso);
+		worldGrid.add(gso);
 	}
 
 	public void update(long timeStep)

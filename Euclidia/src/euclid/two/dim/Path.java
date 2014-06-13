@@ -46,4 +46,9 @@ public class Path
 			return false;
 		}
 	}
+
+	public int size()
+	{
+		return targets.size();
+	}
 }
