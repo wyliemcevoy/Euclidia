@@ -7,6 +7,7 @@ import euclid.two.dim.InputManager;
 import euclid.two.dim.Path;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Fish;
+import euclid.two.dim.model.Obstacle;
 
 public class WorldStateFactory
 {
@@ -32,6 +33,9 @@ public class WorldStateFactory
 			Fish fish = new Fish(worldState, path, new EuVector(rand.nextInt(Configuration.width), rand.nextInt(Configuration.height)));
 			worldState.addObject(fish);
 		}
+		Obstacle fish = new Obstacle(new EuVector(500, 500), worldState);
+		worldState.addObject(fish);
+
 		return worldState;
 	}
 

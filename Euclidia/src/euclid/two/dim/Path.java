@@ -33,12 +33,15 @@ public class Path
 
 	public boolean haveArrived(EuVector location)
 	{
-		if (location.subtract(targets.peek()).getMagnitude() < 30)
+		if (targets.size() == 0)
 		{
-			if (targets.size() > 1)
+			return true;
+		}
+		if (location.subtract(targets.peek()).getMagnitude() < 50)
+		{
+			if (targets.size() >= 1)
 			{
 				EuVector arived = targets.poll();
-				System.out.println(targets.size());
 			}
 			return true;
 		} else

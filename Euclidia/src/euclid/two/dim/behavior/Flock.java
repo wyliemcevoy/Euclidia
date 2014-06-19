@@ -26,12 +26,13 @@ public class Flock extends SteeringBehavior
 	@Override
 	public EuVector calculate()
 	{
-		if (path.haveArrived(self.getPosition()) && path.size() == 1)
+		path.haveArrived(self.getPosition());
+		if (path.size() == 0)
 		{
 			self.setVelocity(new EuVector(0, 0));
-			self.setSteeringBehavior(new StandStill());
 			return new EuVector(0, 0);
 		}
+
 		EuVector desiredVelocity = (path.getTarget().subtract(self.getPosition())).normalize().multipliedBy(self.getMaxSpeed());
 		desiredVelocity = desiredVelocity.subtract(self.getVelocity());
 		double distToTarget = path.getTarget().subtract(self.getPosition()).getMagnitude();

@@ -24,6 +24,11 @@ public abstract class GameSpaceObject
 		color = new Color(rand.nextInt(250), rand.nextInt(250), rand.nextInt(250));
 	}
 
+	public double getRadius()
+	{
+		return radius;
+	}
+
 	public Color getColor()
 	{
 		return color;
@@ -33,6 +38,7 @@ public abstract class GameSpaceObject
 	{
 		this.position = new EuVector(copy.getPosition());
 		this.color = copy.getColor();
+		this.radius = copy.getRadius();
 		//this.sb = new SteeringBehavior(copy.getSteeringBehavior());
 	}
 

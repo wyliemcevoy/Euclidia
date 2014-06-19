@@ -180,8 +180,18 @@ public class ConsoleRenderer extends Thread
 		for (GameSpaceObject gso : currentState.getFish())
 		{
 			EuVector pos = gso.getPosition();
+			int rad = (int) gso.getRadius();
+
 			g.setColor(gso.getColor());
-			g.fillRect((int) (pos.getX() - 2), (int) (pos.getY() - 2), 4, 4);
+
+			if (rad > 10)
+			{
+				g.setColor(Color.WHITE);
+			}
+
+			g.drawArc((int) (pos.getX() - rad), (int) (pos.getY() - rad), 2 * rad, 2 * rad, 0, 360);
+
+			//g.drawRect((int) (pos.getX() - rad), (int) (pos.getY() - rad), rad * 2, rad * 2);
 
 		}
 	}

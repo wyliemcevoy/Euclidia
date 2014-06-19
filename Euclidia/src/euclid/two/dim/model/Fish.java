@@ -9,7 +9,7 @@ import euclid.two.dim.world.WorldState;
 
 public class Fish extends GameSpaceObject
 {
-	private WorldState worldState;
+	protected WorldState worldState;
 
 	public Fish(WorldState worldState, Path path, EuVector position)
 	{
@@ -18,15 +18,18 @@ public class Fish extends GameSpaceObject
 		this.mass = 10;
 		this.sb = new Flock(worldState, path, this);
 		this.worldState = worldState;
+		this.radius = 2;
 	}
 
-	public Fish(EuVector position)
+	public Fish(EuVector position, WorldState worldState)
 	{
 		this.position = position;
 		this.futurePosition = new EuVector(position);
+		this.worldState = worldState;
 		this.velocity = new EuVector(0, 0);
 		this.mass = 10;
 		this.sb = new StandStill();
+		this.radius = 30;
 	}
 
 	public Fish(GameSpaceObject copy)
@@ -46,14 +49,19 @@ public class Fish extends GameSpaceObject
 			double mag = distTo.getMagnitude();
 			if (!this.equals(fish) && mag < 20)
 			{
-				EuVector plus = distTo.normalize().dividedBy(mag * mag / 20);
+				EuVector plus = distTo.normalize().dividedBy(mag * mag / (fish.getRadius() * 10));
 
 				update = update.add(plus);
 			}
 		}
-		if (update.getMagnitude() > 2.5)
+
+		if (update.getMagnitude() > 2)
 		{
-			update = update.normalize().multipliedBy(2.5);
+			update = update.normalize().multipliedBy(2);
+		}
+		if (update.getMagnitude() < .15)
+		{
+			return;
 		}
 
 		futurePosition = futurePosition.add(update);
