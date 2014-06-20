@@ -10,7 +10,7 @@ public class Obstacle extends Fish
 	public Obstacle(EuVector position, WorldState worldState)
 	{
 		super(position, worldState);
-		this.radius = 100;
+		this.radius = 50;
 	}
 
 	@Override

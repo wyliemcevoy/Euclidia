@@ -33,9 +33,11 @@ public class WorldStateFactory
 			Fish fish = new Fish(worldState, path, new EuVector(rand.nextInt(Configuration.width), rand.nextInt(Configuration.height)));
 			worldState.addObject(fish);
 		}
-		Obstacle fish = new Obstacle(new EuVector(500, 500), worldState);
-		worldState.addObject(fish);
-
+		worldState.addObject(new Obstacle(new EuVector(500, 500), worldState));
+		worldState.addObject(new Obstacle(new EuVector(300, 500), worldState));
+		worldState.addObject(new Obstacle(new EuVector(700, 500), worldState));
+		worldState.addObject(new Obstacle(new EuVector(400, 600), worldState));
+		worldState.addObject(new Obstacle(new EuVector(600, 600), worldState));
 		return worldState;
 	}
 

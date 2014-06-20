@@ -33,20 +33,20 @@ public class ConsoleRenderer extends Thread
 	private int scale = 1;
 	private ArrayBlockingQueue<WorldState> rendererQueue;
 	private WorldState currentState;
-	
+
 	public ConsoleRenderer(ArrayBlockingQueue<WorldState> rendererQueue, InputManager inputManager)
 	{
 		this.rendererQueue = rendererQueue;
 		config = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 		consoleFrame = new ConsoleFrame(width, height);
 		consoleFrame.addWindowListener(new FrameClose());
-		
+
 		// Canvas
 		canvas = new Canvas(config);
 		canvas.setSize(width * scale, height * scale);
 		consoleFrame.add(canvas, 0);
 		canvas.addMouseListener(inputManager);
-		
+
 		// Background & Buffer
 		background = create(width, height, false);
 		canvas.createBufferStrategy(2);
@@ -54,15 +54,15 @@ public class ConsoleRenderer extends Thread
 		{
 			strategy = canvas.getBufferStrategy();
 		} while (strategy == null);
-		
+
 	}
-	
+
 	// create a hardware accelerated image
 	public final BufferedImage create(final int width, final int height, final boolean alpha)
 	{
 		return config.createCompatibleImage(width, height, alpha ? Transparency.TRANSLUCENT : Transparency.OPAQUE);
 	}
-	
+
 	private class FrameClose extends WindowAdapter
 	{
 		@Override
@@ -71,7 +71,7 @@ public class ConsoleRenderer extends Thread
 			isRunning = false;
 		}
 	}
-	
+
 	// Screen and buffer stuff
 	private Graphics2D getBuffer()
 	{
@@ -87,7 +87,7 @@ public class ConsoleRenderer extends Thread
 		}
 		return graphics;
 	}
-	
+
 	private boolean updateScreen()
 	{
 		graphics.dispose();
@@ -97,27 +97,27 @@ public class ConsoleRenderer extends Thread
 			strategy.show();
 			Toolkit.getDefaultToolkit().sync();
 			return (!strategy.contentsLost());
-			
+
 		} catch (NullPointerException e)
 		{
 			return true;
-			
+
 		} catch (IllegalStateException e)
 		{
 			return true;
 		}
 	}
-	
+
 	public void run()
 	{
 		backgroundGraphics = (Graphics2D) background.getGraphics();
 		long fpsWait = (long) (1.0 / 30 * 1000);
-		
+
 		main: while (isRunning)
 		{
 			long renderStart = System.nanoTime();
 			updateGame();
-			
+
 			// Update Graphics
 			do
 			{
@@ -136,7 +136,7 @@ public class ConsoleRenderer extends Thread
 				}
 				bg.dispose();
 			} while (!updateScreen());
-			
+
 			// Better do some FPS limiting here
 			long renderTime = (System.nanoTime() - renderStart) / 1000000;
 			try
@@ -148,13 +148,13 @@ public class ConsoleRenderer extends Thread
 				break;
 			}
 			renderTime = (System.nanoTime() - renderStart) / 1000000;
-			
+
 		}
 		consoleFrame.dispose();
-		
+
 		System.exit(1);
 	}
-	
+
 	public void updateGame()
 	{
 		try
@@ -168,46 +168,48 @@ public class ConsoleRenderer extends Thread
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void renderGame(Graphics2D g)
 	{
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, width, height);
 		drawWorldState(g);
 	}
-	
+
 	public void drawWorldState(Graphics2D g)
 	{
-		WorldGrid grid = currentState.getWorldGrid();
-		
-		int gs = grid.getGridStep();
-		
-		for (int y = 0; y < grid.getRows(); y++)
+		if (Configuration.showLines)
 		{
-			for (int x = 0; x < grid.getCols(); x++)
+			WorldGrid grid = currentState.getWorldGrid();
+
+			int gs = grid.getGridStep();
+
+			for (int y = 0; y < grid.getRows(); y++)
 			{
-				int val = (int) Math.min(10 * grid.getForce(x, y).getMagnitude(), 255);
-				// System.out.println(grid.getForce(x, y));
-				g.setColor(new Color(val, val, val));
-				g.drawLine(x * gs, y * gs, (int) (x * gs + grid.getForce(x, y).getX()), (int) (y * gs + grid.getForce(x, y).getY()));
+				for (int x = 0; x < grid.getCols(); x++)
+				{
+					int val = (int) Math.min(1 * grid.getForce(x, y).getMagnitude(), 255);
+					// System.out.println(grid.getForce(x, y));
+					g.setColor(new Color(val, val, val));
+					g.drawLine((int) (x + .5) * gs, (int) (y + .5) * gs, (int) (x * gs + grid.getForce(x, y).getX()), (int) (y * gs + grid.getForce(x, y).getY()));
+				}
 			}
 		}
-		
 		for (GameSpaceObject gso : currentState.getFish())
 		{
 			EuVector pos = gso.getPosition();
 			int rad = (int) gso.getRadius();
-			
+
 			g.setColor(gso.getColor());
-			
+
 			if (rad > 10)
 			{
 				g.setColor(Color.WHITE);
 			}
-			
+
 			g.drawArc((int) (pos.getX() - rad), (int) (pos.getY() - rad), 2 * rad, 2 * rad, 0, 360);
-			
+
 		}
-		
+
 	}
 }

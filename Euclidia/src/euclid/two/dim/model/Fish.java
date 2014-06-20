@@ -63,7 +63,7 @@ public class Fish extends GameSpaceObject
 		{
 			return;
 		}
-
+		futureVelocity = futureVelocity.add(update);
 		futurePosition = futurePosition.add(update);
 
 	}
