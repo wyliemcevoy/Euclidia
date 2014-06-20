@@ -9,42 +9,52 @@ public class WorldState
 {
 	private ArrayList<GameSpaceObject> fish;
 	private WorldGrid worldGrid;
-
+	
+	public WorldGrid getWorldGrid()
+	{
+		return worldGrid;
+	}
+	
+	public void setWorldGrid(WorldGrid worldGrid)
+	{
+		this.worldGrid = worldGrid;
+	}
+	
 	public WorldState()
 	{
 		this.setFish(new ArrayList<GameSpaceObject>());
 		this.worldGrid = new WorldGrid();
 	}
-
+	
 	public void addObject(GameSpaceObject gso)
 	{
 		fish.add(gso);
 		worldGrid.add(gso);
 	}
-
+	
 	public void update(long timeStep)
 	{
 		for (GameSpaceObject fishi : fish)
 		{
 			fishi.update(timeStep);
 		}
-
+		
 		for (GameSpaceObject fishi : fish)
 		{
 			fishi.travelToTheFuture();
 		}
-
+		
 		for (GameSpaceObject fishi : fish)
 		{
 			fishi.separate();
 		}
-
+		
 		for (GameSpaceObject fishi : fish)
 		{
 			fishi.travelToTheFuture();
 		}
 	}
-
+	
 	/**
 	 * @return the fish
 	 */
@@ -52,7 +62,7 @@ public class WorldState
 	{
 		return fish;
 	}
-
+	
 	/**
 	 * @param fish
 	 *            the fish to set
@@ -61,19 +71,16 @@ public class WorldState
 	{
 		this.fish = fish;
 	}
-
+	
 	public WorldState deepCopy()
 	{
 		WorldState copy = new WorldState();
-		ArrayList<GameSpaceObject> fishes = new ArrayList<GameSpaceObject>();
-
+		
 		for (GameSpaceObject fishi : fish)
 		{
-			fishes.add(new Fish(fishi));
+			copy.addObject(new Fish(fishi));
 		}
-
-		copy.setFish(fishes);
-
+		
 		return copy;
 	}
 }
