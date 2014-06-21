@@ -3,19 +3,19 @@ package euclid.two.dim.model;
 public class EuVector
 {
 	private double x, y;
-
+	
 	public EuVector(double x, double y)
 	{
 		this.x = x;
 		this.y = y;
 	}
-
+	
 	public EuVector(EuVector copy)
 	{
 		this.x = copy.getX();
 		this.y = copy.getY();
 	}
-
+	
 	/**
 	 * @return the x
 	 */
@@ -23,7 +23,7 @@ public class EuVector
 	{
 		return x;
 	}
-
+	
 	/**
 	 * @param x
 	 *            the x to set
@@ -32,7 +32,7 @@ public class EuVector
 	{
 		this.x = x;
 	}
-
+	
 	/**
 	 * @return the y
 	 */
@@ -40,7 +40,7 @@ public class EuVector
 	{
 		return y;
 	}
-
+	
 	/**
 	 * @param y
 	 *            the y to set
@@ -49,28 +49,28 @@ public class EuVector
 	{
 		this.y = y;
 	}
-
+	
 	public EuVector multipliedBy(double constant)
 	{
 		return new EuVector(this.x * constant, this.y * constant);
 	}
-
+	
 	public EuVector dividedBy(double constant)
 	{
 		return new EuVector(this.x / constant, this.y / constant);
 	}
-
+	
 	public EuVector add(EuVector euVector)
 	{
 		return new EuVector(this.x + euVector.getX(), this.y + euVector.getY());
 	}
-
+	
 	public EuVector subtract(EuVector euVector)
 	{
 		return new EuVector(this.x - euVector.getX(), this.y - euVector.getY());
 	}
-
-	public void truncate(double constant)
+	
+	public EuVector truncate(double constant)
 	{
 		double ratio = (Math.pow(x, 2) + Math.pow(y, 2)) / Math.pow(constant, 2);
 		if (ratio > 1)
@@ -78,19 +78,20 @@ public class EuVector
 			this.x /= ratio;
 			this.y /= ratio;
 		}
+		return this;
 	}
-
+	
 	public EuVector normalize()
 	{
 		return dividedBy(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
 	}
-
+	
 	@Override
 	public String toString()
 	{
 		return "(" + x + "," + y + ")";
 	}
-
+	
 	public double getMagnitude()
 	{
 		return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));

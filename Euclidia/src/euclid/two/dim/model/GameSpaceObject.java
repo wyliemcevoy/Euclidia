@@ -17,6 +17,7 @@ public abstract class GameSpaceObject
 	protected SteeringBehavior sb;
 	protected double mass;
 	protected Color color;
+	protected EuVector future;
 	
 	public GameSpaceObject()
 	{
@@ -40,7 +41,16 @@ public abstract class GameSpaceObject
 		this.color = copy.getColor();
 		this.radius = copy.getRadius();
 		this.velocity = new EuVector(copy.getVelocity());
-		// this.sb = new SteeringBehavior(copy.getSteeringBehavior());
+		this.futurePosition = new EuVector(copy.getFuturePosition());
+		this.future = new EuVector(copy.getFuture());
+		specificConstructor(copy);
+	}
+	
+	protected abstract void specificConstructor(GameSpaceObject copy);
+	
+	public EuVector getFuture()
+	{
+		return future;
 	}
 	
 	public SteeringBehavior getSteeringBehavior()
@@ -80,11 +90,67 @@ public abstract class GameSpaceObject
 	
 	public void update(double timeStep)
 	{
+		
 		EuVector steeringForce = sb.calculate();
 		EuVector acceleration = steeringForce.dividedBy(mass);
 		futureVelocity = velocity.add(acceleration.multipliedBy(timeStep));
 		futureVelocity.truncate(maxSpeed);
+		
 		futurePosition = position.add(futureVelocity.multipliedBy(timeStep / 100));
+		
+		this.future = position.add(futureVelocity.multipliedBy(timeStep / 20));
+		/*
+		if (sb instanceof Flock)
+		{
+			ArrayList<GameSpaceObject> objects = new ArrayList<GameSpaceObject>();
+			
+			for (GameSpaceObject gso : ((Flock) sb).getWorldState().getFish())
+			{
+				if (gso.radius > 5)
+				{
+					objects.add(gso);
+				}
+			}
+			
+			for (GameSpaceObject object : objects)
+			{
+				EuVector obDist = future.subtract(object.getPosition());
+				
+				if (obDist.getMagnitude() < object.getRadius())
+				{
+					
+				}
+			}
+			
+			WorldGrid grid = ((Flock) sb).getWorldState().getWorldGrid();
+			
+			EuVector adustedFuture = grid.getForceAt(future.getX(), future.getY()).dividedBy(2);
+			adustedFuture = adustedFuture.add(future);
+			
+			futurePosition = position.add(adustedFuture.subtract(position).truncate(7));
+			
+		}
+		
+		 */
+		specificUpdate(futureVelocity.multipliedBy(timeStep / 100));
+	}
+	
+	public EuVector getUpdate()
+	{
+		EuVector steeringForce;
+		
+		if (sb == null)
+		{
+			steeringForce = new EuVector(1, 1);
+		} else
+		{
+			steeringForce = sb.calculate();
+		}
+		EuVector acceleration = steeringForce.dividedBy(mass);
+		EuVector temp = velocity.add(acceleration.multipliedBy(330));
+		temp.truncate(maxSpeed);
+		
+		return position.add(temp.multipliedBy(330 / 25));
 	}
 	
 	private void toroidify(int width, int height)
@@ -125,5 +191,7 @@ public abstract class GameSpaceObject
 	{
 		return "[" + position + futurePosition + velocity + "]";
 	}
+	
+	public abstract void specificUpdate(EuVector displacement);
 	
 }

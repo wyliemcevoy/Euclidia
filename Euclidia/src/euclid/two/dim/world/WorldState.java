@@ -2,6 +2,7 @@ package euclid.two.dim.world;
 
 import java.util.ArrayList;
 
+import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.GameSpaceObject;
 
@@ -76,9 +77,16 @@ public class WorldState
 	{
 		WorldState copy = new WorldState();
 		
-		for (GameSpaceObject fishi : fish)
+		for (GameSpaceObject gso : fish)
 		{
-			copy.addObject(new Fish(fishi));
+			if (gso instanceof Fish)
+			{
+				copy.addObject(new Fish(gso));
+			}
+			if (gso instanceof Boid)
+			{
+				copy.addObject(new Boid(gso));
+			}
 		}
 		
 		return copy;
