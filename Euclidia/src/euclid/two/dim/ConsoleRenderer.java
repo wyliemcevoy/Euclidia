@@ -225,7 +225,7 @@ public class ConsoleRenderer extends Thread
 					{
 						g.setColor(new Color(50, 50, 50));
 						
-						g.drawLine((int) fish.getPosition().getX(), (int) fish.getPosition().getY(), (int) pos.getX(), (int) pos.getY());
+						//g.drawLine((int) fish.getPosition().getX(), (int) fish.getPosition().getY(), (int) pos.getX(), (int) pos.getY());
 					}
 					g.setColor(fish.getColor());
 					g.drawArc((int) (fish.getPosition().getX() - rad), (int) (fish.getPosition().getY() - rad), 2 * rad, 2 * rad, 0, 360);

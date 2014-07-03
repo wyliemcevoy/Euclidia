@@ -11,6 +11,8 @@ public class Fish extends GameSpaceObject
 {
 	protected WorldState worldState;
 	
+	private EuVector force;
+	
 	public Fish(WorldState worldState, Path path, EuVector position)
 	{
 		this.position = position;
@@ -94,7 +96,7 @@ public class Fish extends GameSpaceObject
 	}
 	
 	@Override
-	public void specificUpdate(EuVector displacement)
+	public void specificUpdate(EuVector displacement, double timeStep)
 	{
 		// TODO Auto-generated method stub
 	}
@@ -105,4 +107,15 @@ public class Fish extends GameSpaceObject
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public EuVector getForce()
+	{
+		return force;
+	}
+	
+	public void setForce(EuVector force)
+	{
+		this.force = force;
+	}
+	
 }

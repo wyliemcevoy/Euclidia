@@ -10,6 +10,7 @@ public abstract class GameSpaceObject
 {
 	protected double radius;
 	protected EuVector position;
+	protected EuVector force;
 	protected EuVector futurePosition;
 	protected EuVector velocity;
 	protected EuVector futureVelocity;
@@ -18,6 +19,37 @@ public abstract class GameSpaceObject
 	protected double mass;
 	protected Color color;
 	protected EuVector future;
+	
+	/** Spring constant F = -k*X (where X is displacement from rest) */
+	private double k = Configuration.springConstant;
+	
+	/** distance away from body when system is at rest */
+	private double relaxedPosition = Configuration.relaxedPosition;
+	
+	private double coeficientOfKineticFriction = Configuration.coeficientOfKineticFriction;
+	
+	public double getK()
+	{
+		return k;
+	}
+	
+	public double getRelaxedPosition()
+	{
+		return relaxedPosition;
+	}
+	
+	public double getCoeficientOfKineticFriction()
+	{
+		return coeficientOfKineticFriction;
+	}
+	
+	public double getDampingCoefficient()
+	{
+		return dampingCoefficient;
+	}
+	
+	/** Force of damping F = -c*v (where v is velocity) */
+	private double dampingCoefficient = Configuration.dampingCoefficient;
 	
 	public GameSpaceObject()
 	{
@@ -78,6 +110,16 @@ public abstract class GameSpaceObject
 		this.position = position;
 	}
 	
+	public void setFutureVelocity(EuVector futureVelocity)
+	{
+		this.futureVelocity = futureVelocity;
+	}
+	
+	public EuVector getFutureVelocity()
+	{
+		return futureVelocity;
+	}
+	
 	public void setVelocity(EuVector velocity)
 	{
 		this.velocity = velocity;
@@ -90,7 +132,6 @@ public abstract class GameSpaceObject
 	
 	public void update(double timeStep)
 	{
-		
 		EuVector steeringForce = sb.calculate();
 		EuVector acceleration = steeringForce.dividedBy(mass);
 		futureVelocity = velocity.add(acceleration.multipliedBy(timeStep));
@@ -99,6 +140,7 @@ public abstract class GameSpaceObject
 		futurePosition = position.add(futureVelocity.multipliedBy(timeStep / 100));
 		
 		this.future = position.add(futureVelocity.multipliedBy(timeStep / 20));
+		
 		/*
 		if (sb instanceof Flock)
 		{
@@ -132,7 +174,7 @@ public abstract class GameSpaceObject
 		}
 		
 		 */
-		specificUpdate(futureVelocity.multipliedBy(timeStep / 100));
+		specificUpdate(steeringForce, timeStep);
 	}
 	
 	public EuVector getUpdate()
@@ -155,15 +197,16 @@ public abstract class GameSpaceObject
 	
 	private void toroidify(int width, int height)
 	{
-		futurePosition.setX(futurePosition.getX() % width);
-		futurePosition.setY(futurePosition.getY() % height);
+		futurePosition.setX(futurePosition.getX() % (width - 1));
+		futurePosition.setY(futurePosition.getY() % (height - 1));
 	}
 	
 	public void travelToTheFuture()
 	{
 		position = new EuVector(futurePosition);
 		velocity = new EuVector(futureVelocity);
-		toroidify(Configuration.width, Configuration.height);
+		
+		//toroidify(Configuration.width, Configuration.height);
 	}
 	
 	public void separate()
@@ -186,12 +229,17 @@ public abstract class GameSpaceObject
 		
 	}
 	
+	public double getMass()
+	{
+		return mass;
+	}
+	
 	@Override
 	public String toString()
 	{
 		return "[" + position + futurePosition + velocity + "]";
 	}
 	
-	public abstract void specificUpdate(EuVector displacement);
+	public abstract void specificUpdate(EuVector displacement, double timeStep);
 	
 }

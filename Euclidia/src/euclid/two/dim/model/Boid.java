@@ -2,6 +2,7 @@ package euclid.two.dim.model;
 
 import java.util.ArrayList;
 
+import euclid.two.dim.Configuration;
 import euclid.two.dim.Path;
 import euclid.two.dim.behavior.Flock;
 import euclid.two.dim.world.WorldState;
@@ -13,7 +14,7 @@ public class Boid extends GameSpaceObject
 	
 	public Boid(Fish fish, WorldState worldState, Path path)
 	{
-		radius = fish.getRadius() + 9;
+		radius = fish.getRadius() + 10; //9
 		this.position = fish.getPosition();
 		
 		this.worldState = worldState;
@@ -21,7 +22,7 @@ public class Boid extends GameSpaceObject
 		fishes.add(fish);
 		
 		this.velocity = new EuVector(0, 0);
-		this.mass = 10;
+		this.mass = 15;
 		this.sb = new Flock(worldState, path, this);
 		
 	}
@@ -37,9 +38,80 @@ public class Boid extends GameSpaceObject
 	}
 	
 	@Override
-	public void specificUpdate(EuVector displacement)
+	public void specificUpdate(EuVector steeringForce, double timeStep)
 	{
 		
+		for (Fish fish : fishes)
+		{
+			EuVector acceleration = steeringForce.dividedBy(mass);
+			fish.setFutureVelocity(fish.getVelocity().add(acceleration.multipliedBy(timeStep)).truncate(maxSpeed));
+			fish.setFuturePosition(fish.getPosition().add(fish.getFutureVelocity().multipliedBy(timeStep / 100)));
+		}
+		
+		for (Fish fish : fishes)
+		{
+			fish.setPosition(new EuVector(fish.getFuturePosition()));
+			fish.setVelocity(new EuVector(fish.getFutureVelocity()));
+		}
+		
+		timeStep = timeStep / 35;
+		
+		for (Fish fish : fishes)
+		{
+			/* pull towards center */
+			
+			EuVector dist = futurePosition.subtract(fish.getPosition());
+			EuVector force = dist.multipliedBy(Configuration.springConstant);
+			EuVector springVelocity = force.dividedBy(fish.getMass());
+			
+			// damping
+			EuVector dampingForce = springVelocity.multipliedBy(Configuration.dampingCoefficient);
+			EuVector dampingVelocity = dampingForce.dividedBy(fish.getMass());
+			
+			//System.out.println()
+			
+			fish.setPosition(fish.getPosition().add(springVelocity.add(dampingVelocity).multipliedBy(timeStep)));
+			
+			//fish.setVelocity(fish.getVelocity().add(springVelocity).add(dampingVelocity));
+			//fish.setFuturePosition(fish.getPosition());
+			
+			fish.setForce(new EuVector(0, 0));
+			for (Fish fishi : fishes)
+			{
+				// apply spring force 
+				
+				if (!fishi.equals(fish))
+				{
+					
+					EuVector appart = fishi.getPosition().subtract(fish.getPosition());
+					if (appart.getMagnitude() < 50)
+					{
+						EuVector sForce = appart.normalize().multipliedBy(Configuration.innerSpringConstant * -1 * (appart.getMagnitude() - 50));
+						fish.setForce(fish.getForce().add(sForce.multipliedBy(-1)));
+						EuVector sVeloc = sForce.dividedBy(fish.getMass());
+						//fishi.setPosition(fishi.getPosition().add(sVeloc.multipliedBy(timeStep)));
+					}
+				}
+			}
+		}
+		
+		for (Fish fish : fishes)
+		{
+			EuVector fishV = fish.getForce().dividedBy(fish.getMass());
+			
+			//EuVector dampingForce = fishV.multipliedBy(Configuration.dampingCoefficient);
+			//EuVector dampingVelocity = dampingForce.dividedBy(fish.getMass());
+			
+			//System.out.println()
+			
+			//fish.setPosition(fish.getPosition().add(fishV.add(dampingVelocity).multipliedBy(timeStep)));
+			System.out.println("Force " + fishV.multipliedBy(timeStep).getMagnitude());
+			
+			fish.setPosition(fish.getPosition().add(fishV.multipliedBy(timeStep)));
+			
+		}
+		
+		/*
 		//System.out.println("pre update : " + this.toString());
 		for (Fish fish : fishes)
 		{
@@ -96,7 +168,7 @@ public class Boid extends GameSpaceObject
 			}
 		}
 		//System.out.println(" update : " + this.toString());
-		
+		*/
 	}
 	
 	public ArrayList<Fish> explode()
