@@ -10,9 +10,7 @@ import euclid.two.dim.world.WorldState;
 public class Fish extends GameSpaceObject
 {
 	protected WorldState worldState;
-	
-	private EuVector force;
-	
+
 	public Fish(WorldState worldState, Path path, EuVector position)
 	{
 		this.position = position;
@@ -24,7 +22,7 @@ public class Fish extends GameSpaceObject
 		this.worldState = worldState;
 		this.radius = 1;
 	}
-	
+
 	public Fish(EuVector position, WorldState worldState)
 	{
 		this.position = position;
@@ -36,12 +34,12 @@ public class Fish extends GameSpaceObject
 		this.sb = new StandStill();
 		this.radius = 30;
 	}
-	
+
 	public Fish(GameSpaceObject copy)
 	{
 		super(copy);
 	}
-	
+
 	@Override
 	public void separate()
 	{
@@ -58,7 +56,7 @@ public class Fish extends GameSpaceObject
 				update = update.add(plus);
 			}
 		}
-		
+
 		if (update.getMagnitude() > 2)
 		{
 			update = update.normalize().multipliedBy(2);
@@ -69,9 +67,15 @@ public class Fish extends GameSpaceObject
 		}
 		futureVelocity = futureVelocity.add(update);
 		futurePosition = futurePosition.add(update);
-		
+
 	}
-	
+
+	@Override
+	public void setPath(Path path)
+	{
+		this.sb.setPath(path);
+	}
+
 	@Override
 	public void separate2()
 	{
@@ -85,7 +89,7 @@ public class Fish extends GameSpaceObject
 					EuVector one = fishOne.getFuturePosition();
 					EuVector two = fishTwo.getFuturePosition();
 					EuVector distbetween = one.subtract(two);
-					
+
 					if (distbetween.getMagnitude() < 10)
 					{
 						fishOne.setFuturePosition(fishOne.getFuturePosition().add(distbetween.normalize().multipliedBy(1)));
@@ -94,28 +98,17 @@ public class Fish extends GameSpaceObject
 			}
 		}
 	}
-	
+
 	@Override
-	public void specificUpdate(EuVector displacement, double timeStep)
+	public void specificUpdate(EuVector displacement)
 	{
 		// TODO Auto-generated method stub
 	}
-	
+
 	@Override
 	protected void specificConstructor(GameSpaceObject gso)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	public EuVector getForce()
-	{
-		return force;
-	}
-	
-	public void setForce(EuVector force)
-	{
-		this.force = force;
-	}
-	
 }

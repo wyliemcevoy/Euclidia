@@ -5,7 +5,7 @@ import javax.swing.WindowConstants;
 
 public class ConsoleFrame extends JFrame
 {
-	/** uid */
+	/** uuid */
 	private static final long serialVersionUID = 1L;
 
 	public ConsoleFrame(int width, int height)

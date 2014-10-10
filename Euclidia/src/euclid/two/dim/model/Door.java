@@ -3,14 +3,16 @@ package euclid.two.dim.model;
 public class Door
 {
 	private Room roomOne, roomTwo;
-	private Point pointOne, pointTwo;
+	private EuVector pointOne, pointTwo;
 	private static final double threshold = .000001;
 
 	public Door(Room roomOne, Room roomTwo)
 	{
 		this.roomOne = roomOne;
 		this.roomTwo = roomTwo;
-		findPoints();
+		roomOne.addDoor(this);
+		roomTwo.addDoor(this);
+		//findPoints();
 	}
 
 	public Room goThroughFrom(Room room)
@@ -24,14 +26,30 @@ public class Door
 		}
 	}
 
-	public Point getPointOne()
+	public void setPointOne(EuVector pointOne)
+	{
+		this.pointOne = pointOne;
+	}
+
+	public void setPointTwo(EuVector pointTwo)
+	{
+		this.pointTwo = pointTwo;
+	}
+
+	public EuVector getPointOne()
 	{
 		return pointOne;
 	}
 
-	public Point getPointTwo()
+	public EuVector getPointTwo()
 	{
 		return pointTwo;
+	}
+
+	public EuVector getMidPoint()
+	{
+		return new EuVector((pointOne.getX() + pointTwo.getX()) / 2, (pointOne.getY() + pointTwo.getY()) / 2);
+
 	}
 
 	private void findPoints()
@@ -40,12 +58,12 @@ public class Door
 		{
 			if (roomOne.getHeight() < roomTwo.getHeight())
 			{
-				this.pointOne = new Point(roomOne.getX() + roomOne.getWidth(), roomOne.getY());
-				this.pointTwo = new Point(roomOne.getX() + roomOne.getWidth(), roomOne.getY() + roomOne.getHeight());
+				//this.pointOne = new Point(roomOne.getX() + roomOne.getWidth(), roomOne.getY());
+				//this.pointTwo = new Point(roomOne.getX() + roomOne.getWidth(), roomOne.getY() + roomOne.getHeight());
 			} else
 			{
-				this.pointOne = new Point(roomTwo.getX() + roomTwo.getWidth(), roomTwo.getY());
-				this.pointTwo = new Point(roomTwo.getX() + roomTwo.getWidth(), roomTwo.getY() + roomTwo.getHeight());
+				//this.pointOne = new Point(roomTwo.getX() + roomTwo.getWidth(), roomTwo.getY());
+				//this.pointTwo = new Point(roomTwo.getX() + roomTwo.getWidth(), roomTwo.getY() + roomTwo.getHeight());
 			}
 		} else if (Math.abs(roomTwo.getX() + roomTwo.getWidth() - roomOne.getX()) < threshold)
 		{

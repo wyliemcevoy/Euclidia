@@ -9,6 +9,7 @@ public class ConsoleEuclidia
 {
 	private ConsoleRenderer consoleRenderer;
 	private ArrayBlockingQueue<WorldState> rendererQueue;
+	private ArrayBlockingQueue<ClickInputEvent> clickQueue;
 	private UpdateEngine updateEngine;
 
 	ConsoleEuclidia()
@@ -19,7 +20,7 @@ public class ConsoleEuclidia
 		updateEngine = new UpdateEngine(rendererQueue, inputManager);
 
 		WorldStateFactory f = new WorldStateFactory(inputManager);
-		WorldState state = f.createRandomWorldState();
+		WorldState state = f.createURoomsWorldState(); //f.createRandomWorldState();
 		updateEngine.setWorldState(state);
 		rendererQueue.add(state);
 
@@ -28,13 +29,12 @@ public class ConsoleEuclidia
 
 		try
 		{
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e)
 		{
 			e.printStackTrace();
 		}
 
 		updateEngine.start();
-
 	}
 }

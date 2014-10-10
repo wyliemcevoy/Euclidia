@@ -22,8 +22,8 @@ public class Obstacle extends Fish
 		{
 			double rad = radius + fish.getRadius() * 3;
 			EuVector distTo = position.subtract(fish.getPosition());
-			double mag = distTo.getMagnitude();
-			if (!this.equals(fish) && mag < rad)
+			double mag = distTo.getTaxiCabMagnitude();
+			if (!(fish instanceof Obstacle) && mag < rad)
 			{
 				/*EuVector plus = distTo.normalize().dividedBy(mag * mag / (radius * radius));
 				plus = plus.normalize().multipliedBy(radius * -1);
