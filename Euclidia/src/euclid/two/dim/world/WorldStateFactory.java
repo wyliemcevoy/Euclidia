@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import euclid.two.dim.Configuration;
-import euclid.two.dim.InputManager;
 import euclid.two.dim.Path;
+import euclid.two.dim.input.InputManager;
 import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;

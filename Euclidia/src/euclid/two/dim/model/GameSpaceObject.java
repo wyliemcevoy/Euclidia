@@ -20,6 +20,24 @@ public abstract class GameSpaceObject
 	protected Color color;
 	protected EuVector future;
 	protected Path path;
+	protected boolean isSelected;
+
+	/**
+	 * @return the isSelected
+	 */
+	public boolean isSelected()
+	{
+		return isSelected;
+	}
+
+	/**
+	 * @param isSelected
+	 *            the isSelected to set
+	 */
+	public void setSelected(boolean isSelected)
+	{
+		this.isSelected = isSelected;
+	}
 
 	public GameSpaceObject()
 	{

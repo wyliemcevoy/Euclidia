@@ -16,6 +16,7 @@ public class WorldState
 	private WorldGrid worldGrid;
 	private ArrayList<Room> rooms;
 	private ArrayList<Door> doors;
+	private ArrayList<GameSpaceObject> selectedObjects;
 
 	//private NavMesh navMesh;
 
@@ -44,6 +45,7 @@ public class WorldState
 		this.worldGrid = new WorldGrid();
 		this.rooms = new ArrayList<Room>();
 		this.doors = new ArrayList<Door>();
+		this.selectedObjects = new ArrayList<GameSpaceObject>();
 	}
 
 	public void addObject(GameSpaceObject gso)
@@ -73,6 +75,19 @@ public class WorldState
 		{
 			fishi.travelToTheFuture();
 		}
+	}
+
+	public ArrayList<GameSpaceObject> getSelected()
+	{
+		ArrayList<GameSpaceObject> build = new ArrayList<GameSpaceObject>();
+		for (GameSpaceObject gso : this.fish)
+		{
+			if (gso.isSelected())
+			{
+				build.add(gso);
+			}
+		}
+		return build;
 	}
 
 	/**
@@ -107,6 +122,7 @@ public class WorldState
 				copy.addObject(new Boid(gso));
 			}
 		}
+
 		/*
 		ArrayList<Room> newRooms = new ArrayList<Room>();
 		for (Room room : rooms)

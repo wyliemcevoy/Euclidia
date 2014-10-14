@@ -13,6 +13,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import euclid.two.dim.input.InputManager;
 import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;

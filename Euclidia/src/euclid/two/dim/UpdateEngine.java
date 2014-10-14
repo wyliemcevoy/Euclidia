@@ -1,12 +1,9 @@
 package euclid.two.dim;
 
-import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 
-import euclid.two.dim.model.EuVector;
-import euclid.two.dim.model.GameSpaceObject;
-import euclid.two.dim.model.RoomPath;
-import euclid.two.dim.path.PathCalculator;
+import euclid.two.dim.input.InputCommand;
+import euclid.two.dim.input.InputManager;
 import euclid.two.dim.world.WorldState;
 
 public class UpdateEngine extends Thread
@@ -15,11 +12,13 @@ public class UpdateEngine extends Thread
 	private WorldState worldStateN;
 	private long now, then;
 	private InputManager inputManager;
+	private boolean stopRequested;
 
 	public UpdateEngine(ArrayBlockingQueue<WorldState> rendererQueue, InputManager inputManager)
 	{
 		this.rendererQueue = rendererQueue;
 		this.inputManager = inputManager;
+		this.stopRequested = false;
 	}
 
 	public void setWorldState(WorldState worldState)
@@ -31,7 +30,7 @@ public class UpdateEngine extends Thread
 	{
 		now = System.currentTimeMillis();
 		then = System.currentTimeMillis();
-		while (true)
+		while (!stopRequested)
 		{
 			// Update time step
 			then = now;
@@ -41,19 +40,20 @@ public class UpdateEngine extends Thread
 			if (inputManager.hasUnprocessedEvents())
 			{
 
+				for (InputCommand inputCommand : inputManager.getInputCommands())
+				{
+					inputCommand.execute();
+				}
+
 				// 
-				ArrayList<ClickInputEvent> inputEvents = inputManager.getInputEvents();
+				////ArrayList<ClickEvent> inputEvents = inputManager.getInputEvents();
 
 				// Currently only care about the last click
-				ClickInputEvent target = inputEvents.get(inputEvents.size() - 1);
-				System.out.println("Handling event " + target.getX() + " " + target.getY());
+				//ClickEvent target = inputEvents.get(inputEvents.size() - 1);
+				//System.out.println("Handling event " + target.getX() + " " + target.getY());
 
 				// Handle user input events
-				for (GameSpaceObject fish : worldStateN.getFish())
-				{
-					RoomPath roomPath = PathCalculator.calculateRoomPath(worldStateN, fish.getPosition(), new EuVector(target.getX(), target.getY()));
-					fish.setPath(roomPath.toPath());
-				}
+
 			}
 
 			long timeStep = now - then;
@@ -68,5 +68,15 @@ public class UpdateEngine extends Thread
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public void requestStop()
+	{
+		stopRequested = true;
+	}
+
+	public WorldState getCurrentWorldState()
+	{
+		return worldStateN;
 	}
 }

@@ -21,6 +21,7 @@ public class Fish extends GameSpaceObject
 		this.sb = new Flock(worldState, path, this);
 		this.worldState = worldState;
 		this.radius = 1;
+		this.isSelected = true;
 	}
 
 	public Fish(EuVector position, WorldState worldState)
@@ -33,6 +34,7 @@ public class Fish extends GameSpaceObject
 		this.mass = 10;
 		this.sb = new StandStill();
 		this.radius = 30;
+		this.isSelected = true;
 	}
 
 	public Fish(GameSpaceObject copy)
