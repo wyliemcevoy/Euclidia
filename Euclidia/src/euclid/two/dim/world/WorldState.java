@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import euclid.two.dim.exception.OutOfBoundsException;
 import euclid.two.dim.model.Boid;
+import euclid.two.dim.model.Camera;
 import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Fish;
@@ -17,6 +18,7 @@ public class WorldState
 	private ArrayList<Room> rooms;
 	private ArrayList<Door> doors;
 	private ArrayList<GameSpaceObject> selectedObjects;
+	private Camera camera;
 
 	//private NavMesh navMesh;
 
@@ -165,6 +167,12 @@ public class WorldState
 				return room;
 		}
 		throw new OutOfBoundsException();
+	}
+
+	public Camera getCamera()
+	{
+		// TODO Auto-generated method stub
+		return this.camera;
 	}
 
 	/*

@@ -2,11 +2,13 @@ package euclid.two.dim.input;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 
 import euclid.two.dim.UpdateEngine;
 
-public class InputManager implements MouseListener
+public class InputManager implements MouseListener, MouseWheelListener
 {
 
 	private ArrayList<InputCommand> inputCommands;
@@ -78,6 +80,13 @@ public class InputManager implements MouseListener
 	public boolean hasUnprocessedEvents()
 	{
 		return inputCommands.size() > 0;
+	}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e)
+	{
+		ZoomCommand zoomCommand = new ZoomCommand(this.updateEngine);
+		inputCommands.add(zoomCommand);
 	}
 
 	public ArrayList<InputCommand> getInputCommands()

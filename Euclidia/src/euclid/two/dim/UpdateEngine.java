@@ -79,4 +79,16 @@ public class UpdateEngine extends Thread
 	{
 		return worldStateN;
 	}
+
+	public double getZoom()
+	{
+		// TODO Auto-generated method stub
+		return this.getCurrentWorldState().getCamera().getZoom();
+	}
+
+	public void setZoom(double zoom)
+	{
+		this.getCurrentWorldState().getCamera().setZoom(zoom);
+
+	}
 }

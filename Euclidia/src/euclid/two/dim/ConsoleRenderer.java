@@ -183,7 +183,6 @@ public class ConsoleRenderer extends Thread
 
 	public void drawWorldState(Graphics2D g)
 	{
-
 		g.setColor(new Color(80, 80, 80));
 		for (Door door : currentState.getDoors())
 		{
