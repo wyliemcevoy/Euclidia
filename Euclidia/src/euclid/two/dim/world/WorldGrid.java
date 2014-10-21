@@ -84,7 +84,7 @@ public class WorldGrid
 	{
 		if (gso.getRadius() < Configuration.gridSize)
 		{
-			
+			/*
 			int gridSpaceX = (int) Math.floor(gso.getPosition().getX() / Configuration.gridSize);
 			int gridSpaceY = (int) Math.floor(gso.getPosition().getY() / Configuration.gridSize);
 			if (gridSpaceX < 0 || gridSpaceY < 0)
@@ -94,6 +94,8 @@ public class WorldGrid
 			
 			grid[gridSpaceY][gridSpaceX].add(gso);
 			forceGrid[gridSpaceY][gridSpaceX] = forceGrid[gridSpaceY][gridSpaceX].add(gso.getVelocity().multipliedBy(1));
+			
+			*/
 		} else
 		{
 			

@@ -1,4 +1,4 @@
-package euclid.two.dim;
+package euclid.two.dim.render;
 
 public abstract class Renderer
 {

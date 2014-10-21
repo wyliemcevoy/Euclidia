@@ -2,6 +2,7 @@ package euclid.two.dim;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
+import euclid.two.dim.render.ConsoleRenderer;
 import euclid.two.dim.world.WorldState;
 import euclid.two.dim.world.WorldStateFactory;
 

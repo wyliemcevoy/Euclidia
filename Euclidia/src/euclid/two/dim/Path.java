@@ -8,18 +8,18 @@ import euclid.two.dim.model.EuVector;
 public class Path
 {
 	private Queue<EuVector> targets;
-
+	
 	public void addTarget(EuVector target)
 	{
 		targets.add(target);
 	}
-
+	
 	public Path(EuVector firstTarget)
 	{
 		targets = new LinkedList<EuVector>();
 		targets.add(firstTarget);
 	}
-
+	
 	public EuVector getTarget()
 	{
 		if (targets.isEmpty())
@@ -30,14 +30,14 @@ public class Path
 			return targets.peek();
 		}
 	}
-
+	
 	public boolean haveArrived(EuVector location)
 	{
 		if (targets.size() == 0)
 		{
 			return true;
 		}
-		if (location.subtract(targets.peek()).getMagnitude() < 50)
+		if (location.subtract(targets.peek()).getMagnitude() < 45)
 		{
 			if (targets.size() >= 1)
 			{
@@ -49,7 +49,7 @@ public class Path
 			return false;
 		}
 	}
-
+	
 	public int size()
 	{
 		return targets.size();

@@ -9,4 +9,6 @@ public class Configuration
 	public static final double maxSpeed = 30;
 	public static final int numFish = 250;
 	public static final boolean showLines = false;
+	public static final double rotation = Math.toRadians(0);
+	public static final boolean cameraFollowPlayer = true;
 }
