@@ -6,8 +6,9 @@ import java.util.Random;
 import euclid.two.dim.Configuration;
 import euclid.two.dim.Path;
 import euclid.two.dim.behavior.SteeringBehavior;
+import euclid.two.dim.updater.Updateable;
 
-public abstract class GameSpaceObject
+public abstract class GameSpaceObject implements Updateable
 {
 	protected double radius;
 	protected EuVector position;

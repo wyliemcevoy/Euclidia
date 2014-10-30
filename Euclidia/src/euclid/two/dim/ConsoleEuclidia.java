@@ -4,6 +4,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 import euclid.two.dim.input.ClickEvent;
 import euclid.two.dim.input.InputManager;
+import euclid.two.dim.updater.UpdateEngine;
 import euclid.two.dim.world.WorldState;
 import euclid.two.dim.world.WorldStateFactory;
 

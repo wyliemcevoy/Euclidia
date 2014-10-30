@@ -13,14 +13,11 @@ import euclid.two.dim.model.Room;
 
 public class WorldState
 {
-	private ArrayList<GameSpaceObject> fish;
+	private ArrayList<GameSpaceObject> gsos;
 	private WorldGrid worldGrid;
 	private ArrayList<Room> rooms;
 	private ArrayList<Door> doors;
-	private ArrayList<GameSpaceObject> selectedObjects;
 	private Camera camera;
-
-	//private NavMesh navMesh;
 
 	/**
 	 * @param rooms
@@ -47,42 +44,42 @@ public class WorldState
 		this.worldGrid = new WorldGrid();
 		this.rooms = new ArrayList<Room>();
 		this.doors = new ArrayList<Door>();
-		this.selectedObjects = new ArrayList<GameSpaceObject>();
 	}
 
 	public void addObject(GameSpaceObject gso)
 	{
-		fish.add(gso);
+		gsos.add(gso);
 		worldGrid.add(gso);
 	}
 
 	public void update(long timeStep)
 	{
-		for (GameSpaceObject fishi : fish)
+		for (GameSpaceObject fishi : gsos)
 		{
 			fishi.update(timeStep);
 		}
 
-		for (GameSpaceObject fishi : fish)
+		for (GameSpaceObject fishi : gsos)
 		{
 			fishi.travelToTheFuture();
 		}
 
-		for (GameSpaceObject fishi : fish)
+		for (GameSpaceObject fishi : gsos)
 		{
 			fishi.separate();
 		}
 
-		for (GameSpaceObject fishi : fish)
+		for (GameSpaceObject fishi : gsos)
 		{
 			fishi.travelToTheFuture();
 		}
+
 	}
 
 	public ArrayList<GameSpaceObject> getSelected()
 	{
 		ArrayList<GameSpaceObject> build = new ArrayList<GameSpaceObject>();
-		for (GameSpaceObject gso : this.fish)
+		for (GameSpaceObject gso : this.gsos)
 		{
 			if (gso.isSelected())
 			{
@@ -97,7 +94,7 @@ public class WorldState
 	 */
 	public ArrayList<GameSpaceObject> getFish()
 	{
-		return fish;
+		return gsos;
 	}
 
 	/**
@@ -106,14 +103,14 @@ public class WorldState
 	 */
 	public void setFish(ArrayList<GameSpaceObject> fish)
 	{
-		this.fish = fish;
+		this.gsos = fish;
 	}
 
 	public WorldState deepCopy()
 	{
 		WorldState copy = new WorldState();
 
-		for (GameSpaceObject gso : fish)
+		for (GameSpaceObject gso : gsos)
 		{
 			if (gso instanceof Fish)
 			{
@@ -171,20 +168,12 @@ public class WorldState
 
 	public Camera getCamera()
 	{
-		// TODO Auto-generated method stub
 		return this.camera;
 	}
 
-	/*
-	public NavMesh getNavMesh()
+	public ArrayList<GameSpaceObject> getGameSpaceObjects()
 	{
-		return navMesh;
-	}
 
-	public void setNavMesh(NavMesh navMesh)
-	{
-		this.navMesh = navMesh;
-
+		return gsos;
 	}
-	*/
 }

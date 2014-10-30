@@ -195,16 +195,6 @@ public class ConsoleRenderer extends Thread
 
 			int gs = grid.getGridStep();
 
-			for (int y = 0; y < grid.getRows(); y++)
-			{
-				for (int x = 0; x < grid.getCols(); x++)
-				{
-					int val = (int) Math.min(1 * grid.getForce(x, y).getMagnitude(), 255);
-					// System.out.println(grid.getForce(x, y));
-					g.setColor(new Color(val, val, val));
-					g.drawLine((int) (x + .5) * gs, (int) (y + .5) * gs, (int) (x * gs + grid.getForce(x, y).getX()), (int) (y * gs + grid.getForce(x, y).getY()));
-				}
-			}
 		}
 		for (GameSpaceObject gso : currentState.getFish())
 		{
@@ -244,22 +234,7 @@ public class ConsoleRenderer extends Thread
 			}
 
 			boolean draw = false;
-			if (draw)
-			{
-				WorldGrid grid = currentState.getWorldGrid();
 
-				EuVector future = gso.getFuture();
-				if (future != null)
-				{
-					EuVector adustedFuture = grid.getForceAt(future.getX(), future.getY()).dividedBy(2);
-					adustedFuture = adustedFuture.add(future);
-
-					//g.drawLine((int) (pos.getX()), (int) (pos.getY()), (int) future.getX(), (int) future.getY());
-					// g.setColor(Color.GRAY);
-					// g.drawLine((int) (future.getX()), (int) (future.getY()),
-					// (int) adustedFuture.getX(), (int) adustedFuture.getY());
-				}
-			}
 		}
 		g.setColor(new Color(200, 200, 200));
 

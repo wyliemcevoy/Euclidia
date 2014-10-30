@@ -7,7 +7,6 @@ import euclid.two.dim.exception.OutOfBoundsException;
 public class NavMesh
 {
 	private ArrayList<Room> rooms;
-	private int gridSize = 20;
 
 	public NavMesh()
 	{

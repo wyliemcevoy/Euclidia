@@ -6,7 +6,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 
-import euclid.two.dim.UpdateEngine;
+import euclid.two.dim.updater.UpdateEngine;
 
 public class InputManager implements MouseListener, MouseWheelListener
 {

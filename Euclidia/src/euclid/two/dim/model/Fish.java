@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import euclid.two.dim.Path;
 import euclid.two.dim.behavior.Flock;
 import euclid.two.dim.behavior.StandStill;
+import euclid.two.dim.updater.UpdateVisitor;
 import euclid.two.dim.world.WorldState;
 
 public class Fish extends GameSpaceObject
@@ -52,7 +53,7 @@ public class Fish extends GameSpaceObject
 		{
 			EuVector distTo = position.subtract(fish.getPosition());
 			double mag = distTo.getMagnitude();
-			if (!this.equals(fish) && mag < 20)
+			if (!this.equals(fish) && mag < 15)
 			{
 				EuVector plus = distTo.normalize().dividedBy(mag * mag / (fish.getRadius() * 10));
 				update = update.add(plus);
@@ -67,7 +68,7 @@ public class Fish extends GameSpaceObject
 		{
 			return;
 		}
-		futureVelocity = futureVelocity.add(update);
+		//futureVelocity = futureVelocity.add(update);
 		futurePosition = futurePosition.add(update);
 
 	}
@@ -112,5 +113,11 @@ public class Fish extends GameSpaceObject
 	{
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void acceptUpdateVisitor(UpdateVisitor updateVisitor)
+	{
+		updateVisitor.visit(this);
 	}
 }

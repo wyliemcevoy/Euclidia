@@ -1,16 +1,20 @@
-package euclid.two.dim;
+package euclid.two.dim.updater;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
 import euclid.two.dim.input.InputCommand;
 import euclid.two.dim.input.InputManager;
+import euclid.two.dim.model.Boid;
+import euclid.two.dim.model.Fish;
+import euclid.two.dim.model.GameSpaceObject;
+import euclid.two.dim.model.Obstacle;
 import euclid.two.dim.world.WorldState;
 
-public class UpdateEngine extends Thread
+public class UpdateEngine extends Thread implements UpdateVisitor
 {
 	private ArrayBlockingQueue<WorldState> rendererQueue;
 	private WorldState worldStateN;
-	private long now, then;
+	private long now, then, timeStep;
 	private InputManager inputManager;
 	private boolean stopRequested;
 
@@ -56,7 +60,7 @@ public class UpdateEngine extends Thread
 
 			}
 
-			long timeStep = now - then;
+			timeStep = now - then;
 			worldStateN.update(timeStep);
 			WorldState nPlusOne = worldStateN.deepCopy();
 
@@ -90,5 +94,31 @@ public class UpdateEngine extends Thread
 	{
 		this.getCurrentWorldState().getCamera().setZoom(zoom);
 
+	}
+
+	@Override
+	public void visit(Fish gso)
+	{
+
+	}
+
+	@Override
+	public void visit(Obstacle obstacle)
+	{
+
+	}
+
+	@Override
+	public void visit(Boid boid)
+	{
+
+	}
+
+	public void update(long timeStep)
+	{
+		for (GameSpaceObject gso : worldStateN.getGameSpaceObjects())
+		{
+			gso.acceptUpdateVisitor(this);
+		}
 	}
 }

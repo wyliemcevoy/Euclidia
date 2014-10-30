@@ -1,6 +1,6 @@
 package euclid.two.dim.input;
 
-import euclid.two.dim.UpdateEngine;
+import euclid.two.dim.updater.UpdateEngine;
 
 public class ZoomCommand implements InputCommand
 {

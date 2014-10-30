@@ -1,10 +1,10 @@
 package euclid.two.dim.input;
 
-import euclid.two.dim.UpdateEngine;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.RoomPath;
 import euclid.two.dim.path.PathCalculator;
+import euclid.two.dim.updater.UpdateEngine;
 import euclid.two.dim.world.WorldState;
 
 public class ClickEvent implements InputCommand
