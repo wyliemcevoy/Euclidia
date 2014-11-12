@@ -2,25 +2,24 @@ package euclid.two.dim.world;
 
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import euclid.two.dim.exception.OutOfBoundsException;
 import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;
-import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Room;
+import euclid.two.dim.model.Unit;
 import euclid.two.dim.render.Camera;
 
 public class WorldState
 {
-	private ArrayList<GameSpaceObject> fish;
+	private ArrayList<GameSpaceObject> gsos;
 	private WorldGrid worldGrid;
 	private ArrayList<Room> rooms;
 	private ArrayList<Door> doors;
 	private Camera camera;
-	
-	//private NavMesh navMesh;
 	
 	/**
 	 * @param rooms
@@ -51,31 +50,48 @@ public class WorldState
 	
 	public void addObject(GameSpaceObject gso)
 	{
-		fish.add(gso);
+		gsos.add(gso);
 		worldGrid.add(gso);
 	}
 	
 	public void update(long timeStep)
 	{
-		for (GameSpaceObject fishi : fish)
+		for (GameSpaceObject fishi : gsos)
 		{
 			fishi.update(timeStep);
 		}
 		
-		for (GameSpaceObject fishi : fish)
+		for (GameSpaceObject fishi : gsos)
+		
 		{
 			fishi.travelToTheFuture();
 		}
 		
-		for (GameSpaceObject fishi : fish)
+		for (GameSpaceObject fishi : gsos)
+		
 		{
 			fishi.separate();
 		}
 		
-		for (GameSpaceObject fishi : fish)
+		for (GameSpaceObject fishi : gsos)
+		
 		{
 			fishi.travelToTheFuture();
 		}
+		
+	}
+	
+	public ArrayList<GameSpaceObject> getSelected()
+	{
+		ArrayList<GameSpaceObject> build = new ArrayList<GameSpaceObject>();
+		for (GameSpaceObject gso : this.gsos)
+		{
+			if (gso.isSelected())
+			{
+				build.add(gso);
+			}
+		}
+		return build;
 	}
 	
 	/**
@@ -83,7 +99,7 @@ public class WorldState
 	 */
 	public ArrayList<GameSpaceObject> getFish()
 	{
-		return fish;
+		return gsos;
 	}
 	
 	/**
@@ -92,24 +108,26 @@ public class WorldState
 	 */
 	public void setFish(ArrayList<GameSpaceObject> fish)
 	{
-		this.fish = fish;
+		this.gsos = fish;
 	}
 	
 	public WorldState deepCopy()
 	{
 		WorldState copy = new WorldState();
 		
-		for (GameSpaceObject gso : fish)
+		for (GameSpaceObject gso : gsos)
+		
 		{
-			if (gso instanceof Fish)
+			if (gso instanceof Unit)
 			{
-				copy.addObject(new Fish(gso));
+				copy.addObject(new Unit(gso));
 			}
 			if (gso instanceof Boid)
 			{
 				copy.addObject(new Boid(gso));
 			}
 		}
+		
 		/*
 		ArrayList<Room> newRooms = new ArrayList<Room>();
 		for (Room room : rooms)
@@ -175,16 +193,21 @@ public class WorldState
 		return aTransform;
 	}
 	
-	/*
-	public NavMesh getNavMesh()
+	public ArrayList<GameSpaceObject> getGameSpaceObjects()
 	{
-		return navMesh;
+		return gsos;
 	}
-
-	public void setNavMesh(NavMesh navMesh)
+	
+	public Unit getUnit(UUID id)
 	{
-		this.navMesh = navMesh;
-
+		// HOrrible implementation (change to map)
+		for (GameSpaceObject gso : gsos)
+		{
+			if (gso.getId().equals(id))
+			{
+				return (Unit) gso;
+			}
+		}
+		return null;
 	}
-	*/
 }

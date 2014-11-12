@@ -1,6 +1,7 @@
 package euclid.two.dim.model;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import euclid.two.dim.Path;
 import euclid.two.dim.behavior.Flock;
@@ -8,11 +9,12 @@ import euclid.two.dim.behavior.StandStill;
 import euclid.two.dim.updater.UpdateVisitor;
 import euclid.two.dim.world.WorldState;
 
-public class Fish extends GameSpaceObject
+public class Unit extends GameSpaceObject
 {
 	protected WorldState worldState;
-	
-	public Fish(WorldState worldState, Path path, EuVector position)
+	protected UUID enemyTarget;
+
+	public Unit(WorldState worldState, Path path, EuVector position)
 	{
 		this.position = position;
 		this.futurePosition = new EuVector(position);
@@ -21,10 +23,11 @@ public class Fish extends GameSpaceObject
 		this.mass = 10;
 		this.sb = new Flock(worldState, path, this);
 		this.worldState = worldState;
-		this.radius = 2;
+		this.radius = 1;
+		this.isSelected = true;
 	}
-	
-	public Fish(EuVector position, WorldState worldState)
+
+	public Unit(EuVector position, WorldState worldState)
 	{
 		this.position = position;
 		this.futurePosition = new EuVector(position);
@@ -34,13 +37,14 @@ public class Fish extends GameSpaceObject
 		this.mass = 10;
 		this.sb = new StandStill();
 		this.radius = 30;
+		this.isSelected = true;
 	}
-	
-	public Fish(GameSpaceObject copy)
+
+	public Unit(GameSpaceObject copy)
 	{
 		super(copy);
 	}
-	
+
 	@Override
 	public void separate()
 	{
@@ -51,13 +55,13 @@ public class Fish extends GameSpaceObject
 		{
 			EuVector distTo = position.subtract(fish.getPosition());
 			double mag = distTo.getMagnitude();
-			if (!this.equals(fish) && mag < 20)
+			if (!this.equals(fish) && mag < 15)
 			{
 				EuVector plus = distTo.normalize().dividedBy(mag * mag / (fish.getRadius() * 10));
 				update = update.add(plus);
 			}
 		}
-		
+
 		if (update.getMagnitude() > 2)
 		{
 			update = update.normalize().multipliedBy(2);
@@ -66,17 +70,17 @@ public class Fish extends GameSpaceObject
 		{
 			return;
 		}
-		futureVelocity = futureVelocity.add(update);
+		//futureVelocity = futureVelocity.add(update);
 		futurePosition = futurePosition.add(update);
-		
+
 	}
-	
+
 	@Override
 	public void setPath(Path path)
 	{
 		this.sb.setPath(path);
 	}
-	
+
 	@Override
 	public void separate2()
 	{
@@ -90,7 +94,7 @@ public class Fish extends GameSpaceObject
 					EuVector one = fishOne.getFuturePosition();
 					EuVector two = fishTwo.getFuturePosition();
 					EuVector distbetween = one.subtract(two);
-					
+
 					if (distbetween.getMagnitude() < 10)
 					{
 						fishOne.setFuturePosition(fishOne.getFuturePosition().add(distbetween.normalize().multipliedBy(1)));
@@ -99,24 +103,23 @@ public class Fish extends GameSpaceObject
 			}
 		}
 	}
-	
+
 	@Override
 	public void specificUpdate(EuVector displacement)
 	{
 		// TODO Auto-generated method stub
 	}
-	
+
 	@Override
 	protected void specificConstructor(GameSpaceObject gso)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public void acceptUpdateVisitor(UpdateVisitor updatevisitor)
+	public void acceptUpdateVisitor(UpdateVisitor updateVisitor)
 	{
-		// TODO Auto-generated method stub
-		
+		updateVisitor.visit(this);
 	}
 }

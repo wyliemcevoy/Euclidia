@@ -24,7 +24,7 @@ public class Camera
 		this.mapY = 0;
 		this.width = 1000;
 		this.height = 1000;
-		this.zoom = 1;
+		this.zoom = 2;
 	}
 	
 	public double getMapX()

@@ -2,12 +2,14 @@ package euclid.two.dim.model;
 
 import java.awt.Color;
 import java.util.Random;
+import java.util.UUID;
 
 import euclid.two.dim.Configuration;
 import euclid.two.dim.Path;
 import euclid.two.dim.behavior.SteeringBehavior;
+import euclid.two.dim.updater.Updateable;
 
-public abstract class GameSpaceObject
+public abstract class GameSpaceObject implements Updateable
 {
 	protected double radius;
 	protected EuVector position;
@@ -20,11 +22,31 @@ public abstract class GameSpaceObject
 	protected Color color;
 	protected EuVector future;
 	protected Path path;
+	protected boolean isSelected;
+	protected UUID id;
+
+	/**
+	 * @return the isSelected
+	 */
+	public boolean isSelected()
+	{
+		return isSelected;
+	}
+
+	/**
+	 * @param isSelected
+	 *            the isSelected to set
+	 */
+	public void setSelected(boolean isSelected)
+	{
+		this.isSelected = isSelected;
+	}
 
 	public GameSpaceObject()
 	{
 		Random rand = new Random();
 		color = new Color(rand.nextInt(250), rand.nextInt(250), rand.nextInt(250));
+		this.id = UUID.randomUUID();
 	}
 
 	public double getRadius()
@@ -37,6 +59,11 @@ public abstract class GameSpaceObject
 		return color;
 	}
 
+	public UUID getId()
+	{
+		return id;
+	}
+
 	public GameSpaceObject(GameSpaceObject copy)
 	{
 		this.position = new EuVector(copy.getPosition());
@@ -45,6 +72,7 @@ public abstract class GameSpaceObject
 		this.velocity = new EuVector(copy.getVelocity());
 		this.futurePosition = new EuVector(copy.getFuturePosition());
 		this.future = new EuVector(copy.getFuture());
+		this.id = copy.getId();
 		specificConstructor(copy);
 	}
 

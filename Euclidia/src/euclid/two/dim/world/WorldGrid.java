@@ -12,7 +12,6 @@ public class WorldGrid
 	private WorldGridCell[][] grid;
 	private int rows;
 	private int cols;
-	private EuVector[][] forceGrid;
 	private int gridSize = Configuration.gridSize;
 	
 	public WorldGrid()
@@ -20,7 +19,6 @@ public class WorldGrid
 		rows = Configuration.width / Configuration.gridSize;
 		cols = Configuration.height / Configuration.gridSize;
 		grid = new WorldGridCell[cols][rows];
-		forceGrid = new EuVector[cols][rows];
 		intialize();
 	}
 	
@@ -31,7 +29,6 @@ public class WorldGrid
 			for (int y = 0; y < cols; y++)
 			{
 				grid[y][x] = new WorldGridCell();
-				forceGrid[y][x] = new EuVector(0, 0);
 			}
 		}
 	}
@@ -41,16 +38,6 @@ public class WorldGrid
 		int gridSpaceX = (int) worldSpaceX / Configuration.gridSize;
 		int gridSpaceY = (int) worldSpaceY / Configuration.gridSize;
 		return grid[gridSpaceY][gridSpaceX].getContents();
-	}
-	
-	public EuVector getForce(int gridX, int gridY)
-	{
-		return forceGrid[gridY][gridX];
-	}
-	
-	public EuVector getForceAt(double x, double y)
-	{
-		return forceGrid[(int) (y / gridSize)][(int) (x / gridSize)];
 	}
 	
 	public List<GameSpaceObject> get(double radius, EuVector center)
@@ -84,18 +71,22 @@ public class WorldGrid
 	{
 		if (gso.getRadius() < Configuration.gridSize)
 		{
+			
 			/*
+
 			int gridSpaceX = (int) Math.floor(gso.getPosition().getX() / Configuration.gridSize);
 			int gridSpaceY = (int) Math.floor(gso.getPosition().getY() / Configuration.gridSize);
 			if (gridSpaceX < 0 || gridSpaceY < 0)
 			{
 				// System.out.println(gso);
 			}
-			
+
 			grid[gridSpaceY][gridSpaceX].add(gso);
+
 			forceGrid[gridSpaceY][gridSpaceX] = forceGrid[gridSpaceY][gridSpaceX].add(gso.getVelocity().multipliedBy(1));
 			
 			*/
+			
 		} else
 		{
 			
@@ -105,10 +96,6 @@ public class WorldGrid
 				{
 					EuVector pointer = new EuVector(x * Configuration.gridSize, y * Configuration.gridSize);
 					EuVector distance = pointer.subtract(gso.getPosition());
-					if (distance.getMagnitude() < gso.getRadius())
-					{
-						forceGrid[y][x] = forceGrid[y][x].add(distance.normalize().multipliedBy(100));
-					}
 					
 				}
 				
