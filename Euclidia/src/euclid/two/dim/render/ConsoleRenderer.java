@@ -20,6 +20,7 @@ import euclid.two.dim.input.InputManager;
 import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;
+import euclid.two.dim.model.Explosion;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Room;
 import euclid.two.dim.model.Unit;
@@ -37,7 +38,6 @@ public class ConsoleRenderer extends Thread
 	private ConsoleFrame consoleFrame;
 	private int width = Configuration.width;
 	private int height = Configuration.height;
-	private double rotation = Configuration.rotation;
 	private int scale = 1;
 	private ArrayBlockingQueue<WorldState> rendererQueue;
 	private WorldState currentState;
@@ -140,21 +140,6 @@ public class ConsoleRenderer extends Thread
 					bg.drawImage(background, 0, 0, width * scale, height * scale, 0, 0, width, height, null);
 				} else
 				{
-					Camera camera = currentState.getCamera();
-					/*
-					bg.setColor(Color.BLACK);
-					bg.fillRect(0, 0, width, height);
-					
-					double locationX = 500;
-					double locationY = 500;
-					
-					AffineTransform tx = AffineTransform.getRotateInstance(rotation, locationX, locationY);
-					AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
-					
-					// Drawing the rotated image at the required drawing locations
-					bg.drawImage(op.filter(background, null), 0, 0, null);
-					*/
-					
 					bg.drawImage(background, 0, 0, null);
 				}
 				bg.dispose();
@@ -205,26 +190,12 @@ public class ConsoleRenderer extends Thread
 		AffineTransform saveAT = g.getTransform();
 		g.transform(currentState.buildTransform());
 		
-		if (Configuration.showLines)
+		// Draw Explosions
+		for (Explosion explosion : currentState.getExplosions())
 		{
-			/*
-			WorldGrid grid = currentState.getWorldGrid();
-			
-			int gs = grid.getGridStep();
-			
-			for (int y = 0; y < grid.getRows(); y++)
-			{
-				for (int x = 0; x < grid.getCols(); x++)
-				{
-					int val = (int) Math.min(1 * grid.getForce(x, y).getMagnitude(), 255);
-					// System.out.println(grid.getForce(x, y));
-					g.setColor(new Color(val, val, val));
-					g.drawLine((int) (x + .5) * gs, (int) (y + .5) * gs, (int) (x * gs + grid.getForce(x, y).getX()), (int) (y * gs + grid.getForce(x, y).getY()));
-				}
-			}
-			
-			*/
+			explosion.draw(g);
 		}
+		
 		for (GameSpaceObject gso : currentState.getFish())
 		{
 			EuVector pos = gso.getPosition();

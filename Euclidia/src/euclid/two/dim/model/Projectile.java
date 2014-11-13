@@ -8,10 +8,61 @@ public class Projectile
 	private UUID sender;
 	private double maxRange;
 	private EuVector location;
-
-	public Projectile()
+	
+	public Projectile(Unit target, Unit sender)
 	{
-
+		this.target = target.getId();
+		this.sender = sender.getId();
+		this.maxRange = 30;
+		this.location = new EuVector(sender.getPosition());
 	}
-
+	
+	public Projectile(Projectile copy)
+	{
+		this.target = copy.getTarget();
+		this.sender = copy.getSender();
+		this.maxRange = copy.getMaxRange();
+		this.location = new EuVector(copy.getLocation());
+	}
+	
+	public UUID getTarget()
+	{
+		return target;
+	}
+	
+	public void setTarget(UUID target)
+	{
+		this.target = target;
+	}
+	
+	public UUID getSender()
+	{
+		return sender;
+	}
+	
+	public void setSender(UUID sender)
+	{
+		this.sender = sender;
+	}
+	
+	public double getMaxRange()
+	{
+		return maxRange;
+	}
+	
+	public void setMaxRange(double maxRange)
+	{
+		this.maxRange = maxRange;
+	}
+	
+	public EuVector getLocation()
+	{
+		return location;
+	}
+	
+	public void setLocation(EuVector location)
+	{
+		this.location = location;
+	}
+	
 }
