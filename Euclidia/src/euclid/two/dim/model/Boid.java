@@ -9,16 +9,16 @@ import euclid.two.dim.world.WorldState;
 
 public class Boid extends GameSpaceObject
 {
-	private ArrayList<Fish> fishes;
+	private ArrayList<Unit> fishes;
 	private WorldState worldState;
 
-	public Boid(Fish fish, WorldState worldState, Path path)
+	public Boid(Unit fish, WorldState worldState, Path path)
 	{
 		radius = fish.getRadius() + 9;
 		this.position = fish.getPosition();
 
 		this.worldState = worldState;
-		this.fishes = new ArrayList<Fish>();
+		this.fishes = new ArrayList<Unit>();
 		fishes.add(fish);
 
 		this.velocity = new EuVector(0, 0);
@@ -32,7 +32,7 @@ public class Boid extends GameSpaceObject
 		super(copy);
 	}
 
-	public void ingest(Fish fish)
+	public void ingest(Unit fish)
 	{
 		fishes.add(fish);
 	}
@@ -42,7 +42,7 @@ public class Boid extends GameSpaceObject
 	{
 
 		//System.out.println("pre update : " + this.toString());
-		for (Fish fish : fishes)
+		for (Unit fish : fishes)
 		{
 			fish.setPosition(fish.getPosition().add(displacement));
 			if (fish.getPosition().subtract(futurePosition).getMagnitude() >= radius)
@@ -52,7 +52,7 @@ public class Boid extends GameSpaceObject
 
 		}
 
-		for (Fish fish : fishes)
+		for (Unit fish : fishes)
 		{
 			EuVector update = new EuVector(0, 0);
 			for (GameSpaceObject innerFish : fishes)
@@ -100,7 +100,7 @@ public class Boid extends GameSpaceObject
 
 	}
 
-	public ArrayList<Fish> explode()
+	public ArrayList<Unit> explode()
 	{
 		return fishes;
 	}
@@ -136,7 +136,7 @@ public class Boid extends GameSpaceObject
 		//futureVelocity = futureVelocity.add(update);
 		futurePosition = futurePosition.add(update);
 
-		for (Fish fish : this.fishes)
+		for (Unit fish : this.fishes)
 		{
 			//fish.setPosition(fish.getPosition().subtract(update));
 
@@ -150,12 +150,12 @@ public class Boid extends GameSpaceObject
 	{
 		this.radius = gso.getRadius();
 		//this.position = gso.getPosition();
-		this.fishes = new ArrayList<Fish>();
+		this.fishes = new ArrayList<Unit>();
 		//this.velocity = new EuVector(0, 0);
 		Boid boid = ((Boid) gso);
-		for (Fish fish : boid.explode())
+		for (Unit fish : boid.explode())
 		{
-			fishes.add(new Fish(fish));
+			fishes.add(new Unit(fish));
 		}
 
 	}

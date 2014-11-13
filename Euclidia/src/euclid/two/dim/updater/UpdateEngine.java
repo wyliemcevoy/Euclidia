@@ -1,13 +1,16 @@
 package euclid.two.dim.updater;
 
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import euclid.two.dim.ai.Agent;
 import euclid.two.dim.input.InputCommand;
 import euclid.two.dim.input.InputManager;
 import euclid.two.dim.model.Boid;
-import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Obstacle;
+import euclid.two.dim.model.Unit;
 import euclid.two.dim.world.WorldState;
 
 public class UpdateEngine extends Thread implements UpdateVisitor
@@ -17,12 +20,19 @@ public class UpdateEngine extends Thread implements UpdateVisitor
 	private long now, then, timeStep;
 	private InputManager inputManager;
 	private boolean stopRequested;
+	private ArrayList<Agent> agents;
 
 	public UpdateEngine(ArrayBlockingQueue<WorldState> rendererQueue, InputManager inputManager)
 	{
 		this.rendererQueue = rendererQueue;
 		this.inputManager = inputManager;
 		this.stopRequested = false;
+		this.agents = new ArrayList<Agent>();
+	}
+
+	public void addAgent(Agent agent)
+	{
+		this.agents.add(agent);
 	}
 
 	public void setWorldState(WorldState worldState)
@@ -39,6 +49,8 @@ public class UpdateEngine extends Thread implements UpdateVisitor
 			// Update time step
 			then = now;
 			now = System.currentTimeMillis();
+
+			randomCommand();
 
 			// Read through queue of input events and process them
 			if (inputManager.hasUnprocessedEvents())
@@ -97,7 +109,7 @@ public class UpdateEngine extends Thread implements UpdateVisitor
 	}
 
 	@Override
-	public void visit(Fish gso)
+	public void visit(Unit gso)
 	{
 
 	}
@@ -121,4 +133,22 @@ public class UpdateEngine extends Thread implements UpdateVisitor
 			gso.acceptUpdateVisitor(this);
 		}
 	}
+
+	public void randomCommand()
+	{
+		Random rand = new Random();
+		if (rand.nextDouble() > .99)
+		{
+
+			for (Agent agent : agents)
+			{
+
+				for (InputCommand command : agent.getCommands())
+				{
+					command.execute();
+				}
+			}
+		}
+	}
+
 }

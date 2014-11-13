@@ -9,7 +9,7 @@ import euclid.two.dim.input.InputManager;
 import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;
-import euclid.two.dim.model.Fish;
+import euclid.two.dim.model.Unit;
 import euclid.two.dim.model.Obstacle;
 import euclid.two.dim.model.Room;
 
@@ -35,7 +35,7 @@ public class WorldStateFactory
 		{
 			Path path = new Path(new EuVector(one));
 
-			Fish fish = new Fish(worldState, path, new EuVector(rand.nextInt(Configuration.width), rand.nextInt(Configuration.height)));
+			Unit fish = new Unit(worldState, path, new EuVector(rand.nextInt(Configuration.width), rand.nextInt(Configuration.height)));
 			worldState.addObject(fish);
 		}
 		worldState.addObject(new Obstacle(new EuVector(500, 500), worldState));
@@ -61,7 +61,7 @@ public class WorldStateFactory
 		for (int i = 0; i < 200; i++)
 		{
 			Path path = new Path(new EuVector(150, 250));
-			Fish fish = new Fish(worldState, path, randVect(100, 200, 100, 200));
+			Unit fish = new Unit(worldState, path, randVect(100, 200, 100, 200));
 			worldState.addObject(fish);
 		}
 
@@ -132,16 +132,16 @@ public class WorldStateFactory
 		Path path = new Path(new EuVector(randVect()));
 		//inputManager.addPath(path);
 
-		Boid boid = new Boid(new Fish(worldState, path, v), worldState, path);
+		Boid boid = new Boid(new Unit(worldState, path, v), worldState, path);
 
-		boid.ingest(new Fish(worldState, path, (v.add(new EuVector(4, 4)))));
-		boid.ingest(new Fish(worldState, path, (v.add(new EuVector(4, 0)))));
-		boid.ingest(new Fish(worldState, path, (v.add(new EuVector(0, 4)))));
-		boid.ingest(new Fish(worldState, path, (v.add(new EuVector(8, 4)))));
-		boid.ingest(new Fish(worldState, path, (v.add(new EuVector(4, 8)))));
-		boid.ingest(new Fish(worldState, path, (v.add(new EuVector(0, 8)))));
-		boid.ingest(new Fish(worldState, path, (v.add(new EuVector(8, 8)))));
-		boid.ingest(new Fish(worldState, path, (v.add(new EuVector(8, 0)))));
+		boid.ingest(new Unit(worldState, path, (v.add(new EuVector(4, 4)))));
+		boid.ingest(new Unit(worldState, path, (v.add(new EuVector(4, 0)))));
+		boid.ingest(new Unit(worldState, path, (v.add(new EuVector(0, 4)))));
+		boid.ingest(new Unit(worldState, path, (v.add(new EuVector(8, 4)))));
+		boid.ingest(new Unit(worldState, path, (v.add(new EuVector(4, 8)))));
+		boid.ingest(new Unit(worldState, path, (v.add(new EuVector(0, 8)))));
+		boid.ingest(new Unit(worldState, path, (v.add(new EuVector(8, 8)))));
+		boid.ingest(new Unit(worldState, path, (v.add(new EuVector(8, 0)))));
 		worldState.addObject(boid);
 
 	}

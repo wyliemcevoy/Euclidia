@@ -6,6 +6,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 
+import euclid.two.dim.Player;
 import euclid.two.dim.updater.UpdateEngine;
 
 public class InputManager implements MouseListener, MouseWheelListener
@@ -14,32 +15,13 @@ public class InputManager implements MouseListener, MouseWheelListener
 	private ArrayList<InputCommand> inputCommands;
 	private static Object lock = new Object();
 	private UpdateEngine updateEngine;
+	private Player player;
 
 	public InputManager()
 	{
 		this.inputCommands = new ArrayList<InputCommand>();
-		//inputEvents = new ArrayList<ClickEvent>();
+		this.player = new Player();
 	}
-
-	/*
-	public ArrayList<ClickEvent> getInputEvents()
-	{
-
-		ArrayList<ClickEvent> build = new ArrayList<ClickEvent>();
-
-		synchronized (lock)
-		{
-			for (ClickEvent clone : inputEvents)
-			{
-				build.add(new ClickEvent(clone));
-			}
-
-			inputEvents = new ArrayList<ClickEvent>();
-		}
-
-		return build;
-	}
-	*/
 
 	@Override
 	public void mouseClicked(MouseEvent e)

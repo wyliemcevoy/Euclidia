@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import euclid.two.dim.world.WorldState;
 
-public class Obstacle extends Fish
+public class Obstacle extends Unit
 {
 
 	public Obstacle(EuVector position, WorldState worldState)

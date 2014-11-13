@@ -1,15 +1,16 @@
 package euclid.two.dim.world;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import euclid.two.dim.exception.OutOfBoundsException;
 import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.Camera;
 import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;
-import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Room;
+import euclid.two.dim.model.Unit;
 
 public class WorldState
 {
@@ -112,9 +113,9 @@ public class WorldState
 
 		for (GameSpaceObject gso : gsos)
 		{
-			if (gso instanceof Fish)
+			if (gso instanceof Unit)
 			{
-				copy.addObject(new Fish(gso));
+				copy.addObject(new Unit(gso));
 			}
 			if (gso instanceof Boid)
 			{
@@ -173,7 +174,19 @@ public class WorldState
 
 	public ArrayList<GameSpaceObject> getGameSpaceObjects()
 	{
-
 		return gsos;
+	}
+
+	public Unit getUnit(UUID id)
+	{
+		// HOrrible implementation (change to map)
+		for (GameSpaceObject gso : gsos)
+		{
+			if (gso.getId().equals(id))
+			{
+				return (Unit) gso;
+			}
+		}
+		return null;
 	}
 }

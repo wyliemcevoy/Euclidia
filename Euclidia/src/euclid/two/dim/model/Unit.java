@@ -1,6 +1,7 @@
 package euclid.two.dim.model;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import euclid.two.dim.Path;
 import euclid.two.dim.behavior.Flock;
@@ -8,11 +9,12 @@ import euclid.two.dim.behavior.StandStill;
 import euclid.two.dim.updater.UpdateVisitor;
 import euclid.two.dim.world.WorldState;
 
-public class Fish extends GameSpaceObject
+public class Unit extends GameSpaceObject
 {
 	protected WorldState worldState;
+	protected UUID enemyTarget;
 
-	public Fish(WorldState worldState, Path path, EuVector position)
+	public Unit(WorldState worldState, Path path, EuVector position)
 	{
 		this.position = position;
 		this.futurePosition = new EuVector(position);
@@ -25,7 +27,7 @@ public class Fish extends GameSpaceObject
 		this.isSelected = true;
 	}
 
-	public Fish(EuVector position, WorldState worldState)
+	public Unit(EuVector position, WorldState worldState)
 	{
 		this.position = position;
 		this.futurePosition = new EuVector(position);
@@ -38,7 +40,7 @@ public class Fish extends GameSpaceObject
 		this.isSelected = true;
 	}
 
-	public Fish(GameSpaceObject copy)
+	public Unit(GameSpaceObject copy)
 	{
 		super(copy);
 	}

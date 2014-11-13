@@ -17,7 +17,7 @@ import euclid.two.dim.input.InputManager;
 import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;
-import euclid.two.dim.model.Fish;
+import euclid.two.dim.model.Unit;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Room;
 import euclid.two.dim.world.WorldGrid;
@@ -213,7 +213,7 @@ public class ConsoleRenderer extends Thread
 				g.setColor(new Color(50, 50, 50));
 				//g.drawArc((int) (pos.getX() - rad), (int) (pos.getY() - rad), 2 * rad, 2 * rad, 0, 360);
 
-				for (Fish fish : ((Boid) gso).explode())
+				for (Unit fish : ((Boid) gso).explode())
 				{
 					rad = (int) fish.getRadius();
 
