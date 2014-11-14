@@ -11,4 +11,5 @@ public class Configuration
 	public static final boolean showLines = false;
 	public static final double rotation = Math.toRadians(0);
 	public static final boolean cameraFollowPlayer = true;
+	public static final double initialZoom = 2;
 }

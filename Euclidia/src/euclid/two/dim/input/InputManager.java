@@ -20,7 +20,6 @@ public class InputManager implements MouseListener, MouseWheelListener
 	public InputManager()
 	{
 		this.inputCommands = new ArrayList<InputCommand>();
-		this.player = new Player();
 	}
 
 	@Override

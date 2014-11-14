@@ -1,11 +1,25 @@
 package euclid.two.dim;
 
-import java.util.ArrayList;
-
-import euclid.two.dim.model.Unit;
+import java.awt.Color;
 
 public class Player
 {
-	private ArrayList<Unit> selectedUnits;
+	private Color color;
+
+	public Player(Color color)
+	{
+		this.color = color;
+	}
+
+	public void setColor(Color color)
+	{
+		this.color = color;
+	}
+
+	public Color getColor()
+	{
+		// TODO Auto-generated method stub
+		return color;
+	}
 
 }

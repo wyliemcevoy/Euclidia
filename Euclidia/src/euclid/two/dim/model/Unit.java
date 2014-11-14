@@ -1,9 +1,11 @@
 package euclid.two.dim.model;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.UUID;
 
 import euclid.two.dim.Path;
+import euclid.two.dim.Player;
 import euclid.two.dim.behavior.Flock;
 import euclid.two.dim.behavior.StandStill;
 import euclid.two.dim.updater.UpdateVisitor;
@@ -13,8 +15,10 @@ public class Unit extends GameSpaceObject
 {
 	protected WorldState worldState;
 	protected UUID enemyTarget;
+	protected Player player;
+	protected int hitPoints;
 
-	public Unit(WorldState worldState, Path path, EuVector position)
+	public Unit(WorldState worldState, Path path, EuVector position, Player player)
 	{
 		this.position = position;
 		this.futurePosition = new EuVector(position);
@@ -25,9 +29,11 @@ public class Unit extends GameSpaceObject
 		this.worldState = worldState;
 		this.radius = 1;
 		this.isSelected = true;
+		this.player = player;
+		this.hitPoints = 100;
 	}
 
-	public Unit(EuVector position, WorldState worldState)
+	public Unit(EuVector position, WorldState worldState, Player player)
 	{
 		this.position = position;
 		this.futurePosition = new EuVector(position);
@@ -38,11 +44,23 @@ public class Unit extends GameSpaceObject
 		this.sb = new StandStill();
 		this.radius = 30;
 		this.isSelected = true;
+		this.hitPoints = 100;
+	}
+
+	public Color getColor()
+	{
+		return player.getColor();
 	}
 
 	public Unit(GameSpaceObject copy)
 	{
 		super(copy);
+		this.hitPoints = ((Unit) copy).getHitPoints();
+	}
+
+	public int getHitPoints()
+	{
+		return hitPoints;
 	}
 
 	@Override
@@ -113,8 +131,13 @@ public class Unit extends GameSpaceObject
 	@Override
 	protected void specificConstructor(GameSpaceObject gso)
 	{
-		// TODO Auto-generated method stub
+		this.player = ((Unit) gso).getPlayer();// TODO Auto-generated method stub
 
+	}
+
+	public Player getPlayer()
+	{
+		return this.player;
 	}
 
 	@Override

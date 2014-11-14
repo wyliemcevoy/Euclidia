@@ -12,18 +12,18 @@ public class UpdateEngine extends Thread
 	private WorldState worldStateN;
 	private long now, then;
 	private InputManager inputManager;
-	
+
 	public UpdateEngine(ArrayBlockingQueue<WorldState> rendererQueue, InputManager inputManager)
 	{
 		this.rendererQueue = rendererQueue;
 		this.inputManager = inputManager;
 	}
-	
+
 	public void setWorldState(WorldState worldState)
 	{
 		this.worldStateN = worldState;
 	}
-	
+
 	public void run()
 	{
 		now = System.currentTimeMillis();
@@ -33,31 +33,31 @@ public class UpdateEngine extends Thread
 			// Update time step
 			then = now;
 			now = System.currentTimeMillis();
-			
+
 			// Read through queue of input events and process them
 			if (inputManager.hasUnprocessedEvents())
 			{
-				
+
 				for (InputCommand inputCommand : inputManager.getInputCommands())
 				{
 					inputCommand.execute();
 				}
-				
+
 				// 
 				////ArrayList<ClickEvent> inputEvents = inputManager.getInputEvents();
-				
+
 				// Currently only care about the last click
 				//ClickEvent target = inputEvents.get(inputEvents.size() - 1);
 				//System.out.println("Handling event " + target.getX() + " " + target.getY());
-				
+
 				// Handle user input events
-				
+
 			}
-			
+
 			long timeStep = (now - then) / 4;
 			worldStateN.update(timeStep);
 			WorldState nPlusOne = worldStateN.deepCopy();
-			
+
 			try
 			{
 				rendererQueue.put(nPlusOne);

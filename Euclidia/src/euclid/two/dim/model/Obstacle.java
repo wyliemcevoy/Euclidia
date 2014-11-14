@@ -9,7 +9,7 @@ public class Obstacle extends Unit
 
 	public Obstacle(EuVector position, WorldState worldState)
 	{
-		super(position, worldState);
+		super(position, worldState, null);
 		this.radius = 50;
 	}
 

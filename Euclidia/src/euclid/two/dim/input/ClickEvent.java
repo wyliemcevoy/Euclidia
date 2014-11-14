@@ -1,8 +1,11 @@
 package euclid.two.dim.input;
 
+import java.awt.Color;
+
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.RoomPath;
+import euclid.two.dim.model.Unit;
 import euclid.two.dim.path.PathCalculator;
 import euclid.two.dim.updater.UpdateEngine;
 import euclid.two.dim.world.WorldState;
@@ -39,10 +42,16 @@ public class ClickEvent implements InputCommand
 	public void execute()
 	{
 		WorldState worldState = updateEngine.getCurrentWorldState();
+		EuVector adjustedTarget = new EuVector(x / worldState.getCamera().getZoom(), y / worldState.getCamera().getZoom());
+
 		for (GameSpaceObject fish : worldState.getSelected())
 		{
-			RoomPath roomPath = PathCalculator.calculateRoomPath(worldState, fish.getPosition(), new EuVector(x, y));
-			fish.setPath(roomPath.toPath());
+			if (fish instanceof Unit && ((Unit) fish).getPlayer().getColor().equals(Color.RED))
+			{
+
+				RoomPath roomPath = PathCalculator.calculateRoomPath(worldState, fish.getPosition(), adjustedTarget);
+				fish.setPath(roomPath.toPath());
+			}
 		}
 
 	}
