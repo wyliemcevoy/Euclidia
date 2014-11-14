@@ -19,7 +19,7 @@ import euclid.two.dim.updater.Updatable;
 public class WorldState
 {
 	private ArrayList<GameSpaceObject> gsos;
-	private WorldGrid worldGrid;
+	private WorldGrid worldGrids;
 	private ArrayList<Room> rooms;
 	private ArrayList<Door> doors;
 	private Camera camera;
@@ -38,18 +38,18 @@ public class WorldState
 	
 	public WorldGrid getWorldGrid()
 	{
-		return worldGrid;
+		return worldGrids;
 	}
 	
 	public void setWorldGrid(WorldGrid worldGrid)
 	{
-		this.worldGrid = worldGrid;
+		this.worldGrids = worldGrid;
 	}
 	
 	public WorldState()
 	{
 		this.setFish(new ArrayList<GameSpaceObject>());
-		this.worldGrid = new WorldGrid();
+		this.worldGrids = new WorldGrid();
 		this.rooms = new ArrayList<Room>();
 		this.doors = new ArrayList<Door>();
 		this.explosions = new ArrayList<Explosion>();
@@ -60,7 +60,7 @@ public class WorldState
 	public void addObject(GameSpaceObject gso)
 	{
 		gsos.add(gso);
-		worldGrid.add(gso);
+		worldGrids.add(gso);
 	}
 	
 	public void update(long timeStep)
