@@ -9,6 +9,7 @@ import euclid.two.dim.Player;
 import euclid.two.dim.behavior.Flock;
 import euclid.two.dim.behavior.StandStill;
 import euclid.two.dim.updater.UpdateVisitor;
+import euclid.two.dim.updater.Updatable;
 import euclid.two.dim.world.WorldState;
 
 public class Unit extends GameSpaceObject
@@ -17,7 +18,7 @@ public class Unit extends GameSpaceObject
 	protected UUID enemyTarget;
 	protected Player player;
 	protected int hitPoints;
-
+	
 	public Unit(WorldState worldState, Path path, EuVector position, Player player)
 	{
 		this.position = position;
@@ -32,7 +33,7 @@ public class Unit extends GameSpaceObject
 		this.player = player;
 		this.hitPoints = 100;
 	}
-
+	
 	public Unit(EuVector position, WorldState worldState, Player player)
 	{
 		this.position = position;
@@ -46,23 +47,23 @@ public class Unit extends GameSpaceObject
 		this.isSelected = true;
 		this.hitPoints = 100;
 	}
-
+	
 	public Color getColor()
 	{
 		return player.getColor();
 	}
-
+	
 	public Unit(GameSpaceObject copy)
 	{
 		super(copy);
 		this.hitPoints = ((Unit) copy).getHitPoints();
 	}
-
+	
 	public int getHitPoints()
 	{
 		return hitPoints;
 	}
-
+	
 	@Override
 	public void separate()
 	{
@@ -79,7 +80,7 @@ public class Unit extends GameSpaceObject
 				update = update.add(plus);
 			}
 		}
-
+		
 		if (update.getMagnitude() > 2)
 		{
 			update = update.normalize().multipliedBy(2);
@@ -90,15 +91,15 @@ public class Unit extends GameSpaceObject
 		}
 		//futureVelocity = futureVelocity.add(update);
 		futurePosition = futurePosition.add(update);
-
+		
 	}
-
+	
 	@Override
 	public void setPath(Path path)
 	{
 		this.sb.setPath(path);
 	}
-
+	
 	@Override
 	public void separate2()
 	{
@@ -112,7 +113,7 @@ public class Unit extends GameSpaceObject
 					EuVector one = fishOne.getFuturePosition();
 					EuVector two = fishTwo.getFuturePosition();
 					EuVector distbetween = one.subtract(two);
-
+					
 					if (distbetween.getMagnitude() < 10)
 					{
 						fishOne.setFuturePosition(fishOne.getFuturePosition().add(distbetween.normalize().multipliedBy(1)));
@@ -121,28 +122,34 @@ public class Unit extends GameSpaceObject
 			}
 		}
 	}
-
+	
 	@Override
 	public void specificUpdate(EuVector displacement)
 	{
 		// TODO Auto-generated method stub
 	}
-
+	
 	@Override
 	protected void specificConstructor(GameSpaceObject gso)
 	{
 		this.player = ((Unit) gso).getPlayer();// TODO Auto-generated method stub
-
+		
 	}
-
+	
 	public Player getPlayer()
 	{
 		return this.player;
 	}
-
+	
 	@Override
 	public void acceptUpdateVisitor(UpdateVisitor updateVisitor)
 	{
 		updateVisitor.visit(this);
+	}
+	
+	@Override
+	public Updatable deepCopy()
+	{
+		return new Unit(this);
 	}
 }

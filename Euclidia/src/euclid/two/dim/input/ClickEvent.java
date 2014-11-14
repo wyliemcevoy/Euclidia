@@ -44,7 +44,7 @@ public class ClickEvent implements InputCommand
 	{
 		WorldState worldState = updateEngine.getCurrentWorldState();
 		EuVector adjustedTarget = new EuVector(x / worldState.getCamera().getZoom(), y / worldState.getCamera().getZoom());
-		worldState.addExplosion(new Explosion(new EuVector(adjustedTarget)));
+		worldState.addUpdatable(new Explosion(new EuVector(adjustedTarget)));
 		for (GameSpaceObject fish : worldState.getSelected())
 		{
 			if (fish instanceof Unit && ((Unit) fish).getPlayer().getColor().equals(Color.RED))

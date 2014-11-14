@@ -3,7 +3,10 @@ package euclid.two.dim.model;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class Explosion
+import euclid.two.dim.updater.Updatable;
+import euclid.two.dim.updater.UpdateVisitor;
+
+public class Explosion implements Updatable
 {
 	private EuVector location;
 	private double expireTime;
@@ -51,6 +54,19 @@ public class Explosion
 	public Color getColor()
 	{
 		return this.color;
+	}
+	
+	@Override
+	public void acceptUpdateVisitor(UpdateVisitor updateVisitor)
+	{
+		updateVisitor.visit(this);
+	}
+	
+	@Override
+	public Updatable deepCopy()
+	{
+		// TODO Auto-generated method stub
+		return new Explosion(this);
 	}
 	
 }

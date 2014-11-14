@@ -7,9 +7,9 @@ import java.util.UUID;
 import euclid.two.dim.Configuration;
 import euclid.two.dim.Path;
 import euclid.two.dim.behavior.SteeringBehavior;
-import euclid.two.dim.updater.Updateable;
+import euclid.two.dim.updater.Updatable;
 
-public abstract class GameSpaceObject implements Updateable
+public abstract class GameSpaceObject implements Updatable
 {
 	protected double radius;
 	protected EuVector position;

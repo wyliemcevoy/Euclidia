@@ -6,6 +6,7 @@ import euclid.two.dim.Path;
 import euclid.two.dim.behavior.Flock;
 import euclid.two.dim.behavior.StandStill;
 import euclid.two.dim.updater.UpdateVisitor;
+import euclid.two.dim.updater.Updatable;
 import euclid.two.dim.world.WorldState;
 
 public class Fish extends GameSpaceObject
@@ -114,9 +115,15 @@ public class Fish extends GameSpaceObject
 	}
 	
 	@Override
-	public void acceptUpdateVisitor(UpdateVisitor updatevisitor)
+	public void acceptUpdateVisitor(UpdateVisitor updateVisitor)
 	{
-		// TODO Auto-generated method stub
-		
+		updateVisitor.visit(this);
 	}
+	
+	@Override
+	public Updatable deepCopy()
+	{
+		return new Fish(this);
+	}
+	
 }

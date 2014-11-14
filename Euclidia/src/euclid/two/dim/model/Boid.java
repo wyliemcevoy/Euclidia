@@ -5,42 +5,43 @@ import java.util.ArrayList;
 import euclid.two.dim.Path;
 import euclid.two.dim.behavior.Flock;
 import euclid.two.dim.updater.UpdateVisitor;
+import euclid.two.dim.updater.Updatable;
 import euclid.two.dim.world.WorldState;
 
 public class Boid extends GameSpaceObject
 {
 	private ArrayList<Unit> fishes;
 	private WorldState worldState;
-
+	
 	public Boid(Unit fish, WorldState worldState, Path path)
 	{
 		radius = fish.getRadius() + 9;
 		this.position = fish.getPosition();
-
+		
 		this.worldState = worldState;
 		this.fishes = new ArrayList<Unit>();
 		fishes.add(fish);
-
+		
 		this.velocity = new EuVector(0, 0);
 		this.mass = 10;
 		this.sb = new Flock(worldState, path, this);
-
+		
 	}
-
+	
 	public Boid(GameSpaceObject copy)
 	{
 		super(copy);
 	}
-
+	
 	public void ingest(Unit fish)
 	{
 		fishes.add(fish);
 	}
-
+	
 	@Override
 	public void specificUpdate(EuVector displacement)
 	{
-
+		
 		//System.out.println("pre update : " + this.toString());
 		for (Unit fish : fishes)
 		{
@@ -49,9 +50,9 @@ public class Boid extends GameSpaceObject
 			{
 				System.out.println("PROBLEM " + (fish.getPosition().subtract(futurePosition).getMagnitude() - radius));
 			}
-
+			
 		}
-
+		
 		for (Unit fish : fishes)
 		{
 			EuVector update = new EuVector(0, 0);
@@ -65,9 +66,9 @@ public class Boid extends GameSpaceObject
 					update = update.add(plus);
 				}
 			}
-
+			
 			update = update.multipliedBy(.15);
-
+			
 			if (update.getMagnitude() > 8)
 			{
 				update = update.normalize().multipliedBy(3);
@@ -76,9 +77,9 @@ public class Boid extends GameSpaceObject
 			{
 				update = new EuVector(0, 0);
 			}
-
+			
 			fish.setPosition(fish.getPosition().subtract(update));
-
+			
 			// Dist away from center
 			EuVector fromCenter = futurePosition.subtract(fish.getPosition());
 			if (fromCenter.getMagnitude() > radius - 1.5)
@@ -90,26 +91,26 @@ public class Boid extends GameSpaceObject
 					fish.setPosition(fish.getPosition().add(fromCenter.normalize().multipliedBy(d)));
 				}
 			}
-
+			
 			if (fish.getPosition().subtract(futurePosition).getMagnitude() > radius)
 			{
 				System.out.println("PROBLEM " + (fish.getPosition().subtract(futurePosition).getMagnitude() - radius));
 			}
 		}
 		//System.out.println(" update : " + this.toString());
-
+		
 	}
-
+	
 	public ArrayList<Unit> explode()
 	{
 		return fishes;
 	}
-
+	
 	@Override
 	public void separate()
 	{
 		//System.out.println(this.toString());
-
+		
 		ArrayList<GameSpaceObject> fishes = worldState.getFish();
 		futurePosition = new EuVector(position);
 		EuVector update = new EuVector(0, 0);
@@ -124,7 +125,7 @@ public class Boid extends GameSpaceObject
 				update = update.add(plus);
 			}
 		}
-
+		
 		if (update.getMagnitude() > 2)
 		{
 			update = update.normalize().multipliedBy(2);
@@ -135,16 +136,16 @@ public class Boid extends GameSpaceObject
 		}
 		//futureVelocity = futureVelocity.add(update);
 		futurePosition = futurePosition.add(update);
-
+		
 		for (Unit fish : this.fishes)
 		{
 			//fish.setPosition(fish.getPosition().subtract(update));
-
+			
 		}
 		//System.out.println(update + " POST Separate " + this.toString());
-
+		
 	}
-
+	
 	@Override
 	protected void specificConstructor(GameSpaceObject gso)
 	{
@@ -157,12 +158,19 @@ public class Boid extends GameSpaceObject
 		{
 			fishes.add(new Unit(fish));
 		}
-
+		
 	}
-
+	
 	@Override
 	public void acceptUpdateVisitor(UpdateVisitor updateVisitor)
 	{
 		updateVisitor.visit(this);
+	}
+	
+	@Override
+	public Updatable deepCopy()
+	{
+		// TODO Auto-generated method stub
+		return new Boid(this);
 	}
 }

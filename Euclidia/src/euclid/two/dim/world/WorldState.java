@@ -14,6 +14,7 @@ import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Room;
 import euclid.two.dim.model.Unit;
 import euclid.two.dim.render.Camera;
+import euclid.two.dim.updater.Updatable;
 
 public class WorldState
 {
@@ -23,6 +24,8 @@ public class WorldState
 	private ArrayList<Door> doors;
 	private Camera camera;
 	private ArrayList<Explosion> explosions;
+	private ArrayList<Updatable> updatables;
+	private ArrayList<Updatable> expired;
 	
 	/**
 	 * @param rooms
@@ -50,6 +53,8 @@ public class WorldState
 		this.rooms = new ArrayList<Room>();
 		this.doors = new ArrayList<Door>();
 		this.explosions = new ArrayList<Explosion>();
+		this.updatables = new ArrayList<Updatable>();
+		this.expired = new ArrayList<Updatable>();
 	}
 	
 	public void addObject(GameSpaceObject gso)
@@ -154,7 +159,7 @@ public class WorldState
 		
 		for (Explosion explosion : explosions)
 		{
-			copy.addExplosion(new Explosion(explosion));
+			copy.addUpdatable(new Explosion(explosion));
 		}
 		
 		return copy;
@@ -233,17 +238,39 @@ public class WorldState
 	
 	public ArrayList<Explosion> getExplosions()
 	{
+		explosions = new ArrayList<Explosion>();
+		
+		for (Updatable updatable : updatables)
+		{
+			if (updatable instanceof Explosion)
+			{
+				explosions.add((Explosion) updatable);
+			}
+		}
+		
 		return explosions;
 	}
 	
-	protected void setExplosions(ArrayList<Explosion> explosions)
+	public void addUpdatable(Updatable updatable)
 	{
-		this.explosions = explosions;
+		this.updatables.add(updatable);
 	}
 	
-	public void addExplosion(Explosion explosion)
+	public ArrayList<Updatable> getUpdatable()
 	{
-		explosions.add(explosion);
-		
+		return updatables;
+	}
+	
+	public void registerAsExpired(Updatable updatable)
+	{
+		this.expired.add(updatable);
+	}
+	
+	public void purgeExpired()
+	{
+		System.out.println("Removing " + expired.size());
+		System.out.println("updatables " + updatables.size());
+		updatables.remove(expired);
+		expired = new ArrayList<Updatable>();
 	}
 }
