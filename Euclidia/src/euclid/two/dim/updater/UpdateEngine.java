@@ -8,6 +8,7 @@ import euclid.two.dim.ai.Agent;
 import euclid.two.dim.input.InputCommand;
 import euclid.two.dim.input.InputManager;
 import euclid.two.dim.model.Boid;
+import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Explosion;
 import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.GameSpaceObject;
@@ -171,8 +172,15 @@ public class UpdateEngine extends Thread implements UpdateVisitor
 	@Override
 	public void visit(Projectile projectile)
 	{
-		// TODO Auto-generated method stub
+		EuVector targetLocation = worldStateN.getUnit(projectile.getTarget()).getPosition();
 		
+		EuVector dT = targetLocation.subtract(projectile.getLocation()).normalize().multipliedBy(2);
+		projectile.setLocation(projectile.getLocation().add(dT));
+		
+		if (projectile.hasExpired(timeStep) || projectile.getLocation().subtract(targetLocation).getMagnitude() < 3)
+		{
+			worldStateN.registerAsExpired(projectile);
+		}
 	}
 	
 	@Override

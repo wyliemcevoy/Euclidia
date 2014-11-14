@@ -20,7 +20,6 @@ import euclid.two.dim.input.InputManager;
 import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;
-import euclid.two.dim.model.Explosion;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Room;
 import euclid.two.dim.model.Unit;
@@ -191,9 +190,9 @@ public class ConsoleRenderer extends Thread
 		g.transform(currentState.buildTransform());
 		
 		// Draw Explosions
-		for (Explosion explosion : currentState.getExplosions())
+		for (Renderable renderable : currentState.getRenderables())
 		{
-			explosion.draw(g);
+			renderable.draw(g);
 		}
 		
 		for (GameSpaceObject gso : currentState.getFish())

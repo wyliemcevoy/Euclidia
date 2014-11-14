@@ -8,8 +8,9 @@ import euclid.two.dim.Path;
 import euclid.two.dim.Player;
 import euclid.two.dim.behavior.Flock;
 import euclid.two.dim.behavior.StandStill;
-import euclid.two.dim.updater.UpdateVisitor;
+import euclid.two.dim.render.Renderable;
 import euclid.two.dim.updater.Updatable;
+import euclid.two.dim.updater.UpdateVisitor;
 import euclid.two.dim.world.WorldState;
 
 public class Unit extends GameSpaceObject
@@ -151,5 +152,12 @@ public class Unit extends GameSpaceObject
 	public Updatable deepCopy()
 	{
 		return new Unit(this);
+	}
+	
+	@Override
+	public Renderable toRenderable()
+	{
+		// TODO Auto-generated method stub
+		return new NullRenderable();
 	}
 }

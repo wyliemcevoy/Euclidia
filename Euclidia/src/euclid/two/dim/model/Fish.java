@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import euclid.two.dim.Path;
 import euclid.two.dim.behavior.Flock;
 import euclid.two.dim.behavior.StandStill;
-import euclid.two.dim.updater.UpdateVisitor;
+import euclid.two.dim.render.Renderable;
 import euclid.two.dim.updater.Updatable;
+import euclid.two.dim.updater.UpdateVisitor;
 import euclid.two.dim.world.WorldState;
 
 public class Fish extends GameSpaceObject
@@ -126,4 +127,10 @@ public class Fish extends GameSpaceObject
 		return new Fish(this);
 	}
 	
+	@Override
+	public Renderable toRenderable()
+	{
+		// TODO Auto-generated method stub
+		return new NullRenderable();
+	}
 }
