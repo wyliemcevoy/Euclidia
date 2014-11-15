@@ -24,7 +24,8 @@ public abstract class GameSpaceObject implements Updatable
 	protected Path path;
 	protected boolean isSelected;
 	protected UUID id;
-
+	protected double theta;
+	
 	/**
 	 * @return the isSelected
 	 */
@@ -32,7 +33,7 @@ public abstract class GameSpaceObject implements Updatable
 	{
 		return isSelected;
 	}
-
+	
 	/**
 	 * @param isSelected
 	 *            the isSelected to set
@@ -41,29 +42,30 @@ public abstract class GameSpaceObject implements Updatable
 	{
 		this.isSelected = isSelected;
 	}
-
+	
 	public GameSpaceObject()
 	{
 		Random rand = new Random();
-		color = new Color(rand.nextInt(250), rand.nextInt(250), rand.nextInt(250));
+		this.color = new Color(rand.nextInt(250), rand.nextInt(250), rand.nextInt(250));
 		this.id = UUID.randomUUID();
+		this.theta = 0;
 	}
-
+	
 	public double getRadius()
 	{
 		return radius;
 	}
-
+	
 	public Color getColor()
 	{
 		return color;
 	}
-
+	
 	public UUID getId()
 	{
 		return id;
 	}
-
+	
 	public GameSpaceObject(GameSpaceObject copy)
 	{
 		this.position = new EuVector(copy.getPosition());
@@ -73,61 +75,67 @@ public abstract class GameSpaceObject implements Updatable
 		this.futurePosition = new EuVector(copy.getFuturePosition());
 		this.future = new EuVector(copy.getFuture());
 		this.id = copy.getId();
+		this.theta = copy.getTheta();
 		specificConstructor(copy);
 	}
-
+	
+	public double getTheta()
+	{
+		return theta;
+	}
+	
 	protected abstract void specificConstructor(GameSpaceObject copy);
-
+	
 	public EuVector getFuture()
 	{
 		return future;
 	}
-
+	
 	public SteeringBehavior getSteeringBehavior()
 	{
 		return sb;
 	}
-
+	
 	public void setSteeringBehavior(SteeringBehavior steeringBehavior)
 	{
 		this.sb = steeringBehavior;
 	}
-
+	
 	public double getMaxSpeed()
 	{
 		return maxSpeed;
 	}
-
+	
 	public EuVector getPosition()
 	{
 		return position;
 	}
-
+	
 	public void setPosition(EuVector position)
 	{
 		this.position = position;
 	}
-
+	
 	public void setVelocity(EuVector velocity)
 	{
 		this.velocity = velocity;
 	}
-
+	
 	public EuVector getVelocity()
 	{
 		return velocity;
 	}
-
+	
 	public void update(double timeStep)
 	{
-
+		
 		EuVector steeringForce = sb.calculate();
 		EuVector acceleration = steeringForce.dividedBy(mass);
 		futureVelocity = velocity.add(acceleration.multipliedBy(timeStep));
 		futureVelocity.truncate(maxSpeed);
-
+		
 		futurePosition = position.add(futureVelocity.multipliedBy(timeStep / 100));
-
+		
 		this.future = position.add(futureVelocity.multipliedBy(timeStep / 20));
 		/*
 		if (sb instanceof Flock)
@@ -162,13 +170,75 @@ public abstract class GameSpaceObject implements Updatable
 		}
 		
 		 */
+		if (velocity.getMagnitude() > 1)
+		{
+			theta = Math.atan2(velocity.getX(), -1 * velocity.getY());
+		}
+		
 		specificUpdate(futureVelocity.multipliedBy(timeStep / 100));
 	}
-
+	
+	/*
+	private void findDir()
+	{
+		
+		double x = velocity.getX();
+		double y = velocity.getY();
+		
+		if (x > 0)
+		{
+			if (y > 0)
+			{
+				if (y > x)
+				{
+					dir = Dir.South;
+				} else
+				{
+					dir = Dir.East;
+				}
+			} else
+			{
+				if (-1 * y > x)
+				{
+					dir = Dir.North;
+				} else
+				{
+					dir = Dir.East;
+				}
+				
+			}
+		} else
+		{
+			if (y > 0)
+			{
+				if (y > -x)
+				{
+					dir = Dir.South;
+				} else
+				{
+					dir = Dir.West;
+				}
+			} else
+			{
+				if (-1 * y > -x)
+				{
+					dir = Dir.North;
+				} else
+				{
+					dir = Dir.West;
+				}
+				
+			}
+			
+		}
+		
+	}
+	*/
+	
 	public EuVector getUpdate()
 	{
 		EuVector steeringForce;
-
+		
 		if (sb == null)
 		{
 			steeringForce = new EuVector(1, 1);
@@ -179,54 +249,54 @@ public abstract class GameSpaceObject implements Updatable
 		EuVector acceleration = steeringForce.dividedBy(mass);
 		EuVector temp = velocity.add(acceleration.multipliedBy(330));
 		temp.truncate(maxSpeed);
-
+		
 		return position.add(temp.multipliedBy(330 / 25));
 	}
-
+	
 	private void toroidify(int width, int height)
 	{
 		futurePosition.setX(futurePosition.getX() % width);
 		futurePosition.setY(futurePosition.getY() % height);
 	}
-
+	
 	public void travelToTheFuture()
 	{
 		position = new EuVector(futurePosition);
 		velocity = new EuVector(futureVelocity);
 		toroidify(Configuration.width, Configuration.height);
 	}
-
+	
 	public void separate()
 	{
 		// TODO Auto-generated method stub
 	}
-
+	
 	public EuVector getFuturePosition()
 	{
 		return futurePosition;
 	}
-
+	
 	public void setFuturePosition(EuVector futurePosition)
 	{
 		this.futurePosition = futurePosition;
 	}
-
+	
 	public void separate2()
 	{
-
+		
 	}
-
+	
 	@Override
 	public String toString()
 	{
 		return "[" + position + futurePosition + velocity + "]";
 	}
-
+	
 	public abstract void specificUpdate(EuVector displacement);
-
+	
 	public void setPath(Path path)
 	{
 		this.path = path;
 	}
-
+	
 }

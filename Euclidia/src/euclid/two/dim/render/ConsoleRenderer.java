@@ -40,6 +40,8 @@ public class ConsoleRenderer extends Thread
 	private int scale = 1;
 	private ArrayBlockingQueue<WorldState> rendererQueue;
 	private WorldState currentState;
+	private SpriteFlyWeight sprites;
+	private Sprite sprite;
 	
 	public ConsoleRenderer(ArrayBlockingQueue<WorldState> rendererQueue, InputManager inputManager)
 	{
@@ -62,6 +64,8 @@ public class ConsoleRenderer extends Thread
 			strategy = canvas.getBufferStrategy();
 		} while (strategy == null);
 		
+		this.sprites = new SpriteFlyWeight();
+		this.sprite = sprites.getSprite();
 	}
 	
 	// create a hardware accelerated image
@@ -185,6 +189,9 @@ public class ConsoleRenderer extends Thread
 	
 	public void drawWorldState(Graphics2D g)
 	{
+		/*
+		
+		*/
 		
 		AffineTransform saveAT = g.getTransform();
 		g.transform(currentState.buildTransform());
@@ -228,7 +235,12 @@ public class ConsoleRenderer extends Thread
 				}
 			} else
 			{
-				g.drawArc((int) (pos.getX() - rad), (int) (pos.getY() - rad), 2 * rad, 2 * rad, 0, 360);
+				
+				sprite.draw(g, (int) pos.getX() - rad - 1, (int) pos.getY() - rad - 1, gso);
+				
+				g.setColor(Color.gray);
+				//g.drawRect((int) (pos.getX() - rad), (int) (pos.getY() - rad), 2 * rad, 2 * rad);
+				//g.drawArc((int) (pos.getX() - 2 * rad), (int) (pos.getY() - 2 * rad), 4 * rad, 4 * rad, 0, 360);
 			}
 			
 			boolean draw = false;

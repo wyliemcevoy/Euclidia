@@ -19,6 +19,7 @@ public class Unit extends GameSpaceObject
 	protected UUID enemyTarget;
 	protected Player player;
 	protected int hitPoints;
+	protected int timeIndex;
 	
 	public Unit(WorldState worldState, Path path, EuVector position, Player player)
 	{
@@ -26,13 +27,21 @@ public class Unit extends GameSpaceObject
 		this.futurePosition = new EuVector(position);
 		this.future = new EuVector(position);
 		this.velocity = new EuVector(0, 0);
-		this.mass = 10;
-		this.sb = new Flock(worldState, path, this);
 		this.worldState = worldState;
-		this.radius = 1;
-		this.isSelected = true;
+		this.sb = new Flock(worldState, path, this);
 		this.player = player;
+		
+		initialize();
+	}
+	
+	private void initialize()
+	{
+		this.radius = 8;
+		this.radius = 8;
+		this.isSelected = true;
+		this.mass = 10;
 		this.hitPoints = 100;
+		this.timeIndex = 0;
 	}
 	
 	public Unit(EuVector position, WorldState worldState, Player player)
@@ -157,7 +166,6 @@ public class Unit extends GameSpaceObject
 	@Override
 	public Renderable toRenderable()
 	{
-		// TODO Auto-generated method stub
 		return new NullRenderable();
 	}
 }

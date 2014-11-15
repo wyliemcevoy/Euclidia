@@ -226,7 +226,7 @@ public class WorldState
 	
 	public Unit getUnit(UUID id)
 	{
-		// HOrrible implementation (change to map)
+		// Horrible implementation (change to map)
 		for (GameSpaceObject gso : gsos)
 		{
 			if (gso.getId().equals(id))
