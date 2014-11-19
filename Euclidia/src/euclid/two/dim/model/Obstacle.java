@@ -2,17 +2,31 @@ package euclid.two.dim.model;
 
 import java.util.ArrayList;
 
+import euclid.two.dim.behavior.StandStill;
+import euclid.two.dim.render.Renderable;
+import euclid.two.dim.updater.Updatable;
+import euclid.two.dim.updater.UpdateVisitor;
 import euclid.two.dim.world.WorldState;
 
-public class Obstacle extends Unit
+public class Obstacle extends GameSpaceObject
 {
-
+	private int hitPoints;
+	private WorldState worldState;
+	
 	public Obstacle(EuVector position, WorldState worldState)
 	{
-		super(position, worldState, null);
+		this.position = position;
+		this.futurePosition = new EuVector(position);
+		this.future = new EuVector(position);
+		this.worldState = worldState;
+		this.velocity = new EuVector(0, 0);
+		this.mass = 10;
+		this.sb = new StandStill();
+		this.isSelected = true;
+		this.hitPoints = 100;
 		this.radius = 50;
 	}
-
+	
 	@Override
 	public void separate()
 	{
@@ -33,7 +47,42 @@ public class Obstacle extends Unit
 				fish.setFuturePosition(fish.getFuturePosition().add(plus));
 			}
 		}
-
+		
 	}
-
+	
+	@Override
+	public void acceptUpdateVisitor(UpdateVisitor updatevisitor)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public Updatable deepCopy()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public Renderable toRenderable()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	protected void specificConstructor(GameSpaceObject copy)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void specificUpdate(EuVector displacement)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

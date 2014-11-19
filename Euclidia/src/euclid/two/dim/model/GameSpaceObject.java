@@ -7,6 +7,7 @@ import java.util.UUID;
 import euclid.two.dim.Configuration;
 import euclid.two.dim.Path;
 import euclid.two.dim.behavior.SteeringBehavior;
+import euclid.two.dim.render.RenderComponent;
 import euclid.two.dim.updater.Updatable;
 
 public abstract class GameSpaceObject implements Updatable
@@ -25,6 +26,8 @@ public abstract class GameSpaceObject implements Updatable
 	protected boolean isSelected;
 	protected UUID id;
 	protected double theta;
+	protected boolean isAtRest;
+	protected RenderComponent renderComponent;
 	
 	/**
 	 * @return the isSelected
@@ -49,6 +52,7 @@ public abstract class GameSpaceObject implements Updatable
 		this.color = new Color(rand.nextInt(250), rand.nextInt(250), rand.nextInt(250));
 		this.id = UUID.randomUUID();
 		this.theta = 0;
+		this.isAtRest = true;
 	}
 	
 	public double getRadius()
@@ -76,7 +80,19 @@ public abstract class GameSpaceObject implements Updatable
 		this.future = new EuVector(copy.getFuture());
 		this.id = copy.getId();
 		this.theta = copy.getTheta();
+		this.renderComponent = copy.getRenderComponent().deepCopy();
 		specificConstructor(copy);
+	}
+	
+	public RenderComponent getRenderComponent()
+	{
+		// TODO Auto-generated method stub
+		return renderComponent;
+	}
+	
+	public boolean isAtRest()
+	{
+		return isAtRest;
 	}
 	
 	public double getTheta()
@@ -174,83 +190,9 @@ public abstract class GameSpaceObject implements Updatable
 		{
 			theta = Math.atan2(velocity.getX(), -1 * velocity.getY());
 		}
+		renderComponent.acceptUpdate(this, timeStep);
 		
 		specificUpdate(futureVelocity.multipliedBy(timeStep / 100));
-	}
-	
-	/*
-	private void findDir()
-	{
-		
-		double x = velocity.getX();
-		double y = velocity.getY();
-		
-		if (x > 0)
-		{
-			if (y > 0)
-			{
-				if (y > x)
-				{
-					dir = Dir.South;
-				} else
-				{
-					dir = Dir.East;
-				}
-			} else
-			{
-				if (-1 * y > x)
-				{
-					dir = Dir.North;
-				} else
-				{
-					dir = Dir.East;
-				}
-				
-			}
-		} else
-		{
-			if (y > 0)
-			{
-				if (y > -x)
-				{
-					dir = Dir.South;
-				} else
-				{
-					dir = Dir.West;
-				}
-			} else
-			{
-				if (-1 * y > -x)
-				{
-					dir = Dir.North;
-				} else
-				{
-					dir = Dir.West;
-				}
-				
-			}
-			
-		}
-		
-	}
-	*/
-	
-	public EuVector getUpdate()
-	{
-		EuVector steeringForce;
-		
-		if (sb == null)
-		{
-			steeringForce = new EuVector(1, 1);
-		} else
-		{
-			steeringForce = sb.calculate();
-		}
-		EuVector acceleration = steeringForce.dividedBy(mass);
-		EuVector temp = velocity.add(acceleration.multipliedBy(330));
-		temp.truncate(maxSpeed);
-		
-		return position.add(temp.multipliedBy(330 / 25));
 	}
 	
 	private void toroidify(int width, int height)

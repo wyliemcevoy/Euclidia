@@ -76,7 +76,7 @@ public class UpdateEngine extends Thread implements UpdateVisitor
 				
 			}
 			
-			worldStateN.update(timeStep);
+			worldStateN.update(timeStep / 2);
 			
 			for (Updatable updatable : worldStateN.getUpdatable())
 			{

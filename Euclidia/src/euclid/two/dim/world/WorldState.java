@@ -276,6 +276,12 @@ public class WorldState
 	public ArrayList<Renderable> getRenderables()
 	{
 		ArrayList<Renderable> renderables = new ArrayList<Renderable>();
+		
+		for (GameSpaceObject gso : this.gsos)
+		{
+			renderables.add(gso.toRenderable());
+		}
+		
 		for (Updatable updatable : updatables)
 		{
 			renderables.add(updatable.toRenderable());

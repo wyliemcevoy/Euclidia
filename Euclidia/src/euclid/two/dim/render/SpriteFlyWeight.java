@@ -6,9 +6,19 @@ import javax.swing.ImageIcon;
 
 public class SpriteFlyWeight
 {
-	Image img, sub;
+	private Image img, sub;
+	private static SpriteFlyWeight instance;
 	
-	public SpriteFlyWeight()
+	public static SpriteFlyWeight getInstance()
+	{
+		if (instance == null)
+		{
+			instance = new SpriteFlyWeight();
+		}
+		return instance;
+	}
+	
+	private SpriteFlyWeight()
 	{
 		ImageIcon ii = new ImageIcon("C:\\Users\\Wylie\\Pictures\\Game\\ZergFixed.png");
 		img = ii.getImage();
@@ -31,9 +41,9 @@ public class SpriteFlyWeight
 		return img;
 	}
 	
-	public Sprite getSprite()
+	public Image getZergImage()
 	{
-		return new Sprite(img);
+		return img;
 	}
 	
 }

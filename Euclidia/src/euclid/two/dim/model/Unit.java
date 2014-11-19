@@ -7,8 +7,9 @@ import java.util.UUID;
 import euclid.two.dim.Path;
 import euclid.two.dim.Player;
 import euclid.two.dim.behavior.Flock;
-import euclid.two.dim.behavior.StandStill;
 import euclid.two.dim.render.Renderable;
+import euclid.two.dim.render.UnitRender;
+import euclid.two.dim.render.ZerglingRenderComponent;
 import euclid.two.dim.updater.Updatable;
 import euclid.two.dim.updater.UpdateVisitor;
 import euclid.two.dim.world.WorldState;
@@ -19,7 +20,7 @@ public class Unit extends GameSpaceObject
 	protected UUID enemyTarget;
 	protected Player player;
 	protected int hitPoints;
-	protected int timeIndex;
+	protected int actionIndex;
 	
 	public Unit(WorldState worldState, Path path, EuVector position, Player player)
 	{
@@ -37,25 +38,10 @@ public class Unit extends GameSpaceObject
 	private void initialize()
 	{
 		this.radius = 8;
-		this.radius = 8;
 		this.isSelected = true;
 		this.mass = 10;
 		this.hitPoints = 100;
-		this.timeIndex = 0;
-	}
-	
-	public Unit(EuVector position, WorldState worldState, Player player)
-	{
-		this.position = position;
-		this.futurePosition = new EuVector(position);
-		this.future = new EuVector(position);
-		this.worldState = worldState;
-		this.velocity = new EuVector(0, 0);
-		this.mass = 10;
-		this.sb = new StandStill();
-		this.radius = 30;
-		this.isSelected = true;
-		this.hitPoints = 100;
+		this.renderComponent = new ZerglingRenderComponent();
 	}
 	
 	public Color getColor()
@@ -66,7 +52,6 @@ public class Unit extends GameSpaceObject
 	public Unit(GameSpaceObject copy)
 	{
 		super(copy);
-		this.hitPoints = ((Unit) copy).getHitPoints();
 	}
 	
 	public int getHitPoints()
@@ -166,6 +151,6 @@ public class Unit extends GameSpaceObject
 	@Override
 	public Renderable toRenderable()
 	{
-		return new NullRenderable();
+		return new UnitRender(this);
 	}
 }

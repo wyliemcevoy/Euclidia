@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.Transparency;
 import java.awt.event.WindowAdapter;
@@ -12,7 +13,11 @@ import java.awt.event.WindowEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.ArrayBlockingQueue;
+
+import javax.imageio.ImageIO;
 
 import euclid.two.dim.Configuration;
 import euclid.two.dim.ConsoleFrame;
@@ -40,8 +45,8 @@ public class ConsoleRenderer extends Thread
 	private int scale = 1;
 	private ArrayBlockingQueue<WorldState> rendererQueue;
 	private WorldState currentState;
-	private SpriteFlyWeight sprites;
-	private Sprite sprite;
+	
+	private Image backgroundImage;
 	
 	public ConsoleRenderer(ArrayBlockingQueue<WorldState> rendererQueue, InputManager inputManager)
 	{
@@ -64,8 +69,14 @@ public class ConsoleRenderer extends Thread
 			strategy = canvas.getBufferStrategy();
 		} while (strategy == null);
 		
-		this.sprites = new SpriteFlyWeight();
-		this.sprite = sprites.getSprite();
+		try
+		{
+			this.backgroundImage = ImageIO.read(new File("C:\\Users\\Wylie\\Pictures\\Game\\desert.jpg"));
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	// create a hardware accelerated image
@@ -184,6 +195,8 @@ public class ConsoleRenderer extends Thread
 	{
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, width, height);
+		
+		g.drawImage(backgroundImage, 0, 0, 1000, 1000, 0, 0, backgroundImage.getWidth(null), backgroundImage.getHeight(null), null);
 		drawWorldState(g);
 	}
 	
@@ -236,9 +249,7 @@ public class ConsoleRenderer extends Thread
 			} else
 			{
 				
-				sprite.draw(g, (int) pos.getX() - rad - 1, (int) pos.getY() - rad - 1, gso);
-				
-				g.setColor(Color.gray);
+				//g.setColor(Color.gray);
 				//g.drawRect((int) (pos.getX() - rad), (int) (pos.getY() - rad), 2 * rad, 2 * rad);
 				//g.drawArc((int) (pos.getX() - 2 * rad), (int) (pos.getY() - 2 * rad), 4 * rad, 4 * rad, 0, 360);
 			}
