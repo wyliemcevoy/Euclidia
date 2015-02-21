@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import eucild.two.dim.combat.Health;
 import euclid.two.dim.Path;
 import euclid.two.dim.Player;
 import euclid.two.dim.behavior.Flock;
@@ -19,8 +20,8 @@ public class Unit extends GameSpaceObject
 	protected WorldState worldState;
 	protected UUID enemyTarget;
 	protected Player player;
-	protected int hitPoints;
 	protected int actionIndex;
+	protected Health health;
 	
 	public Unit(WorldState worldState, Path path, EuVector position, Player player)
 	{
@@ -31,6 +32,7 @@ public class Unit extends GameSpaceObject
 		this.worldState = worldState;
 		this.sb = new Flock(worldState, path, this);
 		this.player = player;
+		this.health = new Health(100);
 		
 		initialize();
 	}
@@ -40,7 +42,6 @@ public class Unit extends GameSpaceObject
 		this.radius = 8;
 		this.isSelected = true;
 		this.mass = 10;
-		this.hitPoints = 100;
 		this.renderComponent = new ZerglingRenderComponent();
 	}
 	
@@ -49,20 +50,38 @@ public class Unit extends GameSpaceObject
 		return player.getColor();
 	}
 	
-	public Unit(GameSpaceObject copy)
+	public Unit(Unit copy)
 	{
 		super(copy);
+		
+		this.enemyTarget = copy.getEnemyTarget();
+		this.player = copy.getPlayer();
+		this.actionIndex = copy.getActionIndex();
+		this.health = copy.getHealth().deepCopy();
 	}
 	
-	public int getHitPoints()
+	private Health getHealth()
 	{
-		return hitPoints;
+		return this.health;
+	}
+	
+	private int getActionIndex()
+	{
+		// TODO Auto-generated method stub
+		return actionIndex;
+	}
+	
+	private UUID getEnemyTarget()
+	{
+		// TODO Auto-generated method stub
+		return enemyTarget;
 	}
 	
 	@Override
 	public void separate()
 	{
-		ArrayList<GameSpaceObject> fishes = worldState.getFish();
+		
+		ArrayList<GameSpaceObject> fishes = worldState.getGsos();
 		futurePosition = new EuVector(position);
 		EuVector update = new EuVector(0, 0);
 		for (GameSpaceObject fish : fishes)
@@ -98,24 +117,7 @@ public class Unit extends GameSpaceObject
 	@Override
 	public void separate2()
 	{
-		ArrayList<GameSpaceObject> fishes = worldState.getFish();
-		for (GameSpaceObject fishOne : fishes)
-		{
-			for (GameSpaceObject fishTwo : fishes)
-			{
-				if (!fishOne.equals(fishTwo))
-				{
-					EuVector one = fishOne.getFuturePosition();
-					EuVector two = fishTwo.getFuturePosition();
-					EuVector distbetween = one.subtract(two);
-					
-					if (distbetween.getMagnitude() < 10)
-					{
-						fishOne.setFuturePosition(fishOne.getFuturePosition().add(distbetween.normalize().multipliedBy(1)));
-					}
-				}
-			}
-		}
+		
 	}
 	
 	@Override

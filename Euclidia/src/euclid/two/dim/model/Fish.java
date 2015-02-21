@@ -46,7 +46,7 @@ public class Fish extends GameSpaceObject
 	@Override
 	public void separate()
 	{
-		ArrayList<GameSpaceObject> fishes = worldState.getFish();
+		ArrayList<GameSpaceObject> fishes = worldState.getGsos();
 		futurePosition = new EuVector(position);
 		EuVector update = new EuVector(0, 0);
 		for (GameSpaceObject fish : fishes)
@@ -82,7 +82,7 @@ public class Fish extends GameSpaceObject
 	@Override
 	public void separate2()
 	{
-		ArrayList<GameSpaceObject> fishes = worldState.getFish();
+		ArrayList<GameSpaceObject> fishes = worldState.getGsos();
 		for (GameSpaceObject fishOne : fishes)
 		{
 			for (GameSpaceObject fishTwo : fishes)

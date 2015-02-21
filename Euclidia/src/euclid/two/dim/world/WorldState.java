@@ -3,19 +3,21 @@ package euclid.two.dim.world;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 import euclid.two.dim.exception.OutOfBoundsException;
 import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.Door;
+import euclid.two.dim.model.Etherial;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Explosion;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Room;
 import euclid.two.dim.model.Unit;
 import euclid.two.dim.render.Camera;
+import euclid.two.dim.render.RenderCreator;
 import euclid.two.dim.render.Renderable;
-import euclid.two.dim.updater.Updatable;
 
 public class WorldState
 {
@@ -25,8 +27,8 @@ public class WorldState
 	private ArrayList<Door> doors;
 	private Camera camera;
 	private ArrayList<Explosion> explosions;
-	private ArrayList<Updatable> updatables;
-	private ArrayList<Updatable> expired;
+	private ArrayList<Etherial> etherials;
+	private ArrayList<Etherial> expired;
 	
 	/**
 	 * @param rooms
@@ -49,13 +51,13 @@ public class WorldState
 	
 	public WorldState()
 	{
-		this.setFish(new ArrayList<GameSpaceObject>());
+		this.gsos = new ArrayList<GameSpaceObject>();
 		this.worldGrids = new WorldGrid();
 		this.rooms = new ArrayList<Room>();
 		this.doors = new ArrayList<Door>();
 		this.explosions = new ArrayList<Explosion>();
-		this.updatables = new ArrayList<Updatable>();
-		this.expired = new ArrayList<Updatable>();
+		this.etherials = new ArrayList<Etherial>();
+		this.expired = new ArrayList<Etherial>();
 	}
 	
 	public void addObject(GameSpaceObject gso)
@@ -93,7 +95,7 @@ public class WorldState
 		while (it.hasNext())
 		{
 			Explosion explosion = it.next();
-			if (explosion.hasExpired(timeStep))
+			if (explosion.hasExpired())
 			{
 				it.remove();
 			}
@@ -117,7 +119,7 @@ public class WorldState
 	/**
 	 * @return the fish
 	 */
-	public ArrayList<GameSpaceObject> getFish()
+	public ArrayList<GameSpaceObject> getGsos()
 	{
 		return gsos;
 	}
@@ -140,7 +142,7 @@ public class WorldState
 		{
 			if (gso instanceof Unit)
 			{
-				copy.addObject(new Unit(gso));
+				copy.addObject(new Unit((Unit) gso));
 			}
 			if (gso instanceof Boid)
 			{
@@ -158,9 +160,9 @@ public class WorldState
 		copy.setRooms(rooms);
 		copy.setCamera(this.camera);
 		
-		for (Updatable updatable : updatables)
+		for (Etherial updatable : etherials)
 		{
-			copy.addUpdatable(updatable);
+			copy.addEtherial(updatable);
 		}
 		
 		return copy;
@@ -241,7 +243,7 @@ public class WorldState
 	{
 		explosions = new ArrayList<Explosion>();
 		
-		for (Updatable updatable : updatables)
+		for (Etherial updatable : etherials)
 		{
 			if (updatable instanceof Explosion)
 			{
@@ -252,40 +254,50 @@ public class WorldState
 		return explosions;
 	}
 	
-	public void addUpdatable(Updatable updatable)
+	public void addEtherial(Etherial etherial)
 	{
-		this.updatables.add(updatable);
+		this.etherials.add(etherial);
 	}
 	
-	public ArrayList<Updatable> getUpdatable()
+	public ArrayList<Etherial> getUpdatable()
 	{
-		return updatables;
+		return etherials;
 	}
 	
-	public void registerAsExpired(Updatable updatable)
+	public void registerAsExpired(Etherial etherial)
 	{
-		this.expired.add(updatable);
+		this.expired.add(etherial);
 	}
 	
 	public void purgeExpired()
 	{
-		updatables.removeAll(expired);
-		expired = new ArrayList<Updatable>();
+		etherials.removeAll(expired);
+		expired = new ArrayList<Etherial>();
 	}
 	
-	public ArrayList<Renderable> getRenderables()
+	public List<Renderable> getRenderables()
 	{
+		
 		ArrayList<Renderable> renderables = new ArrayList<Renderable>();
+		
+		RenderCreator renderCreator = new RenderCreator();
 		
 		for (GameSpaceObject gso : this.gsos)
 		{
-			renderables.add(gso.toRenderable());
+			renderCreator.add(gso);
 		}
 		
-		for (Updatable updatable : updatables)
+		for (Etherial etherial : etherials)
 		{
-			renderables.add(updatable.toRenderable());
+			renderCreator.add(etherial);
 		}
-		return renderables;
+		
+		return renderCreator.getRenderables();
 	}
+	
+	public List<Etherial> getEtherials()
+	{
+		return etherials;
+	}
+	
 }

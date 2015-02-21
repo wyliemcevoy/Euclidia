@@ -46,7 +46,7 @@ public class Flock extends SteeringBehavior
 		EuVector averageVelocity = new EuVector(0, 0);
 		int i = 0;
 
-		for (GameSpaceObject gso : worldState.getFish())
+		for (GameSpaceObject gso : worldState.getGsos())
 		{
 			EuVector dist = gso.getPosition().subtract(self.getPosition());
 			double magnitude = dist.getMagnitude();

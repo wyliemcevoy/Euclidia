@@ -2,12 +2,9 @@ package euclid.two.dim.model;
 
 import java.util.UUID;
 
-import euclid.two.dim.render.ExplosionRender;
-import euclid.two.dim.render.Renderable;
-import euclid.two.dim.updater.Updatable;
-import euclid.two.dim.updater.UpdateVisitor;
+import euclid.two.dim.visitor.EtherialVisitor;
 
-public class Projectile implements Updatable
+public class Projectile extends Etherial
 {
 	private UUID target;
 	private UUID sender;
@@ -80,22 +77,15 @@ public class Projectile implements Updatable
 	}
 	
 	@Override
-	public void acceptUpdateVisitor(UpdateVisitor updateVisitor)
-	{
-		updateVisitor.visit(this);
-	}
-	
-	@Override
-	public Updatable deepCopy()
+	public Etherial deepCopy()
 	{
 		return new Projectile(this);
 	}
 	
 	@Override
-	public Renderable toRenderable()
+	public void accept(EtherialVisitor etherialVisitor)
 	{
-		// TODO Auto-generated method stub
-		return new ExplosionRender(this);
+		etherialVisitor.visit(this);
 	}
 	
 }

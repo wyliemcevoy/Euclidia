@@ -3,12 +3,9 @@ package euclid.two.dim.model;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import euclid.two.dim.render.ExplosionRender;
-import euclid.two.dim.render.Renderable;
-import euclid.two.dim.updater.Updatable;
-import euclid.two.dim.updater.UpdateVisitor;
+import euclid.two.dim.visitor.EtherialVisitor;
 
-public class Explosion implements Updatable
+public class Explosion extends Etherial
 {
 	private EuVector location;
 	private double expireTime;
@@ -21,9 +18,13 @@ public class Explosion implements Updatable
 		this.expireTime = 2000;
 	}
 	
-	public boolean hasExpired(long timeStep)
+	public void update(long timeStep)
 	{
 		expireTime -= timeStep;
+	}
+	
+	public boolean hasExpired()
+	{
 		return expireTime < 0;
 	}
 	
@@ -58,22 +59,15 @@ public class Explosion implements Updatable
 	}
 	
 	@Override
-	public void acceptUpdateVisitor(UpdateVisitor updateVisitor)
+	public Etherial deepCopy()
 	{
-		updateVisitor.visit(this);
-	}
-	
-	@Override
-	public Updatable deepCopy()
-	{
-		// TODO Auto-generated method stub
 		return new Explosion(this);
 	}
 	
 	@Override
-	public Renderable toRenderable()
+	public void accept(EtherialVisitor etherialVisitor)
 	{
-		return new ExplosionRender(this);
+		etherialVisitor.visit(this);
 	}
 	
 }

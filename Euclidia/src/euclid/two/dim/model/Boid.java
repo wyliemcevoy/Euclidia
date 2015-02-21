@@ -112,7 +112,7 @@ public class Boid extends GameSpaceObject
 	{
 		//System.out.println(this.toString());
 		
-		ArrayList<GameSpaceObject> fishes = worldState.getFish();
+		ArrayList<GameSpaceObject> fishes = worldState.getGsos();
 		futurePosition = new EuVector(position);
 		EuVector update = new EuVector(0, 0);
 		for (GameSpaceObject fish : fishes)

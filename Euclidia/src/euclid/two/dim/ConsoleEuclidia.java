@@ -18,28 +18,28 @@ public class ConsoleEuclidia
 	private ArrayBlockingQueue<WorldState> rendererQueue;
 	private ArrayBlockingQueue<ClickEvent> clickQueue;
 	private UpdateEngine updateEngine;
-
+	
 	ConsoleEuclidia()
 	{
-
+		
 		rendererQueue = new ArrayBlockingQueue<WorldState>(5);
 		InputManager inputManager = new InputManager();
 		updateEngine = new UpdateEngine(rendererQueue, inputManager);
 		inputManager.setUpdateEngine(updateEngine);
-
+		
 		ArrayList<UUID> ids = new ArrayList<UUID>();
 		Agent agent = new Agent(updateEngine, ids);
 		updateEngine.addAgent(agent);
-
+		
 		WorldStateFactory f = new WorldStateFactory(inputManager);
-		WorldState state = f.createVsWorldState(agent); //f.createRandomWorldState();
-
+		WorldState state = f.createVsWorldState(agent);
+		
 		updateEngine.setWorldState(state);
 		rendererQueue.add(state);
-
+		
 		consoleRenderer = new ConsoleRenderer(rendererQueue, inputManager);
 		consoleRenderer.start();
-
+		
 		try
 		{
 			Thread.sleep(500);
@@ -47,7 +47,7 @@ public class ConsoleEuclidia
 		{
 			e.printStackTrace();
 		}
-
+		
 		updateEngine.start();
 	}
 }

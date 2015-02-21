@@ -30,7 +30,7 @@ public class Obstacle extends GameSpaceObject
 	@Override
 	public void separate()
 	{
-		ArrayList<GameSpaceObject> fishes = worldState.getFish();
+		ArrayList<GameSpaceObject> fishes = worldState.getGsos();
 		futurePosition = new EuVector(position);
 		for (GameSpaceObject fish : fishes)
 		{

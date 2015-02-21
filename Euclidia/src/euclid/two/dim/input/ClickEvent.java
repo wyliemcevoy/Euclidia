@@ -45,7 +45,7 @@ public class ClickEvent implements InputCommand
 	{
 		WorldState worldState = updateEngine.getCurrentWorldState();
 		EuVector adjustedTarget = new EuVector(x / worldState.getCamera().getZoom(), y / worldState.getCamera().getZoom());
-		worldState.addUpdatable(new Explosion(new EuVector(adjustedTarget)));
+		worldState.addEtherial(new Explosion(new EuVector(adjustedTarget)));
 		
 		Unit unit = null;
 		Unit target = null;
@@ -65,7 +65,7 @@ public class ClickEvent implements InputCommand
 				
 				target = (Unit) fish;
 				Projectile projectile = new Projectile(unit, target);
-				worldState.addUpdatable(projectile);
+				worldState.addEtherial(projectile);
 			}
 		}
 	}

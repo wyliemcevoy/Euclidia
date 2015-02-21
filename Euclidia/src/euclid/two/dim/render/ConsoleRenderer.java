@@ -215,7 +215,7 @@ public class ConsoleRenderer extends Thread
 			renderable.draw(g);
 		}
 		
-		for (GameSpaceObject gso : currentState.getFish())
+		for (GameSpaceObject gso : currentState.getGsos())
 		{
 			EuVector pos = gso.getPosition();
 			int rad = (int) gso.getRadius();
