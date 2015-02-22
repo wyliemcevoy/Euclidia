@@ -8,6 +8,7 @@ public class SpriteFlyWeight
 {
 	private Image img, sub;
 	private static SpriteFlyWeight instance;
+	private Image[] zergDeath;
 	
 	public static SpriteFlyWeight getInstance()
 	{
@@ -32,6 +33,21 @@ public class SpriteFlyWeight
 		    	height
 		*/
 		
+		zergDeath = new Image[7];
+		
+		zergDeath[0] = getImage("C:\\Users\\Wylie\\Pictures\\Game\\zerglingDeath1.png");
+		zergDeath[1] = getImage("C:\\Users\\Wylie\\Pictures\\Game\\zerglingDeath2.png");
+		zergDeath[2] = getImage("C:\\Users\\Wylie\\Pictures\\Game\\zerglingDeath3.png");
+		zergDeath[3] = getImage("C:\\Users\\Wylie\\Pictures\\Game\\zerglingDeath4.png");
+		zergDeath[4] = getImage("C:\\Users\\Wylie\\Pictures\\Game\\zerglingDeath5.png");
+		zergDeath[5] = getImage("C:\\Users\\Wylie\\Pictures\\Game\\zerglingDeath6.png");
+		zergDeath[6] = getImage("C:\\Users\\Wylie\\Pictures\\Game\\zerglingDeath7.png");
+	}
+	
+	public Image getImage(String path)
+	{
+		ImageIcon ii = new ImageIcon(path);
+		return ii.getImage();
 	}
 	
 	public Image getImage()
@@ -44,6 +60,13 @@ public class SpriteFlyWeight
 	public Image getZergImage()
 	{
 		return img;
+	}
+	
+	public Image getZergDeathImage(int i)
+	{
+		if (i < 0 || i > 6)
+			i = 0;
+		return zergDeath[i];
 	}
 	
 }

@@ -3,7 +3,7 @@ package euclid.two.dim.render;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import euclid.two.dim.model.Projectile;
+import euclid.two.dim.etherial.Projectile;
 
 public class ProjectileRender implements Renderable
 {

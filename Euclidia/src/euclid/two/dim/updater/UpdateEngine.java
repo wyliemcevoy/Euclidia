@@ -1,20 +1,25 @@
 package euclid.two.dim.updater;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import euclid.two.dim.VectorMath;
 import euclid.two.dim.ai.Agent;
+import euclid.two.dim.etherial.Etherial;
+import euclid.two.dim.etherial.Explosion;
+import euclid.two.dim.etherial.Projectile;
+import euclid.two.dim.etherial.Slash;
+import euclid.two.dim.etherial.ZergDeath;
 import euclid.two.dim.input.InputCommand;
 import euclid.two.dim.input.InputManager;
 import euclid.two.dim.model.Boid;
-import euclid.two.dim.model.Etherial;
 import euclid.two.dim.model.EuVector;
-import euclid.two.dim.model.Explosion;
 import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Obstacle;
-import euclid.two.dim.model.Projectile;
 import euclid.two.dim.model.Unit;
 import euclid.two.dim.visitor.EtherialVisitor;
 import euclid.two.dim.world.WorldState;
@@ -68,9 +73,7 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 				}
 			}
 			
-			worldStateN.update(timeStep / 2);
-			
-			//update(worldStateN, timeStep / 2);
+			update(worldStateN, timeStep / 2);
 			
 			for (Etherial etherial : worldStateN.getEtherials())
 			{
@@ -93,6 +96,30 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 	
 	public void update(WorldState worldState, long timeStep)
 	{
+		worldState.update(timeStep);
+		List<GameSpaceObject> gsos = worldState.getGameSpaceObjects();
+		
+		for (GameSpaceObject gso : gsos)
+		{
+			gso.acceptUpdateVisitor(this);
+		}
+		
+		Iterator<GameSpaceObject> it = gsos.iterator();
+		DeathVisitor deathVisitor = new DeathVisitor();
+		
+		while (it.hasNext())
+		{
+			GameSpaceObject gso = it.next();
+			
+			gso.acceptUpdateVisitor(deathVisitor);
+			if (deathVisitor.isDead())
+			{
+				it.remove();
+				worldState.addEtherial(new ZergDeath(gso.getPosition(), (int) gso.getRadius()));
+				
+			}
+		}
+		
 		/*
 		for (GameSpaceObject fishi : gsos)
 		{
@@ -127,7 +154,6 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 			}
 		}
 		*/
-		worldState.update(timeStep);
 		
 		/*
 		for (GameSpaceObject gso : worldState.getGsos())
@@ -158,8 +184,37 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 	}
 	
 	@Override
-	public void visit(Unit gso)
+	public void visit(Unit unit)
 	{
+		
+		Unit target = worldStateN.getUnit(unit.getTarget());
+		
+		// Check to see if the units target still is alive / exists
+		if (target == null || unit.getPosition() == null || target.getPosition() == null)
+		{
+			pickNewTarget(unit);
+			
+			return;
+		}
+		
+		unit.getAttack().update(timeStep);
+		
+		double distSqrd = VectorMath.getDistanceSquared(target.getPosition(), unit.getPosition());
+		double rangeSqrd = unit.getAttack().getRange() * unit.getAttack().getRange();
+		
+		// Check and see if the unit is capable of attacking (basic attack off cooldown)
+		if (unit.getAttack().isReloaded())
+		{
+			if (distSqrd <= rangeSqrd)
+			{
+				// Unit is alive and within range
+				target.getHealth().add(-1 * unit.getAttack().getDamage());
+				unit.getAttack().attack();
+				
+				worldStateN.addEtherial(new Slash(target.getPosition(), unit.getPosition()));
+			}
+		}
+		
 		/*
 		ArrayList<GameSpaceObject> fishes = worldState.getGsos();
 		futurePosition = new EuVector(position);
@@ -187,6 +242,12 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 		futurePosition = futurePosition.add(update);
 		
 		*/
+	}
+	
+	private void pickNewTarget(Unit unit)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 	
 	@Override
@@ -239,20 +300,49 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 	@Override
 	public void visit(Projectile projectile)
 	{
-		EuVector targetLocation = worldStateN.getUnit(projectile.getTarget()).getPosition();
-		
-		EuVector dT = targetLocation.subtract(projectile.getLocation()).normalize().multipliedBy(2);
-		projectile.setLocation(projectile.getLocation().add(dT));
-		
-		if (projectile.hasExpired(timeStep) || projectile.getLocation().subtract(targetLocation).getMagnitude() < 3)
+		Unit target = worldStateN.getUnit(projectile.getTarget());
+		if (projectile.hasExpired(timeStep) || target == null)
 		{
 			worldStateN.registerAsExpired(projectile);
+		} else
+		{
+			EuVector targetLocation = target.getPosition();
+			
+			EuVector dT = targetLocation.subtract(projectile.getLocation()).normalize().multipliedBy(2);
+			projectile.setLocation(projectile.getLocation().add(dT));
+			
+			if (projectile.getLocation().subtract(targetLocation).getMagnitude() < 3)
+			{
+				target.getHealth().add(-projectile.getDamage());
+				worldStateN.registerAsExpired(projectile);
+			}
 		}
 	}
 	
 	@Override
 	public void visit(Fish fish)
 	{
+		
+	}
+	
+	@Override
+	public void visit(Slash slash)
+	{
+		slash.update(timeStep);
+		if (slash.hasExpired())
+		{
+			worldStateN.registerAsExpired(slash);
+		}
+	}
+	
+	@Override
+	public void visit(ZergDeath zergDeath)
+	{
+		zergDeath.update(timeStep);
+		if (zergDeath.hasExpired())
+		{
+			worldStateN.registerAsExpired(zergDeath);
+		}
 		
 	}
 	

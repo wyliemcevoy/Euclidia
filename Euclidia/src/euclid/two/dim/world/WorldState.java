@@ -6,12 +6,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import euclid.two.dim.etherial.Etherial;
+import euclid.two.dim.etherial.Explosion;
 import euclid.two.dim.exception.OutOfBoundsException;
 import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.Door;
-import euclid.two.dim.model.Etherial;
 import euclid.two.dim.model.EuVector;
-import euclid.two.dim.model.Explosion;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Room;
 import euclid.two.dim.model.Unit;

@@ -1,7 +1,9 @@
-package euclid.two.dim.model;
+package euclid.two.dim.etherial;
 
 import java.util.UUID;
 
+import euclid.two.dim.model.EuVector;
+import euclid.two.dim.model.Unit;
 import euclid.two.dim.visitor.EtherialVisitor;
 
 public class Projectile extends Etherial
@@ -86,6 +88,11 @@ public class Projectile extends Etherial
 	public void accept(EtherialVisitor etherialVisitor)
 	{
 		etherialVisitor.visit(this);
+	}
+	
+	public int getDamage()
+	{
+		return 5;
 	}
 	
 }

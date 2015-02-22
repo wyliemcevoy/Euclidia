@@ -3,6 +3,7 @@ package euclid.two.dim.world;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.UUID;
 
 import euclid.two.dim.Configuration;
 import euclid.two.dim.Path;
@@ -121,19 +122,24 @@ public class WorldStateFactory
 		
 		Player player = new Player(Color.RED);
 		
-		for (int i = 0; i < 100; i++)
+		UUID[] targets = new UUID[10];
+		
+		for (int i = 0; i < 10; i++)
 		{
 			Path path = new Path(new EuVector(150, 250));
-			Unit fish = new Unit(worldState, path, randVect(100, 200, 100, 200), player);
-			worldState.addObject(fish);
+			Unit unit = new Unit(worldState, path, randVect(100, 200, 100, 200), player);
+			worldState.addObject(unit);
+			targets[i] = unit.getId();
 		}
 		
-		for (int i = 0; i < 100; i++)
+		for (int i = 0; i < 10; i++)
 		{
 			Path path = new Path(new EuVector(150, 250));
-			Unit fish = new Unit(worldState, path, randVect(100, 200, 100, 200), agent);
-			worldState.addObject(fish);
-			agent.regesterControl(fish.getId());
+			Unit unit = new Unit(worldState, path, randVect(100, 200, 100, 200), agent);
+			worldState.addObject(unit);
+			unit.setTarget(targets[i]);
+			
+			agent.regesterControl(unit.getId());
 		}
 		
 		Room rTL = new Room(0, 0, 1000, 1000);

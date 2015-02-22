@@ -7,6 +7,8 @@ import java.util.UUID;
 import eucild.two.dim.combat.Health;
 import euclid.two.dim.Path;
 import euclid.two.dim.Player;
+import euclid.two.dim.attack.Attack;
+import euclid.two.dim.attack.SwordAttack;
 import euclid.two.dim.behavior.Flock;
 import euclid.two.dim.render.Renderable;
 import euclid.two.dim.render.UnitRender;
@@ -22,6 +24,7 @@ public class Unit extends GameSpaceObject
 	protected Player player;
 	protected int actionIndex;
 	protected Health health;
+	protected Attack attack;
 	
 	public Unit(WorldState worldState, Path path, EuVector position, Player player)
 	{
@@ -33,7 +36,7 @@ public class Unit extends GameSpaceObject
 		this.sb = new Flock(worldState, path, this);
 		this.player = player;
 		this.health = new Health(100);
-		
+		this.attack = new SwordAttack();
 		initialize();
 	}
 	
@@ -54,24 +57,30 @@ public class Unit extends GameSpaceObject
 	{
 		super(copy);
 		
-		this.enemyTarget = copy.getEnemyTarget();
+		this.enemyTarget = copy.getTarget();
 		this.player = copy.getPlayer();
 		this.actionIndex = copy.getActionIndex();
 		this.health = copy.getHealth().deepCopy();
+		this.attack = copy.getAttack().deepCopy();
 	}
 	
-	private Health getHealth()
+	public Attack getAttack()
+	{
+		return attack;
+	}
+	
+	public Health getHealth()
 	{
 		return this.health;
 	}
 	
-	private int getActionIndex()
+	public int getActionIndex()
 	{
 		// TODO Auto-generated method stub
 		return actionIndex;
 	}
 	
-	private UUID getEnemyTarget()
+	public UUID getTarget()
 	{
 		// TODO Auto-generated method stub
 		return enemyTarget;
@@ -154,5 +163,10 @@ public class Unit extends GameSpaceObject
 	public Renderable toRenderable()
 	{
 		return new UnitRender(this);
+	}
+	
+	public void setTarget(UUID uuid)
+	{
+		this.enemyTarget = uuid;
 	}
 }

@@ -2,10 +2,10 @@ package euclid.two.dim.input;
 
 import java.awt.Color;
 
+import euclid.two.dim.etherial.Explosion;
+import euclid.two.dim.etherial.Projectile;
 import euclid.two.dim.model.EuVector;
-import euclid.two.dim.model.Explosion;
 import euclid.two.dim.model.GameSpaceObject;
-import euclid.two.dim.model.Projectile;
 import euclid.two.dim.model.RoomPath;
 import euclid.two.dim.model.Unit;
 import euclid.two.dim.path.PathCalculator;

@@ -3,8 +3,7 @@ package euclid.two.dim.render;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import euclid.two.dim.model.Explosion;
-import euclid.two.dim.model.Projectile;
+import euclid.two.dim.etherial.Explosion;
 
 public class ExplosionRender implements Renderable
 {
@@ -18,14 +17,6 @@ public class ExplosionRender implements Renderable
 		this.rad = (int) explosion.getExpireTime() / 500;
 		this.x = (int) explosion.getLocation().getX() - rad;
 		this.y = (int) explosion.getLocation().getY() - rad;
-	}
-	
-	public ExplosionRender(Projectile projectile)
-	{
-		this.color = Color.LIGHT_GRAY;
-		this.rad = 1;
-		this.x = (int) projectile.getLocation().getX();
-		this.y = (int) projectile.getLocation().getY();
 	}
 	
 	@Override

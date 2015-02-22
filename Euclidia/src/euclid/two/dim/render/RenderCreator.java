@@ -1,13 +1,16 @@
 package euclid.two.dim.render;
+
 import java.util.ArrayList;
 
+import euclid.two.dim.etherial.Etherial;
+import euclid.two.dim.etherial.Explosion;
+import euclid.two.dim.etherial.Projectile;
+import euclid.two.dim.etherial.Slash;
+import euclid.two.dim.etherial.ZergDeath;
 import euclid.two.dim.model.Boid;
-import euclid.two.dim.model.Etherial;
-import euclid.two.dim.model.Explosion;
 import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Obstacle;
-import euclid.two.dim.model.Projectile;
 import euclid.two.dim.model.Unit;
 import euclid.two.dim.updater.UpdateVisitor;
 import euclid.two.dim.visitor.EtherialVisitor;
@@ -77,4 +80,16 @@ public class RenderCreator implements UpdateVisitor, EtherialVisitor
 		return renderables;
 	}
 	
+	@Override
+	public void visit(Slash slash)
+	{
+		this.renderables.add(new SlashRender(slash));
+	}
+	
+	@Override
+	public void visit(ZergDeath zergDeath)
+	{
+		this.renderables.add(new ZergDeathRender(zergDeath));
+		
+	}
 }
