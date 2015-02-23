@@ -14,7 +14,7 @@ import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Obstacle;
 import euclid.two.dim.model.Room;
-import euclid.two.dim.model.Unit;
+import euclid.two.dim.model.Minion;
 import euclid.two.dim.render.Camera;
 
 public class WorldStateFactory
@@ -64,7 +64,7 @@ public class WorldStateFactory
 		for (int i = 0; i < 200; i++)
 		{
 			Path path = new Path(new EuVector(150, 250));
-			Unit fish = new Unit(worldState, path, randVect(100, 200, 100, 200), new Player(Color.BLUE));
+			Minion fish = new Minion(worldState, path, randVect(100, 200, 100, 200), new Player(Color.BLUE));
 			worldState.addObject(fish);
 		}
 		
@@ -127,7 +127,7 @@ public class WorldStateFactory
 		for (int i = 0; i < 10; i++)
 		{
 			Path path = new Path(new EuVector(150, 250));
-			Unit unit = new Unit(worldState, path, randVect(100, 200, 100, 200), player);
+			Minion unit = new Minion(worldState, path, randVect(100, 200, 100, 200), player);
 			worldState.addObject(unit);
 			targets[i] = unit.getId();
 		}
@@ -135,7 +135,7 @@ public class WorldStateFactory
 		for (int i = 0; i < 10; i++)
 		{
 			Path path = new Path(new EuVector(150, 250));
-			Unit unit = new Unit(worldState, path, randVect(100, 200, 100, 200), agent);
+			Minion unit = new Minion(worldState, path, randVect(100, 200, 100, 200), agent);
 			worldState.addObject(unit);
 			unit.setTarget(targets[i]);
 			

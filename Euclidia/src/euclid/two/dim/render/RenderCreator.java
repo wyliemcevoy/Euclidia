@@ -11,7 +11,7 @@ import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Obstacle;
-import euclid.two.dim.model.Unit;
+import euclid.two.dim.model.Minion;
 import euclid.two.dim.updater.UpdateVisitor;
 import euclid.two.dim.visitor.EtherialVisitor;
 
@@ -48,7 +48,7 @@ public class RenderCreator implements UpdateVisitor, EtherialVisitor
 	}
 	
 	@Override
-	public void visit(Unit unit)
+	public void visit(Minion unit)
 	{
 		this.renderables.add(new UnitRender(unit));
 		

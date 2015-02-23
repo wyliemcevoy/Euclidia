@@ -11,16 +11,16 @@ import euclid.two.dim.world.WorldState;
 
 public class Boid extends GameSpaceObject
 {
-	private ArrayList<Unit> fishes;
+	private ArrayList<Minion> fishes;
 	private WorldState worldState;
 	
-	public Boid(Unit fish, WorldState worldState, Path path)
+	public Boid(Minion fish, WorldState worldState, Path path)
 	{
 		radius = fish.getRadius() + 9;
 		this.position = fish.getPosition();
 		
 		this.worldState = worldState;
-		this.fishes = new ArrayList<Unit>();
+		this.fishes = new ArrayList<Minion>();
 		fishes.add(fish);
 		
 		this.velocity = new EuVector(0, 0);
@@ -34,7 +34,7 @@ public class Boid extends GameSpaceObject
 		super(copy);
 	}
 	
-	public void ingest(Unit fish)
+	public void ingest(Minion fish)
 	{
 		fishes.add(fish);
 	}
@@ -44,7 +44,7 @@ public class Boid extends GameSpaceObject
 	{
 		
 		//System.out.println("pre update : " + this.toString());
-		for (Unit fish : fishes)
+		for (Minion fish : fishes)
 		{
 			fish.setPosition(fish.getPosition().add(displacement));
 			if (fish.getPosition().subtract(futurePosition).getMagnitude() >= radius)
@@ -54,7 +54,7 @@ public class Boid extends GameSpaceObject
 			
 		}
 		
-		for (Unit fish : fishes)
+		for (Minion fish : fishes)
 		{
 			EuVector update = new EuVector(0, 0);
 			for (GameSpaceObject innerFish : fishes)
@@ -102,7 +102,7 @@ public class Boid extends GameSpaceObject
 		
 	}
 	
-	public ArrayList<Unit> explode()
+	public ArrayList<Minion> explode()
 	{
 		return fishes;
 	}
@@ -138,7 +138,7 @@ public class Boid extends GameSpaceObject
 		//futureVelocity = futureVelocity.add(update);
 		futurePosition = futurePosition.add(update);
 		
-		for (Unit fish : this.fishes)
+		for (Minion fish : this.fishes)
 		{
 			//fish.setPosition(fish.getPosition().subtract(update));
 			
@@ -152,12 +152,12 @@ public class Boid extends GameSpaceObject
 	{
 		this.radius = gso.getRadius();
 		//this.position = gso.getPosition();
-		this.fishes = new ArrayList<Unit>();
+		this.fishes = new ArrayList<Minion>();
 		//this.velocity = new EuVector(0, 0);
 		Boid boid = ((Boid) gso);
-		for (Unit fish : boid.explode())
+		for (Minion fish : boid.explode())
 		{
-			fishes.add(new Unit(fish));
+			fishes.add(new Minion(fish));
 		}
 		
 	}

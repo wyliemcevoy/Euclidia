@@ -3,7 +3,7 @@ package euclid.two.dim.etherial;
 import java.util.UUID;
 
 import euclid.two.dim.model.EuVector;
-import euclid.two.dim.model.Unit;
+import euclid.two.dim.model.Minion;
 import euclid.two.dim.visitor.EtherialVisitor;
 
 public class Projectile extends Etherial
@@ -13,7 +13,7 @@ public class Projectile extends Etherial
 	private double maxRange;
 	private EuVector location;
 	
-	public Projectile(Unit target, Unit sender)
+	public Projectile(Minion target, Minion sender)
 	{
 		this.target = target.getId();
 		this.sender = sender.getId();

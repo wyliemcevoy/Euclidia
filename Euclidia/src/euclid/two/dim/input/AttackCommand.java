@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.RoomPath;
-import euclid.two.dim.model.Unit;
+import euclid.two.dim.model.Minion;
 import euclid.two.dim.path.PathCalculator;
 import euclid.two.dim.updater.UpdateEngine;
 import euclid.two.dim.world.WorldState;
@@ -26,7 +26,7 @@ public class AttackCommand implements InputCommand
 	public void execute()
 	{
 		WorldState worldState = updateEngine.getCurrentWorldState();
-		Unit unit = updateEngine.getCurrentWorldState().getUnit(id);
+		Minion unit = updateEngine.getCurrentWorldState().getUnit(id);
 
 		// if unit died between planning time step and execution of this command
 		// the unit will be null (hence the null test)

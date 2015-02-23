@@ -27,7 +27,7 @@ import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Room;
-import euclid.two.dim.model.Unit;
+import euclid.two.dim.model.Minion;
 import euclid.two.dim.world.WorldState;
 
 public class ConsoleRenderer extends Thread
@@ -232,7 +232,7 @@ public class ConsoleRenderer extends Thread
 				g.setColor(new Color(50, 50, 50));
 				//g.drawArc((int) (pos.getX() - rad), (int) (pos.getY() - rad), 2 * rad, 2 * rad, 0, 360);
 				
-				for (Unit fish : ((Boid) gso).explode())
+				for (Minion fish : ((Boid) gso).explode())
 				{
 					rad = (int) fish.getRadius();
 					

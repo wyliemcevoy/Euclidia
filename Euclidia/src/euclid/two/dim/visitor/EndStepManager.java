@@ -11,7 +11,7 @@ import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Obstacle;
-import euclid.two.dim.model.Unit;
+import euclid.two.dim.model.Minion;
 import euclid.two.dim.updater.UpdateVisitor;
 import euclid.two.dim.world.WorldState;
 
@@ -87,7 +87,7 @@ public class EndStepManager implements UpdateVisitor, EtherialVisitor
 	}
 	
 	@Override
-	public void visit(Unit unit)
+	public void visit(Minion unit)
 	{
 		if (unit.hasExpired())
 		{

@@ -6,7 +6,7 @@ import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Obstacle;
-import euclid.two.dim.model.Unit;
+import euclid.two.dim.model.Minion;
 import euclid.two.dim.updater.UpdateVisitor;
 import euclid.two.dim.world.WorldState;
 
@@ -35,7 +35,7 @@ public class SteeringStep implements UpdateVisitor
 	}
 	
 	@Override
-	public void visit(Unit unit)
+	public void visit(Minion unit)
 	{
 		double mass = unit.getMass();
 		SteeringBehavior sb = unit.getSteeringBehavior();

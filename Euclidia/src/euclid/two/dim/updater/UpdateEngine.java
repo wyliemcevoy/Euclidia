@@ -20,7 +20,7 @@ import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Obstacle;
-import euclid.two.dim.model.Unit;
+import euclid.two.dim.model.Minion;
 import euclid.two.dim.visitor.EndStepManager;
 import euclid.two.dim.visitor.EtherialVisitor;
 import euclid.two.dim.visitor.PhysicsStep;
@@ -187,10 +187,10 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 	}
 	
 	@Override
-	public void visit(Unit unit)
+	public void visit(Minion unit)
 	{
 		
-		Unit target = worldStateN.getUnit(unit.getTarget());
+		Minion target = worldStateN.getUnit(unit.getTarget());
 		
 		// Check to see if the units target still is alive / exists
 		if (target == null || unit.getPosition() == null || target.getPosition() == null)
@@ -247,7 +247,7 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 		*/
 	}
 	
-	private void pickNewTarget(Unit unit)
+	private void pickNewTarget(Minion unit)
 	{
 		// TODO Auto-generated method stub
 		
@@ -305,7 +305,7 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 	{
 		projectile.update(timeStep);
 		
-		Unit target = worldStateN.getUnit(projectile.getTarget());
+		Minion target = worldStateN.getUnit(projectile.getTarget());
 		
 		if (projectile.hasExpired() || target == null)
 		{

@@ -14,7 +14,7 @@ import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Room;
-import euclid.two.dim.model.Unit;
+import euclid.two.dim.model.Minion;
 import euclid.two.dim.render.Camera;
 import euclid.two.dim.render.RenderCreator;
 import euclid.two.dim.render.Renderable;
@@ -139,9 +139,9 @@ public class WorldState
 		for (GameSpaceObject gso : gsos)
 		
 		{
-			if (gso instanceof Unit)
+			if (gso instanceof Minion)
 			{
-				copy.addObject(new Unit((Unit) gso));
+				copy.addObject(new Minion((Minion) gso));
 			}
 			if (gso instanceof Boid)
 			{
@@ -225,14 +225,14 @@ public class WorldState
 		return gsos;
 	}
 	
-	public Unit getUnit(UUID id)
+	public Minion getUnit(UUID id)
 	{
 		// Horrible implementation (change to map)
 		for (GameSpaceObject gso : gsos)
 		{
 			if (gso.getId().equals(id))
 			{
-				return (Unit) gso;
+				return (Minion) gso;
 			}
 		}
 		return null;

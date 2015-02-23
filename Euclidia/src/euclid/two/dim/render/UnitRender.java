@@ -6,7 +6,7 @@ import java.awt.Image;
 
 import eucild.two.dim.combat.Health;
 import euclid.two.dim.model.EuVector;
-import euclid.two.dim.model.Unit;
+import euclid.two.dim.model.Minion;
 
 public class UnitRender implements Renderable
 {
@@ -18,7 +18,7 @@ public class UnitRender implements Renderable
 	private int radius;
 	private Health health;
 	
-	public UnitRender(Unit unit)
+	public UnitRender(Minion unit)
 	{
 		this.location = unit.getPosition();
 		this.theta = unit.getTheta();
