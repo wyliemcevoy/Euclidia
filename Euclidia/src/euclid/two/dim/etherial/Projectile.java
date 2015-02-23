@@ -12,8 +12,6 @@ public class Projectile extends Etherial
 	private UUID sender;
 	private double maxRange;
 	private EuVector location;
-	private double expireTime;
-	private double maxSpeed = 2;
 	
 	public Projectile(Unit target, Unit sender)
 	{

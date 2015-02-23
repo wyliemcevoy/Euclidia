@@ -67,14 +67,13 @@ public class WorldState
 	}
 	
 	public void update(long timeStep)
-	{
+	{/*
 		for (GameSpaceObject fishi : gsos)
 		{
 			fishi.update(timeStep);
 		}
 		
 		for (GameSpaceObject fishi : gsos)
-		
 		{
 			fishi.travelToTheFuture();
 		}
@@ -90,7 +89,7 @@ public class WorldState
 		{
 			fishi.travelToTheFuture();
 		}
-		
+		*/
 		Iterator<Explosion> it = explosions.iterator();
 		while (it.hasNext())
 		{

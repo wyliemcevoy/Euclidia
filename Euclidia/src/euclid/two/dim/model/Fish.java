@@ -133,4 +133,12 @@ public class Fish extends GameSpaceObject
 		// TODO Auto-generated method stub
 		return new NullRenderable();
 	}
+	
+	@Override
+	public boolean hasExpired()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
 }

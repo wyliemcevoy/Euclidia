@@ -76,7 +76,6 @@ public class Unit extends GameSpaceObject
 	
 	public int getActionIndex()
 	{
-		// TODO Auto-generated method stub
 		return actionIndex;
 	}
 	
@@ -89,7 +88,6 @@ public class Unit extends GameSpaceObject
 	@Override
 	public void separate()
 	{
-		
 		ArrayList<GameSpaceObject> fishes = worldState.getGsos();
 		futurePosition = new EuVector(position);
 		EuVector update = new EuVector(0, 0);
@@ -114,7 +112,6 @@ public class Unit extends GameSpaceObject
 		}
 		//futureVelocity = futureVelocity.add(update);
 		futurePosition = futurePosition.add(update);
-		
 	}
 	
 	@Override
@@ -168,5 +165,11 @@ public class Unit extends GameSpaceObject
 	public void setTarget(UUID uuid)
 	{
 		this.enemyTarget = uuid;
+	}
+	
+	@Override
+	public boolean hasExpired()
+	{
+		return health.isDead();
 	}
 }

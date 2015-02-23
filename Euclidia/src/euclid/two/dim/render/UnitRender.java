@@ -68,8 +68,11 @@ public class UnitRender implements Renderable
 		g.setColor(getHealthColor(health.getHealthPercentage()));
 		g.drawRect(x - (radius / 2), y - radius, (int) (radius * health.getHealthPercentage()), 1);
 		*/
-		//g.setColor(Color.WHITE);
-		//g.drawArc(x - radius, y - radius, 2 * radius, 2 * radius, 0, 360);
+		
+		/*
+		g.setColor(Color.WHITE);
+		g.drawArc(x - radius, y - radius, 2 * radius, 2 * radius, 0, 360);
+		*/
 	}
 	
 	private Color getHealthColor(double percent)

@@ -21,7 +21,10 @@ import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Obstacle;
 import euclid.two.dim.model.Unit;
+import euclid.two.dim.visitor.EndStepManager;
 import euclid.two.dim.visitor.EtherialVisitor;
+import euclid.two.dim.visitor.PhysicsStep;
+import euclid.two.dim.visitor.SteeringStep;
 import euclid.two.dim.world.WorldState;
 
 public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisitor
@@ -51,6 +54,19 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 		this.worldStateN = worldState;
 	}
 	
+	private void processInput()
+	{
+		// Read through queue of input events and process them
+		if (inputManager.hasUnprocessedEvents())
+		{
+			
+			for (InputCommand inputCommand : inputManager.getInputCommands())
+			{
+				inputCommand.execute();
+			}
+		}
+	}
+	
 	public void run()
 	{
 		now = System.currentTimeMillis();
@@ -63,15 +79,7 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 			timeStep = now - then;
 			randomCommand();
 			
-			// Read through queue of input events and process them
-			if (inputManager.hasUnprocessedEvents())
-			{
-				
-				for (InputCommand inputCommand : inputManager.getInputCommands())
-				{
-					inputCommand.execute();
-				}
-			}
+			processInput();
 			
 			update(worldStateN, timeStep / 2);
 			
@@ -80,7 +88,11 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 				etherial.accept(this);
 			}
 			
-			worldStateN.purgeExpired();
+			//worldStateN.purgeExpired();
+			
+			EndStepManager endStep = new EndStepManager(worldStateN);
+			endStep.endPhase();
+			//purgeExpired();
 			
 			WorldState nPlusOne = worldStateN.deepCopy();
 			
@@ -96,28 +108,19 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 	
 	public void update(WorldState worldState, long timeStep)
 	{
-		worldState.update(timeStep);
+		//worldState.update(timeStep);
+		
+		SteeringStep steeringStep = new SteeringStep(worldState, timeStep);
+		steeringStep.runStep();
+		
+		PhysicsStep physicsStep = new PhysicsStep(worldState);
+		physicsStep.runStep();
+		
 		List<GameSpaceObject> gsos = worldState.getGameSpaceObjects();
 		
 		for (GameSpaceObject gso : gsos)
 		{
 			gso.acceptUpdateVisitor(this);
-		}
-		
-		Iterator<GameSpaceObject> it = gsos.iterator();
-		DeathVisitor deathVisitor = new DeathVisitor();
-		
-		while (it.hasNext())
-		{
-			GameSpaceObject gso = it.next();
-			
-			gso.acceptUpdateVisitor(deathVisitor);
-			if (deathVisitor.isDead())
-			{
-				it.remove();
-				worldState.addEtherial(new ZergDeath(gso.getPosition(), (int) gso.getRadius()));
-				
-			}
 		}
 		
 		/*
@@ -300,10 +303,13 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 	@Override
 	public void visit(Projectile projectile)
 	{
+		projectile.update(timeStep);
+		
 		Unit target = worldStateN.getUnit(projectile.getTarget());
-		if (projectile.hasExpired(timeStep) || target == null)
+		
+		if (projectile.hasExpired() || target == null)
 		{
-			worldStateN.registerAsExpired(projectile);
+			projectile.setAsExpired();
 		} else
 		{
 			EuVector targetLocation = target.getPosition();
@@ -314,7 +320,7 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 			if (projectile.getLocation().subtract(targetLocation).getMagnitude() < 3)
 			{
 				target.getHealth().add(-projectile.getDamage());
-				worldStateN.registerAsExpired(projectile);
+				projectile.setAsExpired();
 			}
 		}
 	}
@@ -343,7 +349,24 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 		{
 			worldStateN.registerAsExpired(zergDeath);
 		}
-		
 	}
 	
+	private void purgeExpired()
+	{
+		Iterator<GameSpaceObject> it = worldStateN.getGsos().iterator();
+		DeathVisitor deathVisitor = new DeathVisitor();
+		
+		while (it.hasNext())
+		{
+			GameSpaceObject gso = it.next();
+			
+			gso.acceptUpdateVisitor(deathVisitor);
+			if (deathVisitor.isDead())
+			{
+				it.remove();
+				worldStateN.addEtherial(new ZergDeath(gso.getPosition(), (int) gso.getRadius()));
+				
+			}
+		}
+	}
 }

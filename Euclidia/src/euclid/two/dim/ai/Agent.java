@@ -18,37 +18,37 @@ public class Agent extends Player
 	private WorldState worldState;
 	private UpdateEngine updateEngine;
 	private ArrayList<UUID> freindlies;
-
+	
 	public Agent(UpdateEngine updateEngine, ArrayList<UUID> freindlies)
 	{
 		super(Color.BLUE);
 		this.updateEngine = updateEngine;
 		this.freindlies = freindlies;
 	}
-
+	
 	public void setWorldState(WorldState worldState)
 	{
 		this.worldState = worldState;
 	}
-
+	
 	public void regesterControl(UUID id)
 	{
 		this.freindlies.add(id);
 	}
-
+	
 	public List<InputCommand> getCommands()
 	{
 		ArrayList<InputCommand> commands = new ArrayList<InputCommand>();
-
+		
 		Random rand = new Random();
-		EuVector target = new EuVector(100 + rand.nextInt(200), 100 + rand.nextInt(200));
-
+		EuVector target = new EuVector(100 + rand.nextInt(400), 100 + rand.nextInt(400));
+		
 		for (UUID id : freindlies)
 		{
 			AttackCommand command = new AttackCommand(updateEngine, target, id);
 			commands.add(command);
 		}
-
+		
 		return commands;
 	}
 }

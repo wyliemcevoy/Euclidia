@@ -29,6 +29,16 @@ public abstract class GameSpaceObject implements Updatable
 	protected boolean isAtRest;
 	protected RenderComponent renderComponent;
 	
+	public double getMass()
+	{
+		return mass;
+	}
+	
+	public void setTheta(double theta)
+	{
+		this.theta = theta;
+	}
+	
 	/**
 	 * @return the isSelected
 	 */
@@ -36,6 +46,13 @@ public abstract class GameSpaceObject implements Updatable
 	{
 		return isSelected;
 	}
+	
+	public void setFutureVelocity(EuVector euVector)
+	{
+		futureVelocity = euVector;
+	}
+	
+	public abstract boolean hasExpired();
 	
 	/**
 	 * @param isSelected
@@ -226,6 +243,16 @@ public abstract class GameSpaceObject implements Updatable
 	public void separate2()
 	{
 		
+	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if (o instanceof GameSpaceObject)
+		{
+			return ((GameSpaceObject) o).getId() == id;
+		} else
+			return false;
 	}
 	
 	@Override

@@ -22,7 +22,12 @@ public abstract class Etherial implements AcceptsEtherialVisitor
 	
 	public boolean hasExpired()
 	{
-		return expireTime < 0;
+		return expireTime <= 0;
+	}
+	
+	public void setAsExpired()
+	{
+		this.expireTime = 0;
 	}
 	
 	public EuVector getLocation()

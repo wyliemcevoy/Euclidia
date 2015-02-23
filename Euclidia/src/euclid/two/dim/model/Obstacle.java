@@ -85,4 +85,11 @@ public class Obstacle extends GameSpaceObject
 		
 	}
 	
+	@Override
+	public boolean hasExpired()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+	
 }
