@@ -37,7 +37,7 @@ public class Path
 		{
 			return true;
 		}
-		if (location.subtract(targets.peek()).getMagnitude() < 45)
+		if (location.subtract(targets.peek()).getMagnitude() < 15)
 		{
 			if (targets.size() >= 1)
 			{

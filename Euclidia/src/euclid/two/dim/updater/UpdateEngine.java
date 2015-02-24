@@ -1,5 +1,6 @@
 package euclid.two.dim.updater;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -19,8 +20,10 @@ import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.GameSpaceObject;
-import euclid.two.dim.model.Obstacle;
 import euclid.two.dim.model.Minion;
+import euclid.two.dim.model.Obstacle;
+import euclid.two.dim.model.RoomPath;
+import euclid.two.dim.path.PathCalculator;
 import euclid.two.dim.visitor.EndStepManager;
 import euclid.two.dim.visitor.EtherialVisitor;
 import euclid.two.dim.visitor.PhysicsStep;
@@ -189,6 +192,7 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 	@Override
 	public void visit(Minion unit)
 	{
+		unit.getAttack().update(timeStep);
 		
 		Minion target = worldStateN.getUnit(unit.getTarget());
 		
@@ -199,8 +203,6 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 			
 			return;
 		}
-		
-		unit.getAttack().update(timeStep);
 		
 		double distSqrd = VectorMath.getDistanceSquared(target.getPosition(), unit.getPosition());
 		double rangeSqrd = unit.getAttack().getRange() * unit.getAttack().getRange();
@@ -216,6 +218,12 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 				
 				worldStateN.addEtherial(new Slash(target.getPosition(), unit.getPosition()));
 			}
+		}
+		
+		if (distSqrd > rangeSqrd)
+		{
+			RoomPath roomPath = PathCalculator.calculateRoomPath(worldStateN, unit.getPosition(), target.getPosition());
+			unit.setPath(roomPath.toPath());
 		}
 		
 		/*
@@ -249,7 +257,17 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 	
 	private void pickNewTarget(Minion unit)
 	{
-		// TODO Auto-generated method stub
+		for (GameSpaceObject gso : worldStateN.getGameSpaceObjects())
+		{
+			if ((gso instanceof Minion) && gso != unit)
+			{
+				Minion minion = (Minion) gso;
+				if (unit.getPlayer().getColor() != Color.BLUE)
+				{
+					unit.setTarget(minion.getId());
+				}
+			}
+		}
 		
 	}
 	

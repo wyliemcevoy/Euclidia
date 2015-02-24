@@ -3,7 +3,6 @@ package euclid.two.dim.world;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.UUID;
 
 import euclid.two.dim.Configuration;
 import euclid.two.dim.Path;
@@ -12,9 +11,9 @@ import euclid.two.dim.ai.Agent;
 import euclid.two.dim.input.InputManager;
 import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;
+import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Obstacle;
 import euclid.two.dim.model.Room;
-import euclid.two.dim.model.Minion;
 import euclid.two.dim.render.Camera;
 
 public class WorldStateFactory
@@ -122,22 +121,23 @@ public class WorldStateFactory
 		
 		Player player = new Player(Color.RED);
 		
-		UUID[] targets = new UUID[10];
-		
 		for (int i = 0; i < 10; i++)
 		{
 			Path path = new Path(new EuVector(150, 250));
 			Minion unit = new Minion(worldState, path, randVect(100, 200, 100, 200), player);
 			worldState.addObject(unit);
-			targets[i] = unit.getId();
+			
+			unit.setMass(500);
+			unit.setRadius(15);
+			unit.getHealth().setMaxHealth(10000);
+			unit.setMaxSpeed(100);
 		}
 		
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 20; i++)
 		{
 			Path path = new Path(new EuVector(150, 250));
 			Minion unit = new Minion(worldState, path, randVect(100, 200, 100, 200), agent);
 			worldState.addObject(unit);
-			unit.setTarget(targets[i]);
 			
 			agent.regesterControl(unit.getId());
 		}

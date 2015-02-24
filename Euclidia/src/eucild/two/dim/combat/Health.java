@@ -1,4 +1,5 @@
 package eucild.two.dim.combat;
+
 public class Health
 {
 	private int maxHealth;
@@ -44,6 +45,12 @@ public class Health
 	public Health deepCopy()
 	{
 		return new Health(this);
+	}
+	
+	public void setMaxHealth(int maxHealth)
+	{
+		this.maxHealth = maxHealth;
+		this.currentHealth = maxHealth;
 	}
 	
 }

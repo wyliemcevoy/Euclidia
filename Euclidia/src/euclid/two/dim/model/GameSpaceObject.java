@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import euclid.two.dim.Configuration;
 import euclid.two.dim.Path;
+import euclid.two.dim.Player;
 import euclid.two.dim.behavior.SteeringBehavior;
 import euclid.two.dim.render.RenderComponent;
 import euclid.two.dim.updater.Updatable;
@@ -17,7 +18,7 @@ public abstract class GameSpaceObject implements Updatable
 	protected EuVector futurePosition;
 	protected EuVector velocity;
 	protected EuVector futureVelocity;
-	protected static final double maxSpeed = Configuration.maxSpeed;
+	protected double maxSpeed = Configuration.maxSpeed;
 	protected SteeringBehavior sb;
 	protected double mass;
 	protected Color color;
@@ -28,10 +29,26 @@ public abstract class GameSpaceObject implements Updatable
 	protected double theta;
 	protected boolean isAtRest;
 	protected RenderComponent renderComponent;
+	protected Player player;
+	
+	public Player getPlayer()
+	{
+		return this.player;
+	}
 	
 	public double getMass()
 	{
 		return mass;
+	}
+	
+	public void setMass(double mass)
+	{
+		this.mass = mass;
+	}
+	
+	public void setRadius(double radius)
+	{
+		this.radius = radius;
 	}
 	
 	public void setTheta(double theta)
@@ -70,6 +87,7 @@ public abstract class GameSpaceObject implements Updatable
 		this.id = UUID.randomUUID();
 		this.theta = 0;
 		this.isAtRest = true;
+		this.player = new Player(Color.white);
 	}
 	
 	public double getRadius()
@@ -99,6 +117,7 @@ public abstract class GameSpaceObject implements Updatable
 		this.theta = copy.getTheta();
 		this.renderComponent = copy.getRenderComponent().deepCopy();
 		specificConstructor(copy);
+		this.player = copy.getPlayer();
 	}
 	
 	public RenderComponent getRenderComponent()
@@ -154,6 +173,11 @@ public abstract class GameSpaceObject implements Updatable
 		this.velocity = velocity;
 	}
 	
+	public void setMaxSpeed(double maxSpeed)
+	{
+		this.maxSpeed = maxSpeed;
+	}
+	
 	public EuVector getVelocity()
 	{
 		return velocity;
@@ -162,54 +186,6 @@ public abstract class GameSpaceObject implements Updatable
 	public void update(double timeStep)
 	{
 		
-		EuVector steeringForce = sb.calculate();
-		EuVector acceleration = steeringForce.dividedBy(mass);
-		futureVelocity = velocity.add(acceleration.multipliedBy(timeStep));
-		futureVelocity.truncate(maxSpeed);
-		
-		futurePosition = position.add(futureVelocity.multipliedBy(timeStep / 100));
-		
-		this.future = position.add(futureVelocity.multipliedBy(timeStep / 20));
-		/*
-		if (sb instanceof Flock)
-		{
-			ArrayList<GameSpaceObject> objects = new ArrayList<GameSpaceObject>();
-			
-			for (GameSpaceObject gso : ((Flock) sb).getWorldState().getFish())
-			{
-				if (gso.radius > 5)
-				{
-					objects.add(gso);
-				}
-			}
-			
-			for (GameSpaceObject object : objects)
-			{
-				EuVector obDist = future.subtract(object.getPosition());
-				
-				if (obDist.getMagnitude() < object.getRadius())
-				{
-					
-				}
-			}
-			
-			WorldGrid grid = ((Flock) sb).getWorldState().getWorldGrid();
-			
-			EuVector adustedFuture = grid.getForceAt(future.getX(), future.getY()).dividedBy(2);
-			adustedFuture = adustedFuture.add(future);
-			
-			futurePosition = position.add(adustedFuture.subtract(position).truncate(7));
-			
-		}
-		
-		 */
-		if (velocity.getMagnitude() > 1)
-		{
-			theta = Math.atan2(velocity.getX(), -1 * velocity.getY());
-		}
-		renderComponent.acceptUpdate(this, timeStep);
-		
-		specificUpdate(futureVelocity.multipliedBy(timeStep / 100));
 	}
 	
 	private void toroidify(int width, int height)

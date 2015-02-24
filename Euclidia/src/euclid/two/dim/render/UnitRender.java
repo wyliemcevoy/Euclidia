@@ -60,15 +60,15 @@ public class UnitRender implements Renderable
 		//g.drawImage(source, x, y, x + ((int) width / 2), y + ((int) height / 2), frameX, frameY, frameX + width, frameY + height, null);
 		g.drawImage(source, x - radius, y - radius, x + radius, y + radius, frameX, frameY, frameX + width, frameY + height, null);
 		
-		/*
-		
-		g.setColor(Color.BLACK);
-		g.drawRect(x - (radius / 2), y - radius, radius, 1);
-		
-		g.setColor(getHealthColor(health.getHealthPercentage()));
-		g.drawRect(x - (radius / 2), y - radius, (int) (radius * health.getHealthPercentage()), 1);
-		*/
-		
+		if (health.getHealthPercentage() < .6)
+		{
+			
+			g.setColor(Color.BLACK);
+			g.drawRect(x - (radius / 2), y - radius, radius, 1);
+			
+			g.setColor(getHealthColor(health.getHealthPercentage()));
+			g.drawRect(x - (radius / 2), y - radius, (int) (radius * health.getHealthPercentage()), 1);
+		}
 		/*
 		g.setColor(Color.WHITE);
 		g.drawArc(x - radius, y - radius, 2 * radius, 2 * radius, 0, 360);

@@ -1,6 +1,6 @@
 package euclid.two.dim.behavior;
 
-public abstract class CombatBehavior
+public enum CombatBehavior
 {
-
+	NoAttack, AttackIfInRange, PersueIfInRange
 }

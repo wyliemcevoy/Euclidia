@@ -6,8 +6,8 @@ import euclid.two.dim.etherial.Explosion;
 import euclid.two.dim.etherial.Projectile;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
-import euclid.two.dim.model.RoomPath;
 import euclid.two.dim.model.Minion;
+import euclid.two.dim.model.RoomPath;
 import euclid.two.dim.path.PathCalculator;
 import euclid.two.dim.updater.UpdateEngine;
 import euclid.two.dim.world.WorldState;
@@ -47,8 +47,16 @@ public class ClickEvent implements InputCommand
 		EuVector adjustedTarget = new EuVector(x / worldState.getCamera().getZoom(), y / worldState.getCamera().getZoom());
 		worldState.addEtherial(new Explosion(new EuVector(adjustedTarget)));
 		
-		Minion unit = null;
+		Minion unit = (Minion) worldState.getSelected().get(0);
 		Minion target = null;
+		
+		for (GameSpaceObject gso : worldState.getGameSpaceObjects())
+		{
+			if (adjustedTarget.subtract(gso.getPosition()).getMagnitudeSquared() < gso.getRadius() * gso.getRadius())
+			{
+				unit.setTarget(gso.getId());
+			}
+		}
 		
 		for (GameSpaceObject fish : worldState.getSelected())
 		{
@@ -68,5 +76,6 @@ public class ClickEvent implements InputCommand
 				worldState.addEtherial(projectile);
 			}
 		}
+		
 	}
 }

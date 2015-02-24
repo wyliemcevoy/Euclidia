@@ -6,15 +6,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import euclid.two.dim.VectorMath;
 import euclid.two.dim.etherial.Etherial;
 import euclid.two.dim.etherial.Explosion;
-import euclid.two.dim.exception.OutOfBoundsException;
 import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
-import euclid.two.dim.model.Room;
 import euclid.two.dim.model.Minion;
+import euclid.two.dim.model.Room;
 import euclid.two.dim.render.Camera;
 import euclid.two.dim.render.RenderCreator;
 import euclid.two.dim.render.Renderable;
@@ -58,6 +58,53 @@ public class WorldState
 		this.explosions = new ArrayList<Explosion>();
 		this.etherials = new ArrayList<Etherial>();
 		this.expired = new ArrayList<Etherial>();
+	}
+	
+	public List<GameSpaceObject> getUnfriendliesInRage(Minion unit)
+	{
+		ArrayList<GameSpaceObject> targets = new ArrayList<GameSpaceObject>();
+		
+		EuVector unitLocation = new EuVector(unit.getPosition());
+		
+		for (GameSpaceObject gso : gsos)
+		{
+			EuVector dist = VectorMath.subtract(gso.getPosition(), unitLocation);
+			
+			if (dist.getMagnitude() < unit.getDetectionRange())
+			{
+				targets.add(gso);
+			}
+		}
+		
+		return targets;
+	}
+	
+	public double getDistanceBetween(GameSpaceObject one, GameSpaceObject two)
+	{
+		return VectorMath.subtract(one.getPosition(), two.getPosition()).getMagnitude() - (one.getRadius() + two.getRadius());
+	}
+	
+	public GameSpaceObject getClosestUnfriendly(Minion unit)
+	{
+		GameSpaceObject target = null;
+		double minDist = Double.MAX_VALUE;
+		
+		for (GameSpaceObject gso : gsos)
+		{
+			if (gso.getPlayer() != unit.getPlayer())
+			{
+				double dist = getDistanceBetween(gso, unit);
+				if (dist < unit.getDetectionRange() && dist < minDist)
+				{
+					target = gso;
+					minDist = dist;
+				}
+				
+			}
+			
+		}
+		
+		return target;
 	}
 	
 	public void addObject(GameSpaceObject gso)
@@ -189,7 +236,7 @@ public class WorldState
 		return doors;
 	}
 	
-	public Room getRoom(EuVector point) throws OutOfBoundsException
+	public Room getRoom(EuVector point)
 	{
 		// Bad implementation (fix with a grid and then store rooms inside)
 		for (Room room : rooms)
@@ -197,7 +244,7 @@ public class WorldState
 			if (room.contains(point))
 				return room;
 		}
-		throw new OutOfBoundsException();
+		return null;
 	}
 	
 	public Camera getCamera()

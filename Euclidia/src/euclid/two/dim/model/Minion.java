@@ -1,7 +1,6 @@
 package euclid.two.dim.model;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.UUID;
 
 import eucild.two.dim.combat.Health;
@@ -9,6 +8,7 @@ import euclid.two.dim.Path;
 import euclid.two.dim.Player;
 import euclid.two.dim.attack.Attack;
 import euclid.two.dim.attack.SwordAttack;
+import euclid.two.dim.behavior.CombatBehavior;
 import euclid.two.dim.behavior.Flock;
 import euclid.two.dim.render.Renderable;
 import euclid.two.dim.render.UnitRender;
@@ -19,12 +19,24 @@ import euclid.two.dim.world.WorldState;
 
 public class Minion extends GameSpaceObject
 {
-	protected WorldState worldState;
 	protected UUID enemyTarget;
-	protected Player player;
+	
 	protected int actionIndex;
 	protected Health health;
 	protected Attack attack;
+	protected int detectionRange;
+	protected CombatBehavior combatBehavior;
+	protected boolean hasTarget;
+	
+	public boolean hasTarget()
+	{
+		return hasTarget;
+	}
+	
+	public void setHasTarget(boolean hasTarget)
+	{
+		this.hasTarget = hasTarget;
+	}
 	
 	public Minion(WorldState worldState, Path path, EuVector position, Player player)
 	{
@@ -32,7 +44,6 @@ public class Minion extends GameSpaceObject
 		this.futurePosition = new EuVector(position);
 		this.future = new EuVector(position);
 		this.velocity = new EuVector(0, 0);
-		this.worldState = worldState;
 		this.sb = new Flock(worldState, path, this);
 		this.player = player;
 		this.health = new Health(100);
@@ -45,6 +56,8 @@ public class Minion extends GameSpaceObject
 		this.radius = 8;
 		this.isSelected = true;
 		this.mass = 10;
+		this.detectionRange = 50;
+		this.combatBehavior = CombatBehavior.AttackIfInRange;
 		this.renderComponent = new ZerglingRenderComponent();
 	}
 	
@@ -88,6 +101,7 @@ public class Minion extends GameSpaceObject
 	@Override
 	public void separate()
 	{
+		/*
 		ArrayList<GameSpaceObject> fishes = worldState.getGsos();
 		futurePosition = new EuVector(position);
 		EuVector update = new EuVector(0, 0);
@@ -112,6 +126,7 @@ public class Minion extends GameSpaceObject
 		}
 		//futureVelocity = futureVelocity.add(update);
 		futurePosition = futurePosition.add(update);
+		*/
 	}
 	
 	@Override
@@ -130,18 +145,6 @@ public class Minion extends GameSpaceObject
 	public void specificUpdate(EuVector displacement)
 	{
 		// TODO Auto-generated method stub
-	}
-	
-	@Override
-	protected void specificConstructor(GameSpaceObject gso)
-	{
-		this.player = ((Minion) gso).getPlayer();// TODO Auto-generated method stub
-		
-	}
-	
-	public Player getPlayer()
-	{
-		return this.player;
 	}
 	
 	@Override
@@ -172,4 +175,32 @@ public class Minion extends GameSpaceObject
 	{
 		return health.isDead();
 	}
+	
+	public int getDetectionRange()
+	{
+		return detectionRange;
+	}
+	
+	public void setDetectionRange(int detectionRange)
+	{
+		this.detectionRange = detectionRange;
+	}
+	
+	public CombatBehavior getCombatBehavior()
+	{
+		return combatBehavior;
+	}
+	
+	public void setCombatBehavior(CombatBehavior combatBehavior)
+	{
+		this.combatBehavior = combatBehavior;
+	}
+	
+	@Override
+	protected void specificConstructor(GameSpaceObject copy)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	
 }
