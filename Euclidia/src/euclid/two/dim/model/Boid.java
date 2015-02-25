@@ -25,7 +25,7 @@ public class Boid extends GameSpaceObject
 		
 		this.velocity = new EuVector(0, 0);
 		this.mass = 10;
-		this.sb = new Flock(worldState, path, this);
+		this.sb = new Flock(path, this);
 		
 	}
 	

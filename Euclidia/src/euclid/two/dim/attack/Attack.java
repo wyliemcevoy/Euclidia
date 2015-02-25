@@ -46,4 +46,19 @@ public abstract class Attack
 	}
 	
 	public abstract Attack deepCopy();
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if (o instanceof Attack)
+		{
+			return this.equals((Attack) o);
+		}
+		return false;
+	}
+	
+	public boolean equals(Attack attack)
+	{
+		return (attack.getDamage() == damage) && (attack.getClass() == this.getClass()) && (attack.getRange() == range) && attack.getReloadTime() == reloadTime;
+	}
 }

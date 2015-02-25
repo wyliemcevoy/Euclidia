@@ -15,7 +15,6 @@ import euclid.two.dim.render.UnitRender;
 import euclid.two.dim.render.ZerglingRenderComponent;
 import euclid.two.dim.updater.Updatable;
 import euclid.two.dim.updater.UpdateVisitor;
-import euclid.two.dim.world.WorldState;
 
 public class Minion extends GameSpaceObject
 {
@@ -38,13 +37,13 @@ public class Minion extends GameSpaceObject
 		this.hasTarget = hasTarget;
 	}
 	
-	public Minion(WorldState worldState, Path path, EuVector position, Player player)
+	public Minion(Path path, EuVector position, Player player)
 	{
 		this.position = position;
 		this.futurePosition = new EuVector(position);
 		this.future = new EuVector(position);
 		this.velocity = new EuVector(0, 0);
-		this.sb = new Flock(worldState, path, this);
+		this.sb = new Flock(path, this);
 		this.player = player;
 		this.health = new Health(100);
 		this.attack = new SwordAttack();
@@ -203,4 +202,8 @@ public class Minion extends GameSpaceObject
 		
 	}
 	
+	public Path getPath()
+	{
+		return sb.getPath();
+	}
 }

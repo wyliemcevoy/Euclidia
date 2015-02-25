@@ -1,5 +1,6 @@
 package euclid.two.dim;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -54,4 +55,54 @@ public class Path
 	{
 		return targets.size();
 	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if (o instanceof Path)
+		{
+			return (this.equals((Path) o));
+		} else
+		{
+			return false;
+			
+		}
+	}
+	
+	private boolean equals(Path path)
+	{
+		ArrayList<EuVector> clonesTargets = path.getTargets();
+		
+		if (clonesTargets.size() != targets.size())
+		{
+			return false;
+		}
+		
+		int i = 0;
+		for (EuVector target : targets)
+		{
+			EuVector clonesTarget = clonesTargets.get(i);
+			if (target != clonesTarget)
+			{
+				return false;
+			}
+			i++;
+		}
+		
+		return true;
+	}
+	
+	private ArrayList<EuVector> getTargets()
+	{
+		ArrayList<EuVector> result = new ArrayList<EuVector>();
+		
+		for (EuVector target : targets)
+		{
+			result.add(target.deepCopy());
+		}
+		
+		return result;
+		
+	}
+	
 }

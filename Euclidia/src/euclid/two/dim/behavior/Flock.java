@@ -4,31 +4,16 @@ import euclid.two.dim.Configuration;
 import euclid.two.dim.Path;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
-import euclid.two.dim.world.WorldState;
 
-public class Flock extends SteeringBehavior
+public class Flock extends SteeringType
 {
-	private WorldState worldState;
-	private Path path;
-
-	public Flock(WorldState worldState, Path path, GameSpaceObject self)
+	
+	public Flock(Path path, GameSpaceObject self)
 	{
-		this.worldState = worldState;
 		this.path = path;
 		this.self = self;
 	}
-
-	public WorldState getWorldState()
-	{
-		return worldState;
-	}
-
-	@Override
-	public void setPath(Path path)
-	{
-		this.path = path;
-	}
-
+	
 	@Override
 	public EuVector calculate()
 	{
@@ -38,14 +23,14 @@ public class Flock extends SteeringBehavior
 			self.setVelocity(new EuVector(0, 0));
 			return new EuVector(0, 0);
 		}
-
+		
 		EuVector desiredVelocity = (path.getTarget().subtract(self.getPosition())).normalize().multipliedBy(self.getMaxSpeed());
 		desiredVelocity = desiredVelocity.subtract(self.getVelocity());
 		double distToTarget = path.getTarget().subtract(self.getPosition()).getMagnitude();
-
+		
 		EuVector averageVelocity = new EuVector(0, 0);
 		int i = 0;
-
+		/*
 		for (GameSpaceObject gso : worldState.getGsos())
 		{
 			EuVector dist = gso.getPosition().subtract(self.getPosition());
@@ -58,24 +43,24 @@ public class Flock extends SteeringBehavior
 				i++;
 			}
 		}
-
+		*/
 		if (i > 0)
 		{
 			averageVelocity = averageVelocity.dividedBy(i);
 		}
-
+		
 		// desiredVelocity.add(repulsion);
 		desiredVelocity.add(averageVelocity);
-
+		
 		if (distToTarget < 50 && distToTarget > 0)
 		{
 			desiredVelocity = desiredVelocity.dividedBy(distToTarget / (Configuration.maxSpeed * 4));
 		}
-
+		
 		// EuVector targetDisplacement =
 		// self.getVelocity().add(desiredVelocity.dividedBy(10));
 		// System.out.println(targetDisplacement.getMagnitude() / 3);
-
+		
 		return desiredVelocity;
 		/*
 		 * 

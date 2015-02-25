@@ -2,7 +2,7 @@ package euclid.two.dim.behavior;
 
 import euclid.two.dim.model.EuVector;
 
-public class StandStill extends SteeringBehavior
+public class StandStill extends SteeringType
 {
 
 	@Override

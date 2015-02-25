@@ -21,7 +21,7 @@ public class Fish extends GameSpaceObject
 		this.future = new EuVector(position);
 		this.velocity = new EuVector(0, 0);
 		this.mass = 10;
-		this.sb = new Flock(worldState, path, this);
+		this.sb = new Flock(path, this);
 		this.worldState = worldState;
 		this.radius = 2;
 	}

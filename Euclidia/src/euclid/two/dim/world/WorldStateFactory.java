@@ -63,7 +63,7 @@ public class WorldStateFactory
 		for (int i = 0; i < 200; i++)
 		{
 			Path path = new Path(new EuVector(150, 250));
-			Minion fish = new Minion(worldState, path, randVect(100, 200, 100, 200), new Player(Color.BLUE));
+			Minion fish = new Minion(path, randVect(100, 200, 100, 200), new Player(Color.BLUE));
 			worldState.addObject(fish);
 		}
 		
@@ -124,7 +124,7 @@ public class WorldStateFactory
 		for (int i = 0; i < 10; i++)
 		{
 			Path path = new Path(new EuVector(150, 250));
-			Minion unit = new Minion(worldState, path, randVect(100, 200, 100, 200), player);
+			Minion unit = new Minion(path, randVect(100, 200, 100, 200), player);
 			worldState.addObject(unit);
 			
 			unit.setMass(500);
@@ -136,7 +136,7 @@ public class WorldStateFactory
 		for (int i = 0; i < 20; i++)
 		{
 			Path path = new Path(new EuVector(150, 250));
-			Minion unit = new Minion(worldState, path, randVect(100, 200, 100, 200), agent);
+			Minion unit = new Minion(path, randVect(100, 200, 100, 200), agent);
 			worldState.addObject(unit);
 			
 			agent.regesterControl(unit.getId());

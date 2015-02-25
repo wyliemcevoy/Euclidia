@@ -114,4 +114,26 @@ public class EuVector
 		this.x = px;
 		this.y = py;
 	}
+	
+	@Override
+	public boolean equals(Object o)
+	{
+		if (o instanceof EuVector)
+		{
+			return equals((EuVector) o);
+		} else
+		{
+			return false;
+		}
+	}
+	
+	private boolean equals(EuVector vect)
+	{
+		return x == vect.getX() && y == vect.getY();
+	}
+	
+	public EuVector deepCopy()
+	{
+		return new EuVector(this);
+	}
 }

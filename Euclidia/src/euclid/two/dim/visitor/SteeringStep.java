@@ -1,12 +1,14 @@
 package euclid.two.dim.visitor;
 
-import euclid.two.dim.behavior.SteeringBehavior;
+import euclid.two.dim.Configuration;
+import euclid.two.dim.Path;
+import euclid.two.dim.behavior.SteeringType;
 import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.GameSpaceObject;
-import euclid.two.dim.model.Obstacle;
 import euclid.two.dim.model.Minion;
+import euclid.two.dim.model.Obstacle;
 import euclid.two.dim.updater.UpdateVisitor;
 import euclid.two.dim.world.WorldState;
 
@@ -34,12 +36,82 @@ public class SteeringStep implements UpdateVisitor
 		}
 	}
 	
+	private EuVector calculateSteeringForce(Minion unit)
+	{
+		
+		SteeringType sb = unit.getSteeringType();
+		EuVector steeringForce = new EuVector(0, 0);
+		
+		Path path = unit.getPath();
+		
+		switch (unit.getSteeringBehavior())
+		{
+		case Flock:
+			
+			path.haveArrived(unit.getPosition());
+			if (path.size() == 0)
+			{
+				unit.setVelocity(new EuVector(0, 0));
+				return new EuVector(0, 0);
+			}
+			
+			EuVector desiredVelocity = (path.getTarget().subtract(unit.getPosition())).normalize().multipliedBy(unit.getMaxSpeed());
+			desiredVelocity = desiredVelocity.subtract(unit.getVelocity());
+			double distToTarget = path.getTarget().subtract(unit.getPosition()).getMagnitude();
+			
+			EuVector averageVelocity = new EuVector(0, 0);
+			int i = 0;
+			/*
+			for (GameSpaceObject gso : worldState.getGsos())
+			{
+				EuVector dist = gso.getPosition().subtract(self.getPosition());
+				double magnitude = dist.getMagnitude();
+				if (magnitude > .1 && magnitude < 10)
+				{
+					// repulsion = repulsion.add(dist.dividedBy(-1 / (magnitude *
+					// 10)));
+					averageVelocity = averageVelocity.add(gso.getVelocity());
+					i++;
+				}
+			}
+			*/
+			if (i > 0)
+			{
+				averageVelocity = averageVelocity.dividedBy(i);
+			}
+			
+			// desiredVelocity.add(repulsion);
+			desiredVelocity.add(averageVelocity);
+			
+			if (distToTarget < 50 && distToTarget > 0)
+			{
+				desiredVelocity = desiredVelocity.dividedBy(distToTarget / (Configuration.maxSpeed * 4));
+			}
+			
+			// EuVector targetDisplacement =
+			// self.getVelocity().add(desiredVelocity.dividedBy(10));
+			// System.out.println(targetDisplacement.getMagnitude() / 3);
+			
+			steeringForce = desiredVelocity;
+			
+			break;
+		case Seek:
+			break;
+		case StandStill:
+			break;
+		default:
+			break;
+		
+		}
+		
+		return steeringForce;
+	}
+	
 	@Override
 	public void visit(Minion unit)
 	{
 		double mass = unit.getMass();
-		SteeringBehavior sb = unit.getSteeringBehavior();
-		EuVector steeringForce = sb.calculate();
+		EuVector steeringForce = calculateSteeringForce(unit);
 		EuVector acceleration = steeringForce.dividedBy(mass);
 		
 		EuVector velocity = unit.getVelocity();

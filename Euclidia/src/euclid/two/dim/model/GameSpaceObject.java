@@ -8,6 +8,7 @@ import euclid.two.dim.Configuration;
 import euclid.two.dim.Path;
 import euclid.two.dim.Player;
 import euclid.two.dim.behavior.SteeringBehavior;
+import euclid.two.dim.behavior.SteeringType;
 import euclid.two.dim.render.RenderComponent;
 import euclid.two.dim.updater.Updatable;
 
@@ -19,7 +20,7 @@ public abstract class GameSpaceObject implements Updatable
 	protected EuVector velocity;
 	protected EuVector futureVelocity;
 	protected double maxSpeed = Configuration.maxSpeed;
-	protected SteeringBehavior sb;
+	protected SteeringType sb;
 	protected double mass;
 	protected Color color;
 	protected EuVector future;
@@ -30,6 +31,17 @@ public abstract class GameSpaceObject implements Updatable
 	protected boolean isAtRest;
 	protected RenderComponent renderComponent;
 	protected Player player;
+	protected SteeringBehavior steeringBehavior;
+	
+	public SteeringBehavior getSteeringBehavior()
+	{
+		return steeringBehavior;
+	}
+	
+	public void setSteeringBehavior(SteeringBehavior steeringBehavior)
+	{
+		this.steeringBehavior = steeringBehavior;
+	}
 	
 	public Player getPlayer()
 	{
@@ -88,6 +100,7 @@ public abstract class GameSpaceObject implements Updatable
 		this.theta = 0;
 		this.isAtRest = true;
 		this.player = new Player(Color.white);
+		this.steeringBehavior = SteeringBehavior.Flock;
 	}
 	
 	public double getRadius()
@@ -118,6 +131,7 @@ public abstract class GameSpaceObject implements Updatable
 		this.renderComponent = copy.getRenderComponent().deepCopy();
 		specificConstructor(copy);
 		this.player = copy.getPlayer();
+		this.steeringBehavior = copy.getSteeringBehavior();
 	}
 	
 	public RenderComponent getRenderComponent()
@@ -143,12 +157,12 @@ public abstract class GameSpaceObject implements Updatable
 		return future;
 	}
 	
-	public SteeringBehavior getSteeringBehavior()
+	public SteeringType getSteeringType()
 	{
 		return sb;
 	}
 	
-	public void setSteeringBehavior(SteeringBehavior steeringBehavior)
+	public void setSteeringType(SteeringType steeringBehavior)
 	{
 		this.sb = steeringBehavior;
 	}
