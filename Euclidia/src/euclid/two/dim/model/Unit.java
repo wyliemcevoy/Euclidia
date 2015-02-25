@@ -1,11 +1,14 @@
 package euclid.two.dim.model;
 
+import java.util.UUID;
+
 import euclid.two.dim.render.Renderable;
 import euclid.two.dim.updater.Updatable;
 import euclid.two.dim.updater.UpdateVisitor;
 
 public abstract class Unit extends GameSpaceObject
 {
+	private UUID target;
 	
 	@Override
 	public void acceptUpdateVisitor(UpdateVisitor updatevisitor)
@@ -47,6 +50,16 @@ public abstract class Unit extends GameSpaceObject
 	{
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public UUID getTarget()
+	{
+		return target;
+	}
+	
+	public void setTarget(UUID target)
+	{
+		this.target = target;
 	}
 	
 }

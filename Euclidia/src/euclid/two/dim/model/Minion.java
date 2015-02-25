@@ -9,7 +9,7 @@ import euclid.two.dim.Player;
 import euclid.two.dim.attack.Attack;
 import euclid.two.dim.attack.SwordAttack;
 import euclid.two.dim.behavior.CombatBehavior;
-import euclid.two.dim.behavior.Flock;
+import euclid.two.dim.behavior.SteeringBehavior;
 import euclid.two.dim.render.Renderable;
 import euclid.two.dim.render.UnitRender;
 import euclid.two.dim.render.ZerglingRenderComponent;
@@ -43,10 +43,11 @@ public class Minion extends GameSpaceObject
 		this.futurePosition = new EuVector(position);
 		this.future = new EuVector(position);
 		this.velocity = new EuVector(0, 0);
-		this.sb = new Flock(path, this);
+		this.steeringBehavior = SteeringBehavior.Flock;
 		this.player = player;
 		this.health = new Health(100);
 		this.attack = new SwordAttack();
+		this.path = path;
 		initialize();
 	}
 	
@@ -129,12 +130,6 @@ public class Minion extends GameSpaceObject
 	}
 	
 	@Override
-	public void setPath(Path path)
-	{
-		this.sb.setPath(path);
-	}
-	
-	@Override
 	public void separate2()
 	{
 		
@@ -202,8 +197,4 @@ public class Minion extends GameSpaceObject
 		
 	}
 	
-	public Path getPath()
-	{
-		return sb.getPath();
-	}
 }

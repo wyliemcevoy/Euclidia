@@ -3,7 +3,7 @@ package euclid.two.dim.model;
 import java.util.ArrayList;
 
 import euclid.two.dim.Path;
-import euclid.two.dim.behavior.Flock;
+import euclid.two.dim.behavior.SteeringBehavior;
 import euclid.two.dim.render.Renderable;
 import euclid.two.dim.updater.Updatable;
 import euclid.two.dim.updater.UpdateVisitor;
@@ -25,8 +25,7 @@ public class Boid extends GameSpaceObject
 		
 		this.velocity = new EuVector(0, 0);
 		this.mass = 10;
-		this.sb = new Flock(path, this);
-		
+		this.steeringBehavior = SteeringBehavior.Flock;
 	}
 	
 	public Boid(GameSpaceObject copy)

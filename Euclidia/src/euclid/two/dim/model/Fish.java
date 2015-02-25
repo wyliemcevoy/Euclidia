@@ -3,8 +3,7 @@ package euclid.two.dim.model;
 import java.util.ArrayList;
 
 import euclid.two.dim.Path;
-import euclid.two.dim.behavior.Flock;
-import euclid.two.dim.behavior.StandStill;
+import euclid.two.dim.behavior.SteeringBehavior;
 import euclid.two.dim.render.Renderable;
 import euclid.two.dim.updater.Updatable;
 import euclid.two.dim.updater.UpdateVisitor;
@@ -21,7 +20,7 @@ public class Fish extends GameSpaceObject
 		this.future = new EuVector(position);
 		this.velocity = new EuVector(0, 0);
 		this.mass = 10;
-		this.sb = new Flock(path, this);
+		this.path = path;
 		this.worldState = worldState;
 		this.radius = 2;
 	}
@@ -34,7 +33,7 @@ public class Fish extends GameSpaceObject
 		this.worldState = worldState;
 		this.velocity = new EuVector(0, 0);
 		this.mass = 10;
-		this.sb = new StandStill();
+		this.steeringBehavior = SteeringBehavior.StandStill;
 		this.radius = 30;
 	}
 	
@@ -71,12 +70,6 @@ public class Fish extends GameSpaceObject
 		futureVelocity = futureVelocity.add(update);
 		futurePosition = futurePosition.add(update);
 		
-	}
-	
-	@Override
-	public void setPath(Path path)
-	{
-		this.sb.setPath(path);
 	}
 	
 	@Override

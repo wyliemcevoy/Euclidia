@@ -2,9 +2,21 @@ TODO:
 
 	PathFlyWeightFactory
 	Integrate DistancFlyWeight
-	
+	WorldState grid for distance lookup
 	AttachBehavior
 	
 	
+	GameSpaceObject polymorphic hierarchy
+	GSO
+		Unit
+			MobileUnit
+			StationaryUnit
+	
+	
+	
+	
+	Input:
+		shift key multi destination path
+		
 	
 	

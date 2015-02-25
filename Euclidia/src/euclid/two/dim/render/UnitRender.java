@@ -17,6 +17,7 @@ public class UnitRender implements Renderable
 	private int height = 38;
 	private int radius;
 	private Health health;
+	private Minion unit;
 	
 	public UnitRender(Minion unit)
 	{
@@ -29,6 +30,7 @@ public class UnitRender implements Renderable
 		{
 			this.index = unit.getRenderComponent().getRenderIndex();
 		}
+		this.unit = new Minion(unit);
 	}
 	
 	@Override
@@ -68,6 +70,18 @@ public class UnitRender implements Renderable
 			
 			g.setColor(getHealthColor(health.getHealthPercentage()));
 			g.drawRect(x - (radius / 2), y - radius, (int) (radius * health.getHealthPercentage()), 1);
+		}
+		
+		float alpha = (float) .25;
+		
+		g.setColor(new Color(1, 1, 1, alpha));
+		
+		for (EuVector vect : unit.getPath().getTargets())
+		{
+			
+			g.drawLine(x, y, (int) vect.getX(), (int) vect.getY());
+			x = (int) vect.getX();
+			y = (int) vect.getY();
 		}
 		/*
 		g.setColor(Color.WHITE);

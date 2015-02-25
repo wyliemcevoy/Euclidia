@@ -2,7 +2,6 @@ package euclid.two.dim.visitor;
 
 import euclid.two.dim.Configuration;
 import euclid.two.dim.Path;
-import euclid.two.dim.behavior.SteeringType;
 import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Fish;
@@ -39,7 +38,7 @@ public class SteeringStep implements UpdateVisitor
 	private EuVector calculateSteeringForce(Minion unit)
 	{
 		
-		SteeringType sb = unit.getSteeringType();
+		//SteeringType sb = unit.getSteeringType();
 		EuVector steeringForce = new EuVector(0, 0);
 		
 		Path path = unit.getPath();

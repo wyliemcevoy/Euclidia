@@ -21,6 +21,16 @@ public class Path
 		targets.add(firstTarget);
 	}
 	
+	public Path(Path copy)
+	{
+		targets = new LinkedList<EuVector>();
+		
+		for (EuVector target : copy.getTargets())
+		{
+			targets.add(target);
+		}
+	}
+	
 	public EuVector getTarget()
 	{
 		if (targets.isEmpty())
@@ -42,7 +52,7 @@ public class Path
 		{
 			if (targets.size() >= 1)
 			{
-				EuVector arived = targets.poll();
+				targets.poll();
 			}
 			return true;
 		} else
@@ -82,7 +92,8 @@ public class Path
 		for (EuVector target : targets)
 		{
 			EuVector clonesTarget = clonesTargets.get(i);
-			if (target != clonesTarget)
+			
+			if (!target.equals(clonesTarget))
 			{
 				return false;
 			}
@@ -92,7 +103,7 @@ public class Path
 		return true;
 	}
 	
-	private ArrayList<EuVector> getTargets()
+	public ArrayList<EuVector> getTargets()
 	{
 		ArrayList<EuVector> result = new ArrayList<EuVector>();
 		
@@ -103,6 +114,11 @@ public class Path
 		
 		return result;
 		
+	}
+	
+	public Path deepCopy()
+	{
+		return new Path(this);
 	}
 	
 }

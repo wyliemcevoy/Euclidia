@@ -22,6 +22,9 @@ public class MinionTest
 	public void before()
 	{
 		Path path = new Path(new EuVector(0, 0));
+		path.addTarget(new EuVector(10, 10));
+		path.addTarget(new EuVector(50, 50));
+		
 		Player player = new Player(Color.BLACK);
 		this.unit = new Minion(path, new EuVector(10, 10), player);
 	}
@@ -35,10 +38,10 @@ public class MinionTest
 		testValidityOfClone("position", clone.getPosition(), unit.getPosition());
 		testValidityOfClone("futurePosition", clone.getFuturePosition(), unit.getFuturePosition());
 		testValidityOfClone("Attack", clone.getAttack(), unit.getAttack());
-		testValidityOfClone("SteeringBehavior", clone.getSteeringType(), unit.getSteeringType());
+		//testValidityOfClone("SteeringBehavior", clone.getSteeringType(), unit.getSteeringType());
 		
 		assertEquals("SteeringBehavior", clone.getSteeringBehavior(), unit.getSteeringBehavior());
-		
+		testValidityOfClone("path", clone.getPath(), unit.getPath());
 		//validClone(clone.getpath());
 		
 	}

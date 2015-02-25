@@ -17,6 +17,12 @@ public class Flock extends SteeringType
 	@Override
 	public EuVector calculate()
 	{
+		return null;
+	}
+	
+	private EuVector Calc()
+	{
+		
 		path.haveArrived(self.getPosition());
 		if (path.size() == 0)
 		{

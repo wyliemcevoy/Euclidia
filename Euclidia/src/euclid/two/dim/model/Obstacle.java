@@ -2,7 +2,6 @@ package euclid.two.dim.model;
 
 import java.util.ArrayList;
 
-import euclid.two.dim.behavior.StandStill;
 import euclid.two.dim.render.Renderable;
 import euclid.two.dim.updater.Updatable;
 import euclid.two.dim.updater.UpdateVisitor;
@@ -21,7 +20,6 @@ public class Obstacle extends GameSpaceObject
 		this.worldState = worldState;
 		this.velocity = new EuVector(0, 0);
 		this.mass = 10;
-		this.sb = new StandStill();
 		this.isSelected = true;
 		this.hitPoints = 100;
 		this.radius = 50;

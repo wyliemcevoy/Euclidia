@@ -8,7 +8,6 @@ import euclid.two.dim.Configuration;
 import euclid.two.dim.Path;
 import euclid.two.dim.Player;
 import euclid.two.dim.behavior.SteeringBehavior;
-import euclid.two.dim.behavior.SteeringType;
 import euclid.two.dim.render.RenderComponent;
 import euclid.two.dim.updater.Updatable;
 
@@ -20,7 +19,7 @@ public abstract class GameSpaceObject implements Updatable
 	protected EuVector velocity;
 	protected EuVector futureVelocity;
 	protected double maxSpeed = Configuration.maxSpeed;
-	protected SteeringType sb;
+	//protected SteeringType sb;
 	protected double mass;
 	protected Color color;
 	protected EuVector future;
@@ -132,6 +131,7 @@ public abstract class GameSpaceObject implements Updatable
 		specificConstructor(copy);
 		this.player = copy.getPlayer();
 		this.steeringBehavior = copy.getSteeringBehavior();
+		this.path = copy.getPath().deepCopy();
 	}
 	
 	public RenderComponent getRenderComponent()
@@ -155,16 +155,6 @@ public abstract class GameSpaceObject implements Updatable
 	public EuVector getFuture()
 	{
 		return future;
-	}
-	
-	public SteeringType getSteeringType()
-	{
-		return sb;
-	}
-	
-	public void setSteeringType(SteeringType steeringBehavior)
-	{
-		this.sb = steeringBehavior;
 	}
 	
 	public double getMaxSpeed()
@@ -256,6 +246,11 @@ public abstract class GameSpaceObject implements Updatable
 	public void setPath(Path path)
 	{
 		this.path = path;
+	}
+	
+	public Path getPath()
+	{
+		return path;
 	}
 	
 }
