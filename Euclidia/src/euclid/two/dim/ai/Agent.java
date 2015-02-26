@@ -21,7 +21,7 @@ public class Agent extends Player
 	
 	public Agent(UpdateEngine updateEngine, ArrayList<UUID> freindlies)
 	{
-		super(Color.BLUE);
+		super(1, Color.BLUE);
 		this.updateEngine = updateEngine;
 		this.freindlies = freindlies;
 	}

@@ -7,16 +7,27 @@ TODO:
 	
 	
 	GameSpaceObject polymorphic hierarchy
-	GSO
-		Unit
-			MobileUnit
-			StationaryUnit
-	
-	
-	
+		GSO
+			Unit
+				MobileUnit
+					Minion
+					Hero
+				StationaryUnit
+					Building
+		
+			Obstacle
 	
 	Input:
 		shift key multi destination path
+		attack
+		ability/s 
 		
+		
+		InputManager
+			key pressed --> command --> WorldState
+			
 	
-	
+	Player
+		selected Units
+		selected Action
+		

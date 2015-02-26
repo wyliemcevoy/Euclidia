@@ -5,10 +5,12 @@ import java.awt.Color;
 public class Player
 {
 	private Color color;
+	private int id;
 	
-	public Player(Color color)
+	public Player(int id, Color color)
 	{
 		this.color = color;
+		this.id = id;
 	}
 	
 	public void setColor(Color color)
@@ -19,6 +21,16 @@ public class Player
 	public Color getColor()
 	{
 		return color;
+	}
+	
+	public boolean equals(Player player)
+	{
+		return player.getId() == id;
+	}
+	
+	private int getId()
+	{
+		return id;
 	}
 	
 }

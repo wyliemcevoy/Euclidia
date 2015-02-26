@@ -29,6 +29,7 @@ public class WorldState
 	private ArrayList<Explosion> explosions;
 	private ArrayList<Etherial> etherials;
 	private ArrayList<Etherial> expired;
+	private char character;
 	
 	/**
 	 * @param rooms
@@ -58,6 +59,7 @@ public class WorldState
 		this.explosions = new ArrayList<Explosion>();
 		this.etherials = new ArrayList<Etherial>();
 		this.expired = new ArrayList<Etherial>();
+		this.character = 0;
 	}
 	
 	public List<GameSpaceObject> getUnfriendliesInRage(Minion unit)
@@ -205,6 +207,7 @@ public class WorldState
 		copy.setDoors(doors);
 		copy.setRooms(rooms);
 		copy.setCamera(this.camera);
+		copy.setCharacter(character);
 		
 		for (Etherial updatable : etherials)
 		{
@@ -212,6 +215,11 @@ public class WorldState
 		}
 		
 		return copy;
+	}
+	
+	public void setCharacter(char character)
+	{
+		this.character = character;
 	}
 	
 	public void addDoor(Door door)
@@ -324,19 +332,7 @@ public class WorldState
 	public List<Renderable> getRenderables()
 	{
 		
-		ArrayList<Renderable> renderables = new ArrayList<Renderable>();
-		
-		RenderCreator renderCreator = new RenderCreator();
-		
-		for (GameSpaceObject gso : this.gsos)
-		{
-			renderCreator.add(gso);
-		}
-		
-		for (Etherial etherial : etherials)
-		{
-			renderCreator.add(etherial);
-		}
+		RenderCreator renderCreator = new RenderCreator(this);
 		
 		return renderCreator.getRenderables();
 	}
@@ -344,6 +340,11 @@ public class WorldState
 	public List<Etherial> getEtherials()
 	{
 		return etherials;
+	}
+	
+	public char getCharacter()
+	{
+		return character;
 	}
 	
 }

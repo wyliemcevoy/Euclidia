@@ -26,8 +26,8 @@ import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
-import euclid.two.dim.model.Room;
 import euclid.two.dim.model.Minion;
+import euclid.two.dim.model.Room;
 import euclid.two.dim.world.WorldState;
 
 public class ConsoleRenderer extends Thread
@@ -60,6 +60,10 @@ public class ConsoleRenderer extends Thread
 		canvas.setSize(width * scale, height * scale);
 		consoleFrame.add(canvas, 0);
 		canvas.addMouseListener(inputManager);
+		
+		canvas.setFocusable(true);
+		canvas.requestFocus();
+		canvas.addKeyListener(inputManager);
 		
 		// Background & Buffer
 		background = create(width, height, false);

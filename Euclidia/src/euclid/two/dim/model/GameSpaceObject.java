@@ -19,11 +19,12 @@ public abstract class GameSpaceObject implements Updatable
 	protected EuVector velocity;
 	protected EuVector futureVelocity;
 	protected double maxSpeed = Configuration.maxSpeed;
-	//protected SteeringType sb;
 	protected double mass;
 	protected Color color;
 	protected EuVector future;
+	
 	protected Path path;
+	
 	protected boolean isSelected;
 	protected UUID id;
 	protected double theta;
@@ -98,7 +99,7 @@ public abstract class GameSpaceObject implements Updatable
 		this.id = UUID.randomUUID();
 		this.theta = 0;
 		this.isAtRest = true;
-		this.player = new Player(Color.white);
+		this.player = new Player(3, Color.white);
 		this.steeringBehavior = SteeringBehavior.Flock;
 	}
 	
@@ -128,7 +129,6 @@ public abstract class GameSpaceObject implements Updatable
 		this.id = copy.getId();
 		this.theta = copy.getTheta();
 		this.renderComponent = copy.getRenderComponent().deepCopy();
-		specificConstructor(copy);
 		this.player = copy.getPlayer();
 		this.steeringBehavior = copy.getSteeringBehavior();
 		this.path = copy.getPath().deepCopy();
@@ -149,8 +149,6 @@ public abstract class GameSpaceObject implements Updatable
 	{
 		return theta;
 	}
-	
-	protected abstract void specificConstructor(GameSpaceObject copy);
 	
 	public EuVector getFuture()
 	{
@@ -205,11 +203,6 @@ public abstract class GameSpaceObject implements Updatable
 		toroidify(Configuration.width, Configuration.height);
 	}
 	
-	public void separate()
-	{
-		// TODO Auto-generated method stub
-	}
-	
 	public EuVector getFuturePosition()
 	{
 		return futurePosition;
@@ -218,11 +211,6 @@ public abstract class GameSpaceObject implements Updatable
 	public void setFuturePosition(EuVector futurePosition)
 	{
 		this.futurePosition = futurePosition;
-	}
-	
-	public void separate2()
-	{
-		
 	}
 	
 	@Override
@@ -240,8 +228,6 @@ public abstract class GameSpaceObject implements Updatable
 	{
 		return "[" + position + futurePosition + velocity + "]";
 	}
-	
-	public abstract void specificUpdate(EuVector displacement);
 	
 	public void setPath(Path path)
 	{

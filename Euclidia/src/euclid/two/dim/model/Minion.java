@@ -1,17 +1,18 @@
 package euclid.two.dim.model;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-import eucild.two.dim.combat.Health;
 import euclid.two.dim.Path;
 import euclid.two.dim.Player;
+import euclid.two.dim.ability.Ability;
 import euclid.two.dim.attack.Attack;
 import euclid.two.dim.attack.SwordAttack;
 import euclid.two.dim.behavior.CombatBehavior;
 import euclid.two.dim.behavior.SteeringBehavior;
-import euclid.two.dim.render.Renderable;
-import euclid.two.dim.render.UnitRender;
+import euclid.two.dim.combat.Health;
 import euclid.two.dim.render.ZerglingRenderComponent;
 import euclid.two.dim.updater.Updatable;
 import euclid.two.dim.updater.UpdateVisitor;
@@ -26,6 +27,7 @@ public class Minion extends GameSpaceObject
 	protected int detectionRange;
 	protected CombatBehavior combatBehavior;
 	protected boolean hasTarget;
+	protected ArrayList<Ability> abilities;
 	
 	public boolean hasTarget()
 	{
@@ -53,6 +55,7 @@ public class Minion extends GameSpaceObject
 	
 	private void initialize()
 	{
+		this.abilities = new ArrayList<Ability>();
 		this.radius = 8;
 		this.isSelected = true;
 		this.mass = 10;
@@ -75,6 +78,17 @@ public class Minion extends GameSpaceObject
 		this.actionIndex = copy.getActionIndex();
 		this.health = copy.getHealth().deepCopy();
 		this.attack = copy.getAttack().deepCopy();
+		this.abilities = new ArrayList<Ability>();
+		
+		for (Ability ability : copy.getAbilities())
+		{
+			abilities.add(ability.deepCopy());
+		}
+	}
+	
+	private List<Ability> getAbilities()
+	{
+		return abilities;
 	}
 	
 	public Attack getAttack()
@@ -99,49 +113,6 @@ public class Minion extends GameSpaceObject
 	}
 	
 	@Override
-	public void separate()
-	{
-		/*
-		ArrayList<GameSpaceObject> fishes = worldState.getGsos();
-		futurePosition = new EuVector(position);
-		EuVector update = new EuVector(0, 0);
-		for (GameSpaceObject fish : fishes)
-		{
-			EuVector distTo = position.subtract(fish.getPosition());
-			double mag = distTo.getMagnitude();
-			if (!this.equals(fish) && mag < 15)
-			{
-				EuVector plus = distTo.normalize().dividedBy(mag * mag / (fish.getRadius() * 10));
-				update = update.add(plus);
-			}
-		}
-		
-		if (update.getMagnitude() > 2)
-		{
-			update = update.normalize().multipliedBy(2);
-		}
-		if (update.getMagnitude() < .15)
-		{
-			return;
-		}
-		//futureVelocity = futureVelocity.add(update);
-		futurePosition = futurePosition.add(update);
-		*/
-	}
-	
-	@Override
-	public void separate2()
-	{
-		
-	}
-	
-	@Override
-	public void specificUpdate(EuVector displacement)
-	{
-		// TODO Auto-generated method stub
-	}
-	
-	@Override
 	public void acceptUpdateVisitor(UpdateVisitor updateVisitor)
 	{
 		updateVisitor.visit(this);
@@ -151,12 +122,6 @@ public class Minion extends GameSpaceObject
 	public Updatable deepCopy()
 	{
 		return new Minion(this);
-	}
-	
-	@Override
-	public Renderable toRenderable()
-	{
-		return new UnitRender(this);
 	}
 	
 	public void setTarget(UUID uuid)
@@ -188,13 +153,6 @@ public class Minion extends GameSpaceObject
 	public void setCombatBehavior(CombatBehavior combatBehavior)
 	{
 		this.combatBehavior = combatBehavior;
-	}
-	
-	@Override
-	protected void specificConstructor(GameSpaceObject copy)
-	{
-		// TODO Auto-generated method stub
-		
 	}
 	
 }

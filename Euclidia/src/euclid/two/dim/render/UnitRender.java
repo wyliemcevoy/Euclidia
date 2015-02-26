@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 
-import eucild.two.dim.combat.Health;
+import euclid.two.dim.combat.Health;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Minion;
 

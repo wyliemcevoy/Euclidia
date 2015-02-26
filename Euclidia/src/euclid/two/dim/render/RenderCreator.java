@@ -8,16 +8,38 @@ import euclid.two.dim.etherial.Projectile;
 import euclid.two.dim.etherial.Slash;
 import euclid.two.dim.etherial.ZergDeath;
 import euclid.two.dim.model.Boid;
+import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.GameSpaceObject;
-import euclid.two.dim.model.Obstacle;
 import euclid.two.dim.model.Minion;
+import euclid.two.dim.model.Obstacle;
 import euclid.two.dim.updater.UpdateVisitor;
 import euclid.two.dim.visitor.EtherialVisitor;
+import euclid.two.dim.world.WorldState;
 
 public class RenderCreator implements UpdateVisitor, EtherialVisitor
 {
 	private ArrayList<Renderable> renderables;
+	private WorldState worldState;
+	
+	public RenderCreator(WorldState worldState)
+	{
+		this.worldState = worldState;
+		this.renderables = new ArrayList<Renderable>();
+		
+		for (GameSpaceObject gso : worldState.getGameSpaceObjects())
+		{
+			gso.acceptUpdateVisitor(this);
+		}
+		
+		for (Etherial etherial : worldState.getEtherials())
+		{
+			etherial.accept(this);
+		}
+		
+		renderables.add(new StringRender("[" + worldState.getCharacter() + "]", new EuVector(10, 10)));
+		
+	}
 	
 	public void add(GameSpaceObject gso)
 	{
@@ -27,11 +49,6 @@ public class RenderCreator implements UpdateVisitor, EtherialVisitor
 	public void add(Etherial etherial)
 	{
 		etherial.accept(this);
-	}
-	
-	public RenderCreator()
-	{
-		this.renderables = new ArrayList<Renderable>();
 	}
 	
 	@Override

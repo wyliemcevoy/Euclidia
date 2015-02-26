@@ -25,7 +25,7 @@ public class MinionTest
 		path.addTarget(new EuVector(10, 10));
 		path.addTarget(new EuVector(50, 50));
 		
-		Player player = new Player(Color.BLACK);
+		Player player = new Player(0, Color.BLACK);
 		this.unit = new Minion(path, new EuVector(10, 10), player);
 	}
 	
@@ -53,11 +53,6 @@ public class MinionTest
 		
 		assertFalse(message, one == two);
 		assertTrue(message, one.equals(two));
-	}
-	
-	private void testValidityOfCopy(String message, Object one, Object two)
-	{
-		
 	}
 	
 }

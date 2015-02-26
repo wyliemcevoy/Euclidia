@@ -1,6 +1,6 @@
 package euclid.two.dim.model;
 
-public class StationaryUnit
+public abstract class StationaryUnit extends Unit
 {
 	
 }

@@ -154,6 +154,25 @@ public class SteeringStep implements UpdateVisitor
 	{
 		// TODO Auto-generated method stub
 		
+		/*
+		ArrayList<GameSpaceObject> fishes = worldState.getGsos();
+		futurePosition = new EuVector(position);
+		for (GameSpaceObject fish : fishes)
+		{
+			double rad = radius + fish.getRadius() * 3;
+			EuVector distTo = position.subtract(fish.getPosition());
+			double mag = distTo.getTaxiCabMagnitude();
+			if (!(fish instanceof Obstacle) && mag < rad)
+			{
+				//EuVector plus = distTo.normalize().dividedBy(mag * mag / (radius * radius));
+				//plus = plus.normalize().multipliedBy(radius * -1);
+				//fish.setFuturePosition(fish.getFuturePosition().add(plus));
+				
+				EuVector plus = distTo.normalize().multipliedBy(-1 * Math.abs(mag - rad));
+				fish.setFuturePosition(fish.getFuturePosition().add(plus));
+			}
+		}
+		*/
+		
 	}
-	
 }

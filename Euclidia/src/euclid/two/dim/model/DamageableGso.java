@@ -1,18 +1,20 @@
-package eucild.two.dim.combat;
+package euclid.two.dim.model;
 
-public class Health
+public abstract class DamageableGso extends GameSpaceObject
 {
 	private int maxHealth;
 	private int currentHealth;
 	
-	public Health(int maxHealth)
+	public DamageableGso()
 	{
-		this.maxHealth = maxHealth;
-		this.currentHealth = maxHealth;
+		super();
+		this.maxHealth = 100;
+		this.currentHealth = 100;
 	}
 	
-	public Health(Health copy)
+	public DamageableGso(DamageableGso copy)
 	{
+		super(copy);
 		this.currentHealth = copy.getCurrentHealth();
 		this.maxHealth = copy.getMaxHealth();
 	}
@@ -22,9 +24,14 @@ public class Health
 		return currentHealth;
 	}
 	
-	public void add(int modifier)
+	public void acceptDamage(int damage)
 	{
-		this.currentHealth = currentHealth + modifier;
+		this.currentHealth -= damage;
+	}
+	
+	public void acceptHeal(int heal)
+	{
+		this.currentHealth = Math.min(maxHealth, currentHealth + heal);
 	}
 	
 	public int getMaxHealth()
@@ -40,11 +47,6 @@ public class Health
 	public boolean isDead()
 	{
 		return currentHealth <= 0;
-	}
-	
-	public Health deepCopy()
-	{
-		return new Health(this);
 	}
 	
 	public void setMaxHealth(int maxHealth)
