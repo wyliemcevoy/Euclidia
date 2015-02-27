@@ -155,4 +155,9 @@ public class Minion extends GameSpaceObject
 		this.combatBehavior = combatBehavior;
 	}
 	
+	public void addAbility(Ability ability)
+	{
+		this.abilities.add(ability);
+	}
+	
 }

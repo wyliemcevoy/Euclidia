@@ -7,6 +7,7 @@ import java.util.Random;
 import euclid.two.dim.Configuration;
 import euclid.two.dim.Path;
 import euclid.two.dim.Player;
+import euclid.two.dim.ability.GrenadeAbility;
 import euclid.two.dim.ai.Agent;
 import euclid.two.dim.input.InputManager;
 import euclid.two.dim.model.Door;
@@ -126,14 +127,14 @@ public class WorldStateFactory
 			Path path = new Path(new EuVector(150, 250));
 			Minion unit = new Minion(path, randVect(100, 200, 100, 200), player);
 			worldState.addObject(unit);
-			
+			unit.addAbility(new GrenadeAbility());
 			unit.setMass(500);
 			unit.setRadius(15);
 			unit.getHealth().setMaxHealth(10000);
 			unit.setMaxSpeed(100);
 		}
 		
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			Path path = new Path(new EuVector(150, 250));
 			Minion unit = new Minion(path, randVect(100, 200, 100, 200), agent);

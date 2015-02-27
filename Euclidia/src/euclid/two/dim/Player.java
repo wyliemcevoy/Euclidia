@@ -2,8 +2,12 @@ package euclid.two.dim;
 
 import java.awt.Color;
 
+import euclid.two.dim.team.Team;
+
 public class Player
 {
+	private Team team;
+	
 	private Color color;
 	private int id;
 	

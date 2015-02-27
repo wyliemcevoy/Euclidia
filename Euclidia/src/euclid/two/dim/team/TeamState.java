@@ -8,7 +8,7 @@ import euclid.two.dim.ability.Ability;
 public class TeamState
 {
 	private Team team;
-	private ArrayList<UUID> selection;
+	private ArrayList<UUID> selectedUnits;
 	private Ability selectedAbility;
 	
 	public TeamState(Team team)

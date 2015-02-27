@@ -27,7 +27,8 @@ TODO:
 			key pressed --> command --> WorldState
 			
 	
-	Player
-		selected Units
-		selected Action
+	GameState
+		TeamState
+			selected Units
+			selected Action
 		

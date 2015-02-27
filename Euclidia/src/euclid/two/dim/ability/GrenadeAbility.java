@@ -52,6 +52,11 @@ public class GrenadeAbility extends Ability
 		this.currentTime = grenadeAbility.getCurrentTime();
 	}
 	
+	public GrenadeAbility()
+	{
+		initialize();
+	}
+	
 	private void initialize()
 	{
 		this.damage = 100;
