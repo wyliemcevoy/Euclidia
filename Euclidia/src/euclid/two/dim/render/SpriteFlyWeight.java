@@ -9,6 +9,7 @@ public class SpriteFlyWeight
 	private Image img, sub;
 	private static SpriteFlyWeight instance;
 	private Image[] zergDeath;
+	private Image[] explosion;
 	
 	public static SpriteFlyWeight getInstance()
 	{
@@ -34,6 +35,7 @@ public class SpriteFlyWeight
 		*/
 		
 		zergDeath = new Image[7];
+		explosion = new Image[7];
 		
 		zergDeath[0] = getImage("C:\\Users\\Wylie\\Pictures\\Game\\zerglingDeath1.png");
 		zergDeath[1] = getImage("C:\\Users\\Wylie\\Pictures\\Game\\zerglingDeath2.png");
@@ -42,6 +44,14 @@ public class SpriteFlyWeight
 		zergDeath[4] = getImage("C:\\Users\\Wylie\\Pictures\\Game\\zerglingDeath5.png");
 		zergDeath[5] = getImage("C:\\Users\\Wylie\\Pictures\\Game\\zerglingDeath6.png");
 		zergDeath[6] = getImage("C:\\Users\\Wylie\\Pictures\\Game\\zerglingDeath7.png");
+		
+		explosion[0] = getImage("C:\\Users\\Wylie\\Pictures\\Game\\Ex1.png");
+		explosion[1] = getImage("C:\\Users\\Wylie\\Pictures\\Game\\Ex2.png");
+		explosion[2] = getImage("C:\\Users\\Wylie\\Pictures\\Game\\Ex3.png");
+		explosion[3] = getImage("C:\\Users\\Wylie\\Pictures\\Game\\Ex4.png");
+		explosion[4] = getImage("C:\\Users\\Wylie\\Pictures\\Game\\Ex5.png");
+		explosion[5] = getImage("C:\\Users\\Wylie\\Pictures\\Game\\Ex6.png");
+		explosion[6] = getImage("C:\\Users\\Wylie\\Pictures\\Game\\Ex7.png");
 	}
 	
 	public Image getImage(String path)
@@ -67,6 +77,13 @@ public class SpriteFlyWeight
 		if (i < 0 || i > 6)
 			i = 0;
 		return zergDeath[i];
+	}
+	
+	public Image getExplosionImage(int i)
+	{
+		if (i < 0 || i > 6)
+			i = 0;
+		return explosion[i];
 	}
 	
 }

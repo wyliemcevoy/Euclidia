@@ -9,12 +9,13 @@ import java.util.UUID;
 import euclid.two.dim.VectorMath;
 import euclid.two.dim.etherial.Etherial;
 import euclid.two.dim.etherial.Explosion;
-import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
+import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Room;
+import euclid.two.dim.model.Unit;
 import euclid.two.dim.render.Camera;
 import euclid.two.dim.render.RenderCreator;
 import euclid.two.dim.render.Renderable;
@@ -86,14 +87,14 @@ public class WorldState
 		return VectorMath.subtract(one.getPosition(), two.getPosition()).getMagnitude() - (one.getRadius() + two.getRadius());
 	}
 	
-	public GameSpaceObject getClosestUnfriendly(Minion unit)
+	public GameSpaceObject getClosestUnfriendly(Unit unit)
 	{
 		GameSpaceObject target = null;
 		double minDist = Double.MAX_VALUE;
 		
 		for (GameSpaceObject gso : gsos)
 		{
-			if (gso.getPlayer() != unit.getPlayer())
+			if (gso.getTeam() != unit.getTeam())
 			{
 				double dist = getDistanceBetween(gso, unit);
 				if (dist < unit.getDetectionRange() && dist < minDist)
@@ -188,14 +189,16 @@ public class WorldState
 		for (GameSpaceObject gso : gsos)
 		
 		{
+			
 			if (gso instanceof Minion)
 			{
 				copy.addObject(new Minion((Minion) gso));
 			}
-			if (gso instanceof Boid)
+			if (gso instanceof Hero)
 			{
-				copy.addObject(new Boid(gso));
+				copy.addObject(new Hero((Hero) gso));
 			}
+			
 		}
 		
 		/*
@@ -280,14 +283,14 @@ public class WorldState
 		return gsos;
 	}
 	
-	public Minion getUnit(UUID id)
+	public Unit getUnit(UUID id)
 	{
 		// Horrible implementation (change to map)
 		for (GameSpaceObject gso : gsos)
 		{
 			if (gso.getId().equals(id))
 			{
-				return (Minion) gso;
+				return (Unit) gso;
 			}
 		}
 		return null;

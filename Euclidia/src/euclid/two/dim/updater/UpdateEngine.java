@@ -1,14 +1,20 @@
 package euclid.two.dim.updater;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 
+import euclid.two.dim.Path;
 import euclid.two.dim.VectorMath;
-import euclid.two.dim.ai.Agent;
+import euclid.two.dim.command.AttackCommand;
+import euclid.two.dim.command.Command;
+import euclid.two.dim.command.CommandVisitor;
+import euclid.two.dim.command.MoveCommand;
+import euclid.two.dim.command.UseLocationAbilityCommand;
+import euclid.two.dim.command.UseTargetedAbilityCommand;
 import euclid.two.dim.etherial.Etherial;
 import euclid.two.dim.etherial.Explosion;
 import euclid.two.dim.etherial.Projectile;
@@ -16,21 +22,25 @@ import euclid.two.dim.etherial.Slash;
 import euclid.two.dim.etherial.ZergDeath;
 import euclid.two.dim.input.InputCommand;
 import euclid.two.dim.input.InputManager;
-import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.GameSpaceObject;
+import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Obstacle;
 import euclid.two.dim.model.RoomPath;
+import euclid.two.dim.model.Unit;
 import euclid.two.dim.path.PathCalculator;
+import euclid.two.dim.team.Agent;
+import euclid.two.dim.team.Game;
+import euclid.two.dim.team.Team;
 import euclid.two.dim.visitor.EndStepManager;
 import euclid.two.dim.visitor.EtherialVisitor;
 import euclid.two.dim.visitor.PhysicsStep;
 import euclid.two.dim.visitor.SteeringStep;
 import euclid.two.dim.world.WorldState;
 
-public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisitor
+public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisitor, CommandVisitor
 {
 	private ArrayBlockingQueue<WorldState> rendererQueue;
 	private WorldState worldStateN;
@@ -38,13 +48,15 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 	private InputManager inputManager;
 	private boolean stopRequested;
 	private ArrayList<Agent> agents;
+	private Game game;
 	
-	public UpdateEngine(ArrayBlockingQueue<WorldState> rendererQueue, InputManager inputManager)
+	public UpdateEngine(ArrayBlockingQueue<WorldState> rendererQueue, InputManager inputManager, Game game)
 	{
 		this.rendererQueue = rendererQueue;
 		this.inputManager = inputManager;
 		this.stopRequested = false;
 		this.agents = new ArrayList<Agent>();
+		this.game = game;
 	}
 	
 	public void addAgent(Agent agent)
@@ -60,12 +72,18 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 	private void processInput()
 	{
 		// Read through queue of input events and process them
+		
+		for (Command command : game.getCommands())
+		{
+			command.accept(this);
+		}
+		
 		if (inputManager.hasUnprocessedEvents())
 		{
 			
 			for (InputCommand inputCommand : inputManager.getInputCommands())
 			{
-				inputCommand.execute();
+				//inputCommand.execute();
 			}
 		}
 	}
@@ -98,6 +116,9 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 			//purgeExpired();
 			
 			WorldState nPlusOne = worldStateN.deepCopy();
+			WorldState playerCopy = worldStateN.deepCopy();
+			
+			game.updatePlayers(playerCopy);
 			
 			try
 			{
@@ -111,7 +132,6 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 	
 	public void update(WorldState worldState, long timeStep)
 	{
-		//worldState.update(timeStep);
 		
 		SteeringStep steeringStep = new SteeringStep(worldState, timeStep);
 		steeringStep.runStep();
@@ -120,7 +140,6 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 		physicsStep.runStep();
 		
 		List<GameSpaceObject> gsos = worldState.getGameSpaceObjects();
-		
 		for (GameSpaceObject gso : gsos)
 		{
 			gso.acceptUpdateVisitor(this);
@@ -189,12 +208,53 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 		this.getCurrentWorldState().getCamera().setZoom(zoom);
 	}
 	
-	@Override
-	public void visit(Minion unit)
+	public void visit(Unit unit)
 	{
 		unit.getAttack().update(timeStep);
 		
-		Minion target = worldStateN.getUnit(unit.getTarget());
+		Unit target = worldStateN.getUnit(unit.getTarget());
+		
+		// Check to see if the units target still is alive / exists
+		if (target == null || unit.getPosition() == null || target.getPosition() == null)
+		{
+			//pickNewTarget(unit);
+			
+			return;
+		}
+		
+		double distSqrd = VectorMath.getDistanceSquared(target.getPosition(), unit.getPosition());
+		double rangeSqrd = unit.getAttack().getRange() * unit.getAttack().getRange();
+		
+		// Check and see if the unit is capable of attacking (basic attack off cooldown)
+		if (unit.getAttack().isReloaded())
+		{
+			if (distSqrd <= rangeSqrd)
+			{
+				// Unit is alive and within range
+				target.getHealth().add(-1 * unit.getAttack().getDamage());
+				unit.getAttack().attack();
+				
+				worldStateN.addEtherial(new Slash(target.getPosition(), unit.getPosition()));
+			}
+		}
+		
+		if (distSqrd > rangeSqrd)
+		{
+			RoomPath roomPath = PathCalculator.calculateRoomPath(worldStateN, unit.getPosition(), target.getPosition());
+			unit.setPath(roomPath.toPath());
+		}
+		
+	}
+	
+	@Override
+	public void visit(Minion unit)
+	{
+		visit((Unit) unit);
+		/*
+		
+		unit.getAttack().update(timeStep);
+		
+		Unit target = worldStateN.getUnit(unit.getTarget());
 		
 		// Check to see if the units target still is alive / exists
 		if (target == null || unit.getPosition() == null || target.getPosition() == null)
@@ -262,7 +322,7 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 			if ((gso instanceof Minion) && gso != unit)
 			{
 				Minion minion = (Minion) gso;
-				if (unit.getPlayer().getColor() != Color.BLUE)
+				if (unit.getTeam() != Team.Blue)
 				{
 					unit.setTarget(minion.getId());
 				}
@@ -273,12 +333,6 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 	
 	@Override
 	public void visit(Obstacle obstacle)
-	{
-		
-	}
-	
-	@Override
-	public void visit(Boid boid)
 	{
 		
 	}
@@ -299,11 +353,12 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 			
 			for (Agent agent : agents)
 			{
-				
+				/*
 				for (InputCommand command : agent.getCommands())
 				{
 					command.execute();
 				}
+				*/
 			}
 		}
 	}
@@ -323,7 +378,7 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 	{
 		projectile.update(timeStep);
 		
-		Minion target = worldStateN.getUnit(projectile.getTarget());
+		Unit target = worldStateN.getUnit(projectile.getTarget());
 		
 		if (projectile.hasExpired() || target == null)
 		{
@@ -384,6 +439,61 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 				it.remove();
 				worldStateN.addEtherial(new ZergDeath(gso.getPosition(), (int) gso.getRadius()));
 				
+			}
+		}
+	}
+	
+	@Override
+	public void visit(Hero hero)
+	{
+		
+		visit((Unit) hero);
+		
+	}
+	
+	@Override
+	public void visit(MoveCommand moveCommand)
+	{
+		
+		for (UUID id : moveCommand.getIds())
+		{
+			Unit unit = worldStateN.getUnit(id);
+			
+			if (unit != null)
+			{
+				unit.setPath(new Path(new EuVector(moveCommand.getLocation())));
+			}
+			
+		}
+	}
+	
+	@Override
+	public void visit(UseLocationAbilityCommand command)
+	{
+		worldStateN.addEtherial(new Explosion(command.getLocation()));
+		
+	}
+	
+	@Override
+	public void visit(UseTargetedAbilityCommand useTargetedAbilityCommand)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void visit(AttackCommand attackCommand)
+	{
+		if (attackCommand.getIds().size() > 0)
+		{
+			for (UUID id : attackCommand.getIds())
+			{
+				Unit unit = worldStateN.getUnit(id);
+				Unit target = worldStateN.getUnit(attackCommand.getTargetId());
+				if (unit != null && unit.getTeam() != target.getTeam())
+				{
+					unit.setTarget(attackCommand.getTargetId());
+				}
 			}
 		}
 	}

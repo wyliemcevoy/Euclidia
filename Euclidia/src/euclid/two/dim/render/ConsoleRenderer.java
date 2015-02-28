@@ -22,11 +22,9 @@ import javax.imageio.ImageIO;
 import euclid.two.dim.Configuration;
 import euclid.two.dim.ConsoleFrame;
 import euclid.two.dim.input.InputManager;
-import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
-import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Room;
 import euclid.two.dim.world.WorldState;
 
@@ -230,7 +228,7 @@ public class ConsoleRenderer extends Thread
 			{
 				g.setColor(new Color(25, 25, 25));
 			}
-			
+			/*
 			if (gso instanceof Boid)
 			{
 				g.setColor(new Color(50, 50, 50));
@@ -257,7 +255,7 @@ public class ConsoleRenderer extends Thread
 				//g.drawRect((int) (pos.getX() - rad), (int) (pos.getY() - rad), 2 * rad, 2 * rad);
 				//g.drawArc((int) (pos.getX() - 2 * rad), (int) (pos.getY() - 2 * rad), 4 * rad, 4 * rad, 0, 360);
 			}
-			
+			*/
 			boolean draw = false;
 			if (draw)
 			{

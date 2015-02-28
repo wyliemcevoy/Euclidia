@@ -7,12 +7,13 @@ import euclid.two.dim.visitor.EtherialVisitor;
 
 public class Explosion extends Etherial
 {
+	private int radius = 10;
 	
 	public Explosion(EuVector location)
 	{
 		this.location = location;
 		this.color = Color.pink;
-		this.expireTime = 2000;
+		this.expireTime = 500;
 	}
 	
 	public Explosion(Explosion copy)
@@ -32,6 +33,12 @@ public class Explosion extends Etherial
 	public void accept(EtherialVisitor etherialVisitor)
 	{
 		etherialVisitor.visit(this);
+	}
+	
+	public int getRadius()
+	{
+		// TODO Auto-generated method stub
+		return radius;
 	}
 	
 }

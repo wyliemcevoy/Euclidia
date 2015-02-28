@@ -1,4 +1,4 @@
-package euclid.two.dim.ai;
+package euclid.two.dim.command;
 
 public interface AcceptsCommandVisitor
 {

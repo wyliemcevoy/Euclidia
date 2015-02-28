@@ -6,9 +6,9 @@ import java.awt.Image;
 
 import euclid.two.dim.combat.Health;
 import euclid.two.dim.model.EuVector;
-import euclid.two.dim.model.Minion;
+import euclid.two.dim.model.Hero;
 
-public class UnitRender implements Renderable
+public class HeroRender implements Renderable
 {
 	private EuVector location;
 	private double theta;
@@ -17,9 +17,9 @@ public class UnitRender implements Renderable
 	private int height = 38;
 	private int radius;
 	private Health health;
-	private Minion unit;
+	private Hero unit;
 	
-	public UnitRender(Minion unit)
+	public HeroRender(Hero unit)
 	{
 		this.location = unit.getPosition();
 		this.theta = unit.getTheta();
@@ -30,7 +30,7 @@ public class UnitRender implements Renderable
 		{
 			this.index = unit.getRenderComponent().getRenderIndex();
 		}
-		this.unit = new Minion(unit);
+		this.unit = new Hero(unit);
 	}
 	
 	@Override
@@ -75,7 +75,8 @@ public class UnitRender implements Renderable
 		float alpha = (float) .25;
 		
 		g.setColor(new Color(1, 1, 1, alpha));
-		g.drawArc(x - radius, y - radius, 2 * radius, 2 * radius, 0, 360);
+		
+		//g.drawArc(x - radius, y - radius, 2 * radius, 2 * radius, 0, 360);
 		
 		for (EuVector vect : unit.getPath().getTargets())
 		{

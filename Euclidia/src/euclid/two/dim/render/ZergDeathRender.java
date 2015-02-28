@@ -26,7 +26,6 @@ public class ZergDeathRender implements Renderable
 		radius = (int) (radius * 1.8);
 		
 		g.drawImage(image, x - 1 * radius, y - 1 * radius, radius * 2, radius * 2, null);
-		
 	}
 	
 }

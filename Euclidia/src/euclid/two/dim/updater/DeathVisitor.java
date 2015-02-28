@@ -1,9 +1,9 @@
 package euclid.two.dim.updater;
 
-import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.Fish;
-import euclid.two.dim.model.Obstacle;
+import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
+import euclid.two.dim.model.Obstacle;
 
 public class DeathVisitor implements UpdateVisitor
 {
@@ -28,12 +28,6 @@ public class DeathVisitor implements UpdateVisitor
 	}
 	
 	@Override
-	public void visit(Boid boid)
-	{
-		dead = false;
-	}
-	
-	@Override
 	public void visit(Obstacle obstacle)
 	{
 		dead = false;
@@ -42,6 +36,13 @@ public class DeathVisitor implements UpdateVisitor
 	public boolean isDead()
 	{
 		return dead;
+	}
+	
+	@Override
+	public void visit(Hero hero)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

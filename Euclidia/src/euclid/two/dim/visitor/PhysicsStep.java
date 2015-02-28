@@ -2,12 +2,13 @@ package euclid.two.dim.visitor;
 
 import java.util.ArrayList;
 
-import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.GameSpaceObject;
-import euclid.two.dim.model.Obstacle;
+import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
+import euclid.two.dim.model.Obstacle;
+import euclid.two.dim.model.Unit;
 import euclid.two.dim.updater.UpdateVisitor;
 import euclid.two.dim.world.WorldState;
 
@@ -35,11 +36,17 @@ public class PhysicsStep implements UpdateVisitor
 	}
 	
 	@Override
-	public void visit(Minion gso)
+	public void visit(Minion unit)
+	{
+		
+		visit((Unit) unit);
+	}
+	
+	private void visit(Unit unit)
 	{
 		ArrayList<GameSpaceObject> fishes = worldState.getGsos();
 		
-		EuVector position = new EuVector(gso.getPosition());
+		EuVector position = new EuVector(unit.getPosition());
 		
 		EuVector futurePosition = new EuVector(position);
 		EuVector update = new EuVector(0, 0);
@@ -47,7 +54,7 @@ public class PhysicsStep implements UpdateVisitor
 		{
 			EuVector distTo = position.subtract(fish.getPosition());
 			double mag = distTo.getMagnitude();
-			if (!gso.equals(fish) && mag < 15)
+			if (!unit.equals(fish) && mag < 15)
 			{
 				EuVector plus = distTo.normalize().dividedBy(mag * mag / (fish.getRadius() * 10));
 				update = update.add(plus);
@@ -64,8 +71,7 @@ public class PhysicsStep implements UpdateVisitor
 		}
 		futurePosition = futurePosition.add(update);
 		
-		gso.setFuturePosition(futurePosition);
-		
+		unit.setFuturePosition(futurePosition);
 	}
 	
 	@Override
@@ -76,17 +82,16 @@ public class PhysicsStep implements UpdateVisitor
 	}
 	
 	@Override
-	public void visit(Boid boid)
+	public void visit(Obstacle obstacle)
 	{
 		// TODO Auto-generated method stub
 		
 	}
 	
 	@Override
-	public void visit(Obstacle obstacle)
+	public void visit(Hero hero)
 	{
-		// TODO Auto-generated method stub
-		
+		visit((Unit) hero);
 	}
 	
 }

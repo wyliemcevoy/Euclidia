@@ -1,13 +1,11 @@
-package euclid.two.dim.ai;
+package euclid.two.dim.command;
 
-public class MoveCommand extends Command
+public class UseTargetedAbilityCommand extends UseAbilityCommand
 {
 	
 	@Override
 	public void accept(CommandVisitor commandVisitor)
 	{
 		commandVisitor.visit(this);
-		
 	}
-	
 }

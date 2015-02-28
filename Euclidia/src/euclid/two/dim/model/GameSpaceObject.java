@@ -6,9 +6,9 @@ import java.util.UUID;
 
 import euclid.two.dim.Configuration;
 import euclid.two.dim.Path;
-import euclid.two.dim.Player;
 import euclid.two.dim.behavior.SteeringBehavior;
 import euclid.two.dim.render.RenderComponent;
+import euclid.two.dim.team.Team;
 import euclid.two.dim.updater.Updatable;
 
 public abstract class GameSpaceObject implements Updatable
@@ -22,16 +22,14 @@ public abstract class GameSpaceObject implements Updatable
 	protected double mass;
 	protected Color color;
 	protected EuVector future;
-	
 	protected Path path;
-	
 	protected boolean isSelected;
 	protected UUID id;
 	protected double theta;
 	protected boolean isAtRest;
 	protected RenderComponent renderComponent;
-	protected Player player;
 	protected SteeringBehavior steeringBehavior;
+	protected Team team;
 	
 	public SteeringBehavior getSteeringBehavior()
 	{
@@ -41,11 +39,6 @@ public abstract class GameSpaceObject implements Updatable
 	public void setSteeringBehavior(SteeringBehavior steeringBehavior)
 	{
 		this.steeringBehavior = steeringBehavior;
-	}
-	
-	public Player getPlayer()
-	{
-		return this.player;
 	}
 	
 	public double getMass()
@@ -99,8 +92,8 @@ public abstract class GameSpaceObject implements Updatable
 		this.id = UUID.randomUUID();
 		this.theta = 0;
 		this.isAtRest = true;
-		this.player = new Player(3, Color.white);
 		this.steeringBehavior = SteeringBehavior.Flock;
+		this.team = Team.Neutral;
 	}
 	
 	public double getRadius()
@@ -129,14 +122,18 @@ public abstract class GameSpaceObject implements Updatable
 		this.id = copy.getId();
 		this.theta = copy.getTheta();
 		this.renderComponent = copy.getRenderComponent().deepCopy();
-		this.player = copy.getPlayer();
+		this.team = copy.getTeam();
 		this.steeringBehavior = copy.getSteeringBehavior();
 		this.path = copy.getPath().deepCopy();
 	}
 	
+	public Team getTeam()
+	{
+		return team;
+	}
+	
 	public RenderComponent getRenderComponent()
 	{
-		// TODO Auto-generated method stub
 		return renderComponent;
 	}
 	
@@ -239,4 +236,8 @@ public abstract class GameSpaceObject implements Updatable
 		return path;
 	}
 	
+	public void setTeam(Team team)
+	{
+		this.team = team;
+	}
 }

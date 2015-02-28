@@ -1,40 +1,22 @@
 package euclid.two.dim;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
+import euclid.two.dim.command.Command;
 import euclid.two.dim.team.Team;
+import euclid.two.dim.world.WorldState;
 
-public class Player
+public abstract class Player
 {
-	private Team team;
+	protected Team team;
+	protected WorldState worldState;
+	protected Color color;
+	protected ArrayList<Command> commands;
 	
-	private Color color;
-	private int id;
+	public abstract List<Command> getCommands();
 	
-	public Player(int id, Color color)
-	{
-		this.color = color;
-		this.id = id;
-	}
-	
-	public void setColor(Color color)
-	{
-		this.color = color;
-	}
-	
-	public Color getColor()
-	{
-		return color;
-	}
-	
-	public boolean equals(Player player)
-	{
-		return player.getId() == id;
-	}
-	
-	private int getId()
-	{
-		return id;
-	}
+	public abstract void acceptWorldState(WorldState worldState);
 	
 }

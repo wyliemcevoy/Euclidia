@@ -4,15 +4,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.awt.Color;
-
 import org.junit.Before;
 import org.junit.Test;
 
 import euclid.two.dim.Path;
-import euclid.two.dim.Player;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Minion;
+import euclid.two.dim.team.Team;
 
 public class MinionTest
 {
@@ -25,8 +23,8 @@ public class MinionTest
 		path.addTarget(new EuVector(10, 10));
 		path.addTarget(new EuVector(50, 50));
 		
-		Player player = new Player(0, Color.BLACK);
-		this.unit = new Minion(path, new EuVector(10, 10), player);
+		Team blackTeam = Team.Black;
+		this.unit = new Minion(blackTeam, new EuVector(10, 10));
 	}
 	
 	@Test

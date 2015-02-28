@@ -1,30 +1,26 @@
 package euclid.two.dim.world;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
 import euclid.two.dim.Configuration;
 import euclid.two.dim.Path;
-import euclid.two.dim.Player;
 import euclid.two.dim.ability.GrenadeAbility;
-import euclid.two.dim.ai.Agent;
-import euclid.two.dim.input.InputManager;
 import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;
+import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Obstacle;
 import euclid.two.dim.model.Room;
 import euclid.two.dim.render.Camera;
+import euclid.two.dim.team.Team;
 
 public class WorldStateFactory
 {
-	private InputManager inputManager;
 	private Random rand;
 	
-	public WorldStateFactory(InputManager inputManager)
+	public WorldStateFactory()
 	{
-		this.inputManager = inputManager;
 		rand = new Random(System.currentTimeMillis());
 	}
 	
@@ -60,11 +56,11 @@ public class WorldStateFactory
 	public WorldState createURoomsWorldState()
 	{
 		WorldState worldState = new WorldState();
-		
+		Team blueTeam = Team.Blue;
 		for (int i = 0; i < 200; i++)
 		{
 			Path path = new Path(new EuVector(150, 250));
-			Minion fish = new Minion(path, randVect(100, 200, 100, 200), new Player(1, Color.BLUE));
+			Minion fish = new Minion(blueTeam, randVect(100, 200, 100, 200));
 			worldState.addObject(fish);
 		}
 		
@@ -116,31 +112,26 @@ public class WorldStateFactory
 		return worldState;
 	}
 	
-	public WorldState createVsWorldState(Agent agent)
+	public Hero createHero(Team team)
+	{
+		Hero hero = new Hero(team, randVect(100, 200, 100, 200));
+		hero.addAbility(new GrenadeAbility());
+		hero.setMass(500);
+		hero.setRadius(15);
+		hero.getHealth().setMaxHealth(5000);
+		hero.setMaxSpeed(100);
+		
+		return hero;
+	}
+	
+	public WorldState createVsWorldState(Team team)
 	{
 		WorldState worldState = new WorldState();
 		
-		Player player = new Player(0, Color.RED);
-		
-		for (int i = 0; i < 1; i++)
-		{
-			Path path = new Path(new EuVector(150, 250));
-			Minion unit = new Minion(path, randVect(100, 200, 100, 200), player);
-			worldState.addObject(unit);
-			unit.addAbility(new GrenadeAbility());
-			unit.setMass(500);
-			unit.setRadius(15);
-			unit.getHealth().setMaxHealth(10000);
-			unit.setMaxSpeed(100);
-		}
-		
 		for (int i = 0; i < 5; i++)
 		{
-			Path path = new Path(new EuVector(150, 250));
-			Minion unit = new Minion(path, randVect(100, 200, 100, 200), agent);
+			Minion unit = new Minion(team, randVect(100, 200, 100, 200));
 			worldState.addObject(unit);
-			
-			agent.regesterControl(unit.getId());
 		}
 		
 		Room rTL = new Room(0, 0, 1000, 1000);

@@ -8,7 +8,8 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 
-import euclid.two.dim.Player;
+import euclid.two.dim.HumanPlayer;
+import euclid.two.dim.model.EuVector;
 import euclid.two.dim.updater.UpdateEngine;
 
 public class InputManager implements MouseListener, MouseWheelListener, KeyListener
@@ -17,16 +18,20 @@ public class InputManager implements MouseListener, MouseWheelListener, KeyListe
 	private ArrayList<InputCommand> inputCommands;
 	private static Object lock = new Object();
 	private UpdateEngine updateEngine;
-	private Player player;
+	private HumanPlayer player;
 	
-	public InputManager()
+	public InputManager(HumanPlayer player)
 	{
+		this.player = player;
 		this.inputCommands = new ArrayList<InputCommand>();
 	}
 	
 	@Override
 	public void mouseClicked(MouseEvent e)
 	{
+		
+		player.click(new EuVector(e.getX(), e.getY()));
+		
 		synchronized (lock)
 		{
 			inputCommands.add(new ClickEvent(e.getX(), e.getY(), updateEngine));
@@ -94,6 +99,8 @@ public class InputManager implements MouseListener, MouseWheelListener, KeyListe
 	@Override
 	public void keyPressed(KeyEvent keyEvent)
 	{
+		
+		player.keyPressed(keyEvent.getKeyChar());
 		
 		System.out.println(keyEvent.getKeyChar());
 		inputCommands.add(new KeyInput(updateEngine, keyEvent.getKeyChar()));

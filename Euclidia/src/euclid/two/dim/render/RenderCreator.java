@@ -7,10 +7,10 @@ import euclid.two.dim.etherial.Explosion;
 import euclid.two.dim.etherial.Projectile;
 import euclid.two.dim.etherial.Slash;
 import euclid.two.dim.etherial.ZergDeath;
-import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.GameSpaceObject;
+import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Obstacle;
 import euclid.two.dim.updater.UpdateVisitor;
@@ -26,18 +26,6 @@ public class RenderCreator implements UpdateVisitor, EtherialVisitor
 	{
 		this.worldState = worldState;
 		this.renderables = new ArrayList<Renderable>();
-		
-		for (GameSpaceObject gso : worldState.getGameSpaceObjects())
-		{
-			gso.acceptUpdateVisitor(this);
-		}
-		
-		for (Etherial etherial : worldState.getEtherials())
-		{
-			etherial.accept(this);
-		}
-		
-		renderables.add(new StringRender("[" + worldState.getCharacter() + "]", new EuVector(10, 10)));
 		
 	}
 	
@@ -79,13 +67,6 @@ public class RenderCreator implements UpdateVisitor, EtherialVisitor
 	}
 	
 	@Override
-	public void visit(Boid boid)
-	{
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
 	public void visit(Obstacle obstacle)
 	{
 		// TODO Auto-generated method stub
@@ -94,6 +75,21 @@ public class RenderCreator implements UpdateVisitor, EtherialVisitor
 	
 	public ArrayList<Renderable> getRenderables()
 	{
+		
+		for (GameSpaceObject gso : worldState.getGameSpaceObjects())
+		{
+			
+			gso.acceptUpdateVisitor(this);
+			
+		}
+		
+		for (Etherial etherial : worldState.getEtherials())
+		{
+			etherial.accept(this);
+		}
+		
+		renderables.add(new StringRender("[" + worldState.getCharacter() + "]", new EuVector(10, 10)));
+		
 		return renderables;
 	}
 	
@@ -107,6 +103,13 @@ public class RenderCreator implements UpdateVisitor, EtherialVisitor
 	public void visit(ZergDeath zergDeath)
 	{
 		this.renderables.add(new ZergDeathRender(zergDeath));
+		
+	}
+	
+	@Override
+	public void visit(Hero hero)
+	{
+		this.renderables.add(new HeroRender(hero));
 		
 	}
 }

@@ -7,11 +7,11 @@ import euclid.two.dim.etherial.Explosion;
 import euclid.two.dim.etherial.Projectile;
 import euclid.two.dim.etherial.Slash;
 import euclid.two.dim.etherial.ZergDeath;
-import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.GameSpaceObject;
-import euclid.two.dim.model.Obstacle;
+import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
+import euclid.two.dim.model.Obstacle;
 import euclid.two.dim.updater.UpdateVisitor;
 import euclid.two.dim.world.WorldState;
 
@@ -105,17 +105,20 @@ public class EndStepManager implements UpdateVisitor, EtherialVisitor
 	}
 	
 	@Override
-	public void visit(Boid boid)
+	public void visit(Obstacle obstacle)
 	{
 		// TODO Auto-generated method stub
 		
 	}
 	
 	@Override
-	public void visit(Obstacle obstacle)
+	public void visit(Hero hero)
 	{
-		// TODO Auto-generated method stub
-		
+		if (hero.hasExpired())
+		{
+			dead.add(hero);
+			worldState.addEtherial(new ZergDeath(hero.getPosition(), (int) hero.getRadius()));
+		}
 	}
 	
 }

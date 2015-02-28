@@ -2,12 +2,13 @@ package euclid.two.dim.visitor;
 
 import euclid.two.dim.Configuration;
 import euclid.two.dim.Path;
-import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.GameSpaceObject;
+import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Obstacle;
+import euclid.two.dim.model.Unit;
 import euclid.two.dim.updater.UpdateVisitor;
 import euclid.two.dim.world.WorldState;
 
@@ -35,7 +36,7 @@ public class SteeringStep implements UpdateVisitor
 		}
 	}
 	
-	private EuVector calculateSteeringForce(Minion unit)
+	private EuVector calculateSteeringForce(Unit unit)
 	{
 		
 		//SteeringType sb = unit.getSteeringType();
@@ -109,6 +110,11 @@ public class SteeringStep implements UpdateVisitor
 	@Override
 	public void visit(Minion unit)
 	{
+		visit((Unit) unit);
+	}
+	
+	private void visit(Unit unit)
+	{
 		double mass = unit.getMass();
 		EuVector steeringForce = calculateSteeringForce(unit);
 		EuVector acceleration = steeringForce.dividedBy(mass);
@@ -143,13 +149,6 @@ public class SteeringStep implements UpdateVisitor
 	}
 	
 	@Override
-	public void visit(Boid boid)
-	{
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
 	public void visit(Obstacle obstacle)
 	{
 		// TODO Auto-generated method stub
@@ -174,5 +173,11 @@ public class SteeringStep implements UpdateVisitor
 		}
 		*/
 		
+	}
+	
+	@Override
+	public void visit(Hero hero)
+	{
+		visit((Unit) hero);
 	}
 }

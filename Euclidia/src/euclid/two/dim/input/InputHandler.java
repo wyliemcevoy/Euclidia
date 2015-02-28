@@ -8,5 +8,5 @@ public interface InputHandler
 
 	public abstract void process(QuitCommand quitEvent);
 
-	public abstract void process(AttackCommand attackCommand);
+	public abstract void process(AttackInputCommand attackCommand);
 }

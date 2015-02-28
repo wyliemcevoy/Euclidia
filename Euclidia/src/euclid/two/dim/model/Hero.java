@@ -1,30 +1,58 @@
 package euclid.two.dim.model;
 
+import java.util.ArrayList;
+
+import euclid.two.dim.ability.Ability;
+import euclid.two.dim.team.Team;
 import euclid.two.dim.updater.Updatable;
 import euclid.two.dim.updater.UpdateVisitor;
 
 public class Hero extends Unit
 {
+	private ArrayList<Ability> abilities;
+	
+	public Hero(Team team, EuVector location)
+	{
+		super(team, location);
+		this.setAbilities(new ArrayList<Ability>());
+		
+	}
+	
+	public Hero(Hero hero)
+	{
+		super(hero);
+		this.setAbilities(new ArrayList<Ability>());
+		for (Ability ability : hero.getAbilities())
+		{
+			abilities.add(ability.deepCopy());
+		}
+	}
 	
 	@Override
-	public void acceptUpdateVisitor(UpdateVisitor updatevisitor)
+	public void acceptUpdateVisitor(UpdateVisitor updateVisitor)
 	{
-		// TODO Auto-generated method stub
-		
+		updateVisitor.visit(this);
 	}
 	
 	@Override
 	public Updatable deepCopy()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return new Hero(this);
 	}
 	
-	@Override
-	public boolean hasExpired()
+	public ArrayList<Ability> getAbilities()
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return abilities;
+	}
+	
+	private void setAbilities(ArrayList<Ability> abilities)
+	{
+		this.abilities = abilities;
+	}
+	
+	public void addAbility(Ability ability)
+	{
+		this.abilities.add(ability);
 	}
 	
 }

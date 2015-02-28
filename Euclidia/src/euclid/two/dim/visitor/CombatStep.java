@@ -1,10 +1,11 @@
 package euclid.two.dim.visitor;
 
-import euclid.two.dim.model.Boid;
 import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.GameSpaceObject;
+import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Obstacle;
+import euclid.two.dim.model.Unit;
 import euclid.two.dim.updater.UpdateVisitor;
 import euclid.two.dim.world.WorldState;
 
@@ -26,6 +27,13 @@ public class CombatStep implements UpdateVisitor
 	@Override
 	public void visit(Minion unit)
 	{
+		
+		visit((Unit) unit);
+	}
+	
+	private void visit(Unit unit)
+	{
+		
 		switch (unit.getCombatBehavior())
 		{
 		case AttackIfInRange:
@@ -37,7 +45,7 @@ public class CombatStep implements UpdateVisitor
 			//			- There is no no target in range
 			// Unit does not have target
 			
-			Minion target = worldState.getUnit(unit.getTarget());
+			Unit target = worldState.getUnit(unit.getTarget());
 			if (target != null)
 			{
 				if (worldState.getDistanceBetween(target, unit) < unit.getAttack().getRange())
@@ -76,16 +84,16 @@ public class CombatStep implements UpdateVisitor
 	}
 	
 	@Override
-	public void visit(Boid boid)
+	public void visit(Obstacle obstacle)
 	{
 		// TODO Auto-generated method stub
 		
 	}
 	
 	@Override
-	public void visit(Obstacle obstacle)
+	public void visit(Hero hero)
 	{
-		// TODO Auto-generated method stub
+		visit((Unit) hero);
 		
 	}
 	
