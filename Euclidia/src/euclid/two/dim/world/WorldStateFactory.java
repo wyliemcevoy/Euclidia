@@ -5,7 +5,7 @@ import java.util.Random;
 
 import euclid.two.dim.Configuration;
 import euclid.two.dim.Path;
-import euclid.two.dim.ability.GrenadeAbility;
+import euclid.two.dim.ability.EplosiveProjectileAbility;
 import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Hero;
@@ -26,7 +26,6 @@ public class WorldStateFactory
 	
 	public WorldState createRandomWorldState()
 	{
-		
 		WorldState worldState = new WorldState();
 		/*
 		EuVector one = randVect();
@@ -115,7 +114,7 @@ public class WorldStateFactory
 	public Hero createHero(Team team)
 	{
 		Hero hero = new Hero(team, randVect(100, 200, 100, 200));
-		hero.addAbility(new GrenadeAbility());
+		hero.addAbility(new EplosiveProjectileAbility());
 		hero.setMass(500);
 		hero.setRadius(15);
 		hero.getHealth().setMaxHealth(5000);
@@ -128,7 +127,7 @@ public class WorldStateFactory
 	{
 		WorldState worldState = new WorldState();
 		
-		for (int i = 0; i < 5; i++)
+		for (int i = 0; i < 100; i++)
 		{
 			Minion unit = new Minion(team, randVect(100, 200, 100, 200));
 			worldState.addObject(unit);

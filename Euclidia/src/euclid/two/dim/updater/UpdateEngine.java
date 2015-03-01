@@ -9,6 +9,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 import euclid.two.dim.Path;
 import euclid.two.dim.VectorMath;
+import euclid.two.dim.ability.request.AbilityRequest;
+import euclid.two.dim.command.AbilityCommand;
 import euclid.two.dim.command.AttackCommand;
 import euclid.two.dim.command.Command;
 import euclid.two.dim.command.CommandVisitor;
@@ -470,6 +472,9 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 	@Override
 	public void visit(UseLocationAbilityCommand command)
 	{
+		command.getHeroId();
+		command.getAbilityIndex();
+		
 		worldStateN.addEtherial(new Explosion(command.getLocation()));
 		
 	}
@@ -477,7 +482,6 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 	@Override
 	public void visit(UseTargetedAbilityCommand useTargetedAbilityCommand)
 	{
-		// TODO Auto-generated method stub
 		
 	}
 	
@@ -496,5 +500,16 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 				}
 			}
 		}
+	}
+	
+	@Override
+	public void visit(AbilityCommand abilityCommand)
+	{
+		AbilityRequest abilityRequest = abilityCommand.getAbilityRequest();
+		
+		Hero hero = worldStateN.getHero(abilityRequest.getHeroId());
+		
+		hero.getAbilities();
+		
 	}
 }

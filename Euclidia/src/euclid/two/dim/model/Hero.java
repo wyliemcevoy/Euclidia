@@ -2,7 +2,7 @@ package euclid.two.dim.model;
 
 import java.util.ArrayList;
 
-import euclid.two.dim.ability.Ability;
+import euclid.two.dim.ability.internal.Ability;
 import euclid.two.dim.team.Team;
 import euclid.two.dim.updater.Updatable;
 import euclid.two.dim.updater.UpdateVisitor;

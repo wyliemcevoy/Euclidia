@@ -350,4 +350,17 @@ public class WorldState
 		return character;
 	}
 	
+	public Hero getHero(UUID id)
+	{
+		// Horrible implementation (change to map)
+		for (GameSpaceObject gso : gsos)
+		{
+			if (gso.getId().equals(id))
+			{
+				return (Hero) gso;
+			}
+		}
+		return null;
+	}
+	
 }

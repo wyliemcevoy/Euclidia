@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import euclid.two.dim.ability.internal.Ability;
 import euclid.two.dim.command.AttackCommand;
 import euclid.two.dim.command.Command;
 import euclid.two.dim.command.MoveCommand;
 import euclid.two.dim.command.UseLocationAbilityCommand;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
+import euclid.two.dim.model.Hero;
 import euclid.two.dim.team.Team;
 import euclid.two.dim.world.WorldState;
 
@@ -47,7 +49,17 @@ public class HumanMobaPlayer extends HumanPlayer
 		
 		if (selectedAbility != -1)
 		{
-			commands.add(new UseLocationAbilityCommand(heroId, adjustedTarget, 0));
+			
+			Hero hero = worldState.getHero(heroId);
+			List<Ability> abilities = hero.getAbilities();
+			if (abilities.size() > selectedAbility)
+			{
+				Ability ability = hero.getAbilities().get(selectedAbility);
+				
+				commands.add(new UseLocationAbilityCommand(heroId, adjustedTarget, 0));
+				
+			}
+			
 			selectedAbility = -1;
 		} else
 		{

@@ -8,6 +8,8 @@ public interface CommandVisitor
 	
 	void visit(UseTargetedAbilityCommand useTargetedAbilityCommand);
 	
+	void visit(AbilityCommand abilityCommand);
+	
 	void visit(AttackCommand attackCommand);
 	
 }

@@ -75,12 +75,12 @@ public class UnitRender implements Renderable
 		float alpha = (float) .25;
 		
 		g.setColor(new Color(1, 1, 1, alpha));
-		g.drawArc(x - radius, y - radius, 2 * radius, 2 * radius, 0, 360);
+		//g.drawArc(x - radius, y - radius, 2 * radius, 2 * radius, 0, 360);
 		
 		for (EuVector vect : unit.getPath().getTargets())
 		{
 			
-			g.drawLine(x, y, (int) vect.getX(), (int) vect.getY());
+			//g.drawLine(x, y, (int) vect.getX(), (int) vect.getY());
 			x = (int) vect.getX();
 			y = (int) vect.getY();
 		}
