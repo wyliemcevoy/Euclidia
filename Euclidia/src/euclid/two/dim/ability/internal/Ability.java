@@ -27,6 +27,8 @@ public abstract class Ability implements AbilityRequestVisitor
 		this.abilityType = abilityType;
 	}
 	
+	//public abstract AbilityRequest toRequest(UUID heroId, WorldState worldState, EuVector location);
+	
 	public abstract void processRequest(AbilityRequest request, WorldState worldState);
 	
 	public abstract boolean isValidRequest(AbilityRequest abilityRequest);

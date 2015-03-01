@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import euclid.two.dim.etherial.Etherial;
 import euclid.two.dim.etherial.Explosion;
+import euclid.two.dim.etherial.ExplosiveProjectile;
 import euclid.two.dim.etherial.Projectile;
 import euclid.two.dim.etherial.Slash;
 import euclid.two.dim.etherial.ZergDeath;
@@ -21,12 +22,14 @@ public class EndStepManager implements UpdateVisitor, EtherialVisitor
 	private WorldState worldState;
 	private ArrayList<GameSpaceObject> dead;
 	private ArrayList<Etherial> expired;
+	private ArrayList<Etherial> created;
 	
 	public EndStepManager(WorldState worldState)
 	{
 		this.worldState = worldState;
 		this.dead = new ArrayList<GameSpaceObject>();
 		this.expired = new ArrayList<Etherial>();
+		this.created = new ArrayList<Etherial>();
 	}
 	
 	public void endPhase()
@@ -47,7 +50,10 @@ public class EndStepManager implements UpdateVisitor, EtherialVisitor
 		
 		worldState.getGsos().removeAll(dead);
 		worldState.getEtherials().removeAll(expired);
-		
+		for (Etherial etherial : created)
+		{
+			worldState.addEtherial(etherial);
+		}
 	}
 	
 	@Override
@@ -118,6 +124,16 @@ public class EndStepManager implements UpdateVisitor, EtherialVisitor
 		{
 			dead.add(hero);
 			worldState.addEtherial(new ZergDeath(hero.getPosition(), (int) hero.getRadius()));
+		}
+	}
+	
+	@Override
+	public void visit(ExplosiveProjectile explosiveProjectile)
+	{
+		if (explosiveProjectile.hasExpired())
+		{
+			expired.add(explosiveProjectile);
+			created.add(new Explosion(explosiveProjectile.getLocation()));
 		}
 	}
 	

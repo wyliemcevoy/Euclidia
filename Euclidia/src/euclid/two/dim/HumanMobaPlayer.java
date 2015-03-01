@@ -5,10 +5,12 @@ import java.util.List;
 import java.util.UUID;
 
 import euclid.two.dim.ability.internal.Ability;
+import euclid.two.dim.ability.internal.AbilityType;
+import euclid.two.dim.ability.request.LocationAbilityRequest;
+import euclid.two.dim.command.AbilityCommand;
 import euclid.two.dim.command.AttackCommand;
 import euclid.two.dim.command.Command;
 import euclid.two.dim.command.MoveCommand;
-import euclid.two.dim.command.UseLocationAbilityCommand;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Hero;
@@ -35,15 +37,14 @@ public class HumanMobaPlayer extends HumanPlayer
 		double x = location.getX();
 		double y = location.getY();
 		
-		EuVector adjustedTarget = new EuVector(x / 2, y / 2);
+		location = new EuVector(x / 2, y / 2);
 		//EuVector adjustedTarget = new EuVector(x / worldState.getCamera().getZoom(), y / worldState.getCamera().getZoom());
 		
 		for (GameSpaceObject gso : worldState.getGameSpaceObjects())
 		{
-			if (adjustedTarget.subtract(gso.getPosition()).getMagnitudeSquared() < gso.getRadius() * gso.getRadius())
+			if (location.subtract(gso.getPosition()).getMagnitudeSquared() < gso.getRadius() * gso.getRadius())
 			{
 				commands.add(new AttackCommand(heroId, gso.getId()));
-				
 			}
 		}
 		
@@ -56,15 +57,19 @@ public class HumanMobaPlayer extends HumanPlayer
 			{
 				Ability ability = hero.getAbilities().get(selectedAbility);
 				
-				commands.add(new UseLocationAbilityCommand(heroId, adjustedTarget, 0));
+				LocationAbilityRequest request = new LocationAbilityRequest();
+				request.setHeroId(heroId);
+				request.setAbilityType(AbilityType.grenade);
+				request.setLocation(location);
 				
+				commands.add(new AbilityCommand(request));
 			}
 			
 			selectedAbility = -1;
 		} else
 		{
 			
-			commands.add(new MoveCommand(heroId, adjustedTarget));
+			commands.add(new MoveCommand(heroId, location));
 		}
 		
 	}

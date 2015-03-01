@@ -1,9 +1,10 @@
 package euclid.two.dim.ability;
 
 import euclid.two.dim.ability.internal.Ability;
+import euclid.two.dim.ability.internal.AbilityType;
 import euclid.two.dim.ability.internal.LocationAbility;
 import euclid.two.dim.ability.request.AbilityRequest;
-import euclid.two.dim.etherial.Explosion;
+import euclid.two.dim.etherial.ExplosiveProjectile;
 import euclid.two.dim.world.WorldState;
 
 public class EplosiveProjectileAbility extends LocationAbility
@@ -43,8 +44,9 @@ public class EplosiveProjectileAbility extends LocationAbility
 		this.damage = 100;
 		this.radius = 40;
 		this.reloadTime = 1000;
-		this.currentTime = 1001;
+		this.currentTime = reloadTime + 1;
 		this.range = 100;
+		this.abilityType = AbilityType.grenade;
 	}
 	
 	@Override
@@ -59,9 +61,8 @@ public class EplosiveProjectileAbility extends LocationAbility
 		// Sanity check to prevent a client sending invalid requests
 		if (isValidRequest(abilityRequest))
 		{
-			
-			worldState.addEtherial(new Explosion(request.getLocation()));
-			
+			worldState.addEtherial(new ExplosiveProjectile(request.getLocation(), worldState.getUnit(abilityRequest.getHeroId())));
+			//this.currentTime = 0;
 			closeRequest();
 		}
 	}

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import euclid.two.dim.etherial.Etherial;
 import euclid.two.dim.etherial.Explosion;
+import euclid.two.dim.etherial.ExplosiveProjectile;
 import euclid.two.dim.etherial.Projectile;
 import euclid.two.dim.etherial.Slash;
 import euclid.two.dim.etherial.ZergDeath;
@@ -111,5 +112,11 @@ public class RenderCreator implements UpdateVisitor, EtherialVisitor
 	{
 		this.renderables.add(new HeroRender(hero));
 		
+	}
+	
+	@Override
+	public void visit(ExplosiveProjectile explosiveProjectile)
+	{
+		this.renderables.add(new StringRender("a", explosiveProjectile.getLocation()));
 	}
 }

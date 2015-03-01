@@ -9,6 +9,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 import euclid.two.dim.Path;
 import euclid.two.dim.VectorMath;
+import euclid.two.dim.ability.internal.Ability;
 import euclid.two.dim.ability.request.AbilityRequest;
 import euclid.two.dim.command.AbilityCommand;
 import euclid.two.dim.command.AttackCommand;
@@ -19,6 +20,7 @@ import euclid.two.dim.command.UseLocationAbilityCommand;
 import euclid.two.dim.command.UseTargetedAbilityCommand;
 import euclid.two.dim.etherial.Etherial;
 import euclid.two.dim.etherial.Explosion;
+import euclid.two.dim.etherial.ExplosiveProjectile;
 import euclid.two.dim.etherial.Projectile;
 import euclid.two.dim.etherial.Slash;
 import euclid.two.dim.etherial.ZergDeath;
@@ -505,11 +507,44 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 	@Override
 	public void visit(AbilityCommand abilityCommand)
 	{
+		
 		AbilityRequest abilityRequest = abilityCommand.getAbilityRequest();
 		
 		Hero hero = worldStateN.getHero(abilityRequest.getHeroId());
 		
-		hero.getAbilities();
+		// Verify hero is still in existence
+		if (hero != null)
+		{
+			Ability ability = hero.getAbility(abilityRequest.getAbilityType());
+			
+			// Verify ability is valid
+			if (ability != null)
+			{
+				ability.processRequest(abilityRequest, worldStateN);
+			}
+		}
 		
+	}
+	
+	@Override
+	public void visit(ExplosiveProjectile projectile)
+	{
+		projectile.update(timeStep);
+		
+		if (projectile.hasExpired())
+		{
+			projectile.setAsExpired();
+		} else
+		{
+			EuVector targetLocation = projectile.getDestination();
+			
+			EuVector dT = targetLocation.subtract(projectile.getLocation()).normalize().multipliedBy(2);
+			projectile.setLocation(projectile.getLocation().add(dT));
+			
+			if (projectile.getLocation().subtract(targetLocation).getMagnitude() < 3)
+			{
+				projectile.setAsExpired();
+			}
+		}
 	}
 }

@@ -3,6 +3,7 @@ package euclid.two.dim.model;
 import java.util.ArrayList;
 
 import euclid.two.dim.ability.internal.Ability;
+import euclid.two.dim.ability.internal.AbilityType;
 import euclid.two.dim.team.Team;
 import euclid.two.dim.updater.Updatable;
 import euclid.two.dim.updater.UpdateVisitor;
@@ -53,6 +54,18 @@ public class Hero extends Unit
 	public void addAbility(Ability ability)
 	{
 		this.abilities.add(ability);
+	}
+	
+	public Ability getAbility(AbilityType abilityType)
+	{
+		for (Ability ability : abilities)
+		{
+			if (abilityType == ability.getAbilityType())
+			{
+				return ability;
+			}
+		}
+		return null;
 	}
 	
 }

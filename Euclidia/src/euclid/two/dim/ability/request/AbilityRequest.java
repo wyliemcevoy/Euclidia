@@ -10,6 +10,15 @@ public abstract class AbilityRequest implements AcceptsAbilityRequestVisitor
 	protected UUID heroId;
 	
 	/**
+	 * @param heroId
+	 *            the heroId to set
+	 */
+	public void setHeroId(UUID heroId)
+	{
+		this.heroId = heroId;
+	}
+	
+	/**
 	 * @return the heroId
 	 */
 	public UUID getHeroId()
