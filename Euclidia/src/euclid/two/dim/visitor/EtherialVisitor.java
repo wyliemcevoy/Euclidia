@@ -1,5 +1,6 @@
 package euclid.two.dim.visitor;
 
+import euclid.two.dim.etherial.CircleGraphic;
 import euclid.two.dim.etherial.Explosion;
 import euclid.two.dim.etherial.ExplosiveProjectile;
 import euclid.two.dim.etherial.Projectile;
@@ -17,4 +18,6 @@ public interface EtherialVisitor
 	public void visit(ZergDeath zergDeath);
 	
 	public void visit(ExplosiveProjectile explosiveProjectile);
+	
+	public void visit(CircleGraphic circleGraphic);
 }

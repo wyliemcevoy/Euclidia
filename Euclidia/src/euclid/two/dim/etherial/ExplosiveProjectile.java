@@ -11,6 +11,7 @@ public class ExplosiveProjectile extends Etherial
 	private UUID sender;
 	private double maxRange;
 	private EuVector destination;
+	private int explosionRadius;
 	
 	public ExplosiveProjectile(EuVector destination, Unit sender)
 	{
@@ -19,6 +20,7 @@ public class ExplosiveProjectile extends Etherial
 		this.location = new EuVector(sender.getPosition());
 		this.expireTime = 1500;
 		this.destination = destination;
+		this.explosionRadius = 50;
 	}
 	
 	public ExplosiveProjectile(ExplosiveProjectile copy)
@@ -90,5 +92,10 @@ public class ExplosiveProjectile extends Etherial
 	public void setDestination(EuVector destination)
 	{
 		this.destination = destination;
+	}
+	
+	public int getExplosionRadius()
+	{
+		return this.explosionRadius;
 	}
 }

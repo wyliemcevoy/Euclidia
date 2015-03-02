@@ -18,6 +18,7 @@ import euclid.two.dim.command.CommandVisitor;
 import euclid.two.dim.command.MoveCommand;
 import euclid.two.dim.command.UseLocationAbilityCommand;
 import euclid.two.dim.command.UseTargetedAbilityCommand;
+import euclid.two.dim.etherial.CircleGraphic;
 import euclid.two.dim.etherial.Etherial;
 import euclid.two.dim.etherial.Explosion;
 import euclid.two.dim.etherial.ExplosiveProjectile;
@@ -543,8 +544,20 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 			
 			if (projectile.getLocation().subtract(targetLocation).getMagnitude() < 3)
 			{
+				for (Unit unit : worldStateN.getUnitsInRange(projectile.getLocation(), projectile.getExplosionRadius()))
+				{
+					unit.getHealth().add(-60);
+				}
+				
 				projectile.setAsExpired();
 			}
 		}
+	}
+	
+	@Override
+	public void visit(CircleGraphic circleGraphic)
+	{
+		circleGraphic.update(timeStep);
+		
 	}
 }

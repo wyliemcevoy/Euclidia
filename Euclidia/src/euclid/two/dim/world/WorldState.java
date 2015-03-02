@@ -363,4 +363,21 @@ public class WorldState
 		return null;
 	}
 	
+	public ArrayList<Unit> getUnitsInRange(EuVector location, int explosionRadius)
+	{
+		ArrayList<Unit> result = new ArrayList<Unit>();
+		
+		for (GameSpaceObject gso : gsos)
+		{
+			EuVector distance = VectorMath.subtract(gso.getPosition(), location);
+			
+			if (gso instanceof Unit && distance.getMagnitude() - gso.getRadius() < explosionRadius)
+			{
+				result.add((Unit) gso);
+			}
+		}
+		
+		return result;
+	}
+	
 }

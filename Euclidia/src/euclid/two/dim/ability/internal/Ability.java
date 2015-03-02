@@ -1,7 +1,10 @@
 package euclid.two.dim.ability.internal;
 
+import java.util.UUID;
+
 import euclid.two.dim.ability.request.AbilityRequest;
 import euclid.two.dim.ability.request.AbilityRequestVisitor;
+import euclid.two.dim.model.EuVector;
 import euclid.two.dim.world.WorldState;
 
 public abstract class Ability implements AbilityRequestVisitor
@@ -27,9 +30,9 @@ public abstract class Ability implements AbilityRequestVisitor
 		this.abilityType = abilityType;
 	}
 	
-	//public abstract AbilityRequest toRequest(UUID heroId, WorldState worldState, EuVector location);
+	public abstract AbilityRequest toRequest(UUID heroId, WorldState worldState, EuVector location);
 	
-	public abstract void processRequest(AbilityRequest request, WorldState worldState);
+	public abstract void processRequest(AbilityRequest abilityRequest, WorldState worldState);
 	
 	public abstract boolean isValidRequest(AbilityRequest abilityRequest);
 	

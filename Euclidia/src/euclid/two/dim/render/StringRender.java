@@ -1,5 +1,6 @@
 package euclid.two.dim.render;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 
 import euclid.two.dim.model.EuVector;
@@ -18,6 +19,8 @@ public class StringRender implements Renderable
 	@Override
 	public void draw(Graphics2D g)
 	{
+		
+		g.setColor(Color.WHITE);
 		g.drawString(message, (int) location.getX(), (int) location.getY());
 	}
 }

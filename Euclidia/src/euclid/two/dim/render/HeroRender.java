@@ -81,7 +81,7 @@ public class HeroRender implements Renderable
 		for (EuVector vect : unit.getPath().getTargets())
 		{
 			
-			g.drawLine(x, y, (int) vect.getX(), (int) vect.getY());
+			//g.drawLine(x, y, (int) vect.getX(), (int) vect.getY());
 			x = (int) vect.getX();
 			y = (int) vect.getY();
 		}

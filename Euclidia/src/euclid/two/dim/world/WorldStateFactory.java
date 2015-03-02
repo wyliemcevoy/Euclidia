@@ -5,6 +5,7 @@ import java.util.Random;
 
 import euclid.two.dim.Configuration;
 import euclid.two.dim.Path;
+import euclid.two.dim.ability.BlinkAbility;
 import euclid.two.dim.ability.EplosiveProjectileAbility;
 import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;
@@ -115,6 +116,7 @@ public class WorldStateFactory
 	{
 		Hero hero = new Hero(team, randVect(100, 200, 100, 200));
 		hero.addAbility(new EplosiveProjectileAbility());
+		hero.addAbility(new BlinkAbility());
 		hero.setMass(500);
 		hero.setRadius(15);
 		hero.getHealth().setMaxHealth(5000);

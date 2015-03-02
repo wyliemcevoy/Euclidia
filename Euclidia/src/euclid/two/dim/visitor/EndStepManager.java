@@ -2,6 +2,7 @@ package euclid.two.dim.visitor;
 
 import java.util.ArrayList;
 
+import euclid.two.dim.etherial.CircleGraphic;
 import euclid.two.dim.etherial.Etherial;
 import euclid.two.dim.etherial.Explosion;
 import euclid.two.dim.etherial.ExplosiveProjectile;
@@ -134,7 +135,18 @@ public class EndStepManager implements UpdateVisitor, EtherialVisitor
 		{
 			expired.add(explosiveProjectile);
 			created.add(new Explosion(explosiveProjectile.getLocation()));
+			created.add(new CircleGraphic(explosiveProjectile.getLocation(), explosiveProjectile.getExplosionRadius()));
 		}
+	}
+	
+	@Override
+	public void visit(CircleGraphic circleGraphic)
+	{
+		if (circleGraphic.hasExpired())
+		{
+			expired.add(circleGraphic);
+		}
+		
 	}
 	
 }

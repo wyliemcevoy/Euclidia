@@ -5,8 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import euclid.two.dim.ability.internal.Ability;
-import euclid.two.dim.ability.internal.AbilityType;
-import euclid.two.dim.ability.request.LocationAbilityRequest;
+import euclid.two.dim.ability.request.AbilityRequest;
 import euclid.two.dim.command.AbilityCommand;
 import euclid.two.dim.command.AttackCommand;
 import euclid.two.dim.command.Command;
@@ -56,11 +55,7 @@ public class HumanMobaPlayer extends HumanPlayer
 			if (abilities.size() > selectedAbility)
 			{
 				Ability ability = hero.getAbilities().get(selectedAbility);
-				
-				LocationAbilityRequest request = new LocationAbilityRequest();
-				request.setHeroId(heroId);
-				request.setAbilityType(AbilityType.grenade);
-				request.setLocation(location);
+				AbilityRequest request = ability.toRequest(heroId, worldState, location);
 				
 				commands.add(new AbilityCommand(request));
 			}

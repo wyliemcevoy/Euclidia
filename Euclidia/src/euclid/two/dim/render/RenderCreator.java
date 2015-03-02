@@ -2,6 +2,7 @@ package euclid.two.dim.render;
 
 import java.util.ArrayList;
 
+import euclid.two.dim.etherial.CircleGraphic;
 import euclid.two.dim.etherial.Etherial;
 import euclid.two.dim.etherial.Explosion;
 import euclid.two.dim.etherial.ExplosiveProjectile;
@@ -117,6 +118,13 @@ public class RenderCreator implements UpdateVisitor, EtherialVisitor
 	@Override
 	public void visit(ExplosiveProjectile explosiveProjectile)
 	{
-		this.renderables.add(new StringRender("a", explosiveProjectile.getLocation()));
+		this.renderables.add(new StringRender("*", explosiveProjectile.getLocation()));
+	}
+	
+	@Override
+	public void visit(CircleGraphic circleGraphic)
+	{
+		this.renderables.add(new CircleRender(circleGraphic));
+		
 	}
 }

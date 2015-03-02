@@ -19,11 +19,11 @@ public class Hero extends Unit
 		
 	}
 	
-	public Hero(Hero hero)
+	public Hero(Hero copy)
 	{
-		super(hero);
+		super(copy);
 		this.setAbilities(new ArrayList<Ability>());
-		for (Ability ability : hero.getAbilities())
+		for (Ability ability : copy.getAbilities())
 		{
 			abilities.add(ability.deepCopy());
 		}
