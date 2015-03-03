@@ -117,10 +117,10 @@ public class WorldStateFactory
 		Hero hero = new Hero(team, randVect(100, 200, 100, 200));
 		hero.addAbility(new EplosiveProjectileAbility());
 		hero.addAbility(new BlinkAbility());
-		hero.setMass(500);
+		hero.setMass(50);
 		hero.setRadius(15);
 		hero.getHealth().setMaxHealth(5000);
-		hero.setMaxSpeed(100);
+		hero.setMaxSpeed(20);
 		
 		return hero;
 	}
