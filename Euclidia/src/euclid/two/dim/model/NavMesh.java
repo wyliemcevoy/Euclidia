@@ -2,18 +2,20 @@ package euclid.two.dim.model;
 
 import java.util.ArrayList;
 
+import euclid.two.dim.map.ConvexPoly;
+
 public class NavMesh
 {
-	private ArrayList<Room> rooms;
+	private ArrayList<ConvexPoly> polys;
 	
 	public NavMesh()
 	{
-		this.rooms = new ArrayList<Room>();
+		this.polys = new ArrayList<ConvexPoly>();
 	}
 	
-	public void addRoom(Room room)
+	public void addPoly(ConvexPoly poly)
 	{
-		rooms.add(room);
+		polys.add(poly);
 	}
 	
 	public void preCalculatePaths()
@@ -21,14 +23,21 @@ public class NavMesh
 		// TODO run A* on every possible path and store it in memory?
 	}
 	
-	public Room getRoom(EuVector point)
+	public ConvexPoly getRoom(EuVector point)
 	{
 		// Bad implementation (fix with a grid and then store rooms inside)
-		for (Room room : rooms)
+		for (ConvexPoly poly : polys)
 		{
-			if (room.contains(point))
-				return room;
+			if (poly.contains(point))
+				return poly;
 		}
 		return null;
+	}
+	
+	public ArrayList<ConvexPoly> getRooms()
+	{
+		// TODO Auto-generated method stub
+		return polys;
+		
 	}
 }

@@ -16,7 +16,7 @@ public class KeyInput implements InputCommand
 	@Override
 	public void execute()
 	{
-		updateEngine.getCurrentWorldState().setCharacter(character);
+		
 	}
 	
 }

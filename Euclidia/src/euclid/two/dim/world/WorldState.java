@@ -9,6 +9,7 @@ import java.util.UUID;
 import euclid.two.dim.VectorMath;
 import euclid.two.dim.etherial.Etherial;
 import euclid.two.dim.etherial.Explosion;
+import euclid.two.dim.map.GameMap;
 import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
@@ -30,7 +31,7 @@ public class WorldState
 	private ArrayList<Explosion> explosions;
 	private ArrayList<Etherial> etherials;
 	private ArrayList<Etherial> expired;
-	private char character;
+	private GameMap gameMap;
 	
 	/**
 	 * @param rooms
@@ -60,7 +61,6 @@ public class WorldState
 		this.explosions = new ArrayList<Explosion>();
 		this.etherials = new ArrayList<Etherial>();
 		this.expired = new ArrayList<Etherial>();
-		this.character = 0;
 	}
 	
 	public List<GameSpaceObject> getUnfriendliesInRage(Minion unit)
@@ -210,19 +210,13 @@ public class WorldState
 		copy.setDoors(doors);
 		copy.setRooms(rooms);
 		copy.setCamera(this.camera);
-		copy.setCharacter(character);
-		
+		copy.setGameMap(gameMap);
 		for (Etherial updatable : etherials)
 		{
 			copy.addEtherial(updatable);
 		}
 		
 		return copy;
-	}
-	
-	public void setCharacter(char character)
-	{
-		this.character = character;
 	}
 	
 	public void addDoor(Door door)
@@ -345,11 +339,6 @@ public class WorldState
 		return etherials;
 	}
 	
-	public char getCharacter()
-	{
-		return character;
-	}
-	
 	public Hero getHero(UUID id)
 	{
 		// Horrible implementation (change to map)
@@ -378,6 +367,16 @@ public class WorldState
 		}
 		
 		return result;
+	}
+	
+	public GameMap getGameMap()
+	{
+		return gameMap;
+	}
+	
+	public void setGameMap(GameMap gameMap)
+	{
+		this.gameMap = gameMap;
 	}
 	
 }

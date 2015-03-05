@@ -7,10 +7,13 @@ import euclid.two.dim.Configuration;
 import euclid.two.dim.Path;
 import euclid.two.dim.ability.BlinkAbility;
 import euclid.two.dim.ability.EplosiveProjectileAbility;
+import euclid.two.dim.map.ConvexPoly;
+import euclid.two.dim.map.GameMap;
 import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
+import euclid.two.dim.model.NavMesh;
 import euclid.two.dim.model.Obstacle;
 import euclid.two.dim.model.Room;
 import euclid.two.dim.render.Camera;
@@ -142,6 +145,8 @@ public class WorldStateFactory
 		Camera camera = new Camera();
 		worldState.setCamera(camera);
 		
+		worldState.setGameMap(createSpacePlatform());
+		
 		return worldState;
 	}
 	
@@ -157,6 +162,64 @@ public class WorldStateFactory
 		int x = lowX + rand.nextInt(highX - lowX);
 		int y = lowY + rand.nextInt(highY - lowY);
 		return new EuVector(x, y);
+	}
+	
+	public GameMap createSpacePlatform()
+	{
+		
+		NavMesh navMesh = new NavMesh();
+		
+		ArrayList<EuVector> p1 = new ArrayList<EuVector>();
+		p1.add(new EuVector(33, 289));
+		p1.add(new EuVector(556, 32));
+		p1.add(new EuVector(556, 254));
+		p1.add(new EuVector(414, 316));
+		
+		navMesh.addPoly(new ConvexPoly(p1));
+		
+		ArrayList<EuVector> p2 = new ArrayList<EuVector>();
+		p2.add(new EuVector(556, 32));
+		p2.add(new EuVector(1160, 32));
+		p2.add(new EuVector(1160, 254));
+		p2.add(new EuVector(556, 254));
+		
+		navMesh.addPoly(new ConvexPoly(p2));
+		
+		ArrayList<EuVector> p3 = new ArrayList<EuVector>();
+		p3.add(new EuVector(1160, 32));
+		p3.add(new EuVector(1680, 290));
+		p3.add(new EuVector(1306, 322));
+		p3.add(new EuVector(1160, 254));
+		
+		ConvexPoly c3 = new ConvexPoly(p3);
+		navMesh.addPoly(new ConvexPoly(p3));
+		
+		ArrayList<EuVector> p4 = new ArrayList<EuVector>();
+		p4.add(new EuVector(33, 289));
+		p4.add(new EuVector(414, 316));
+		p4.add(new EuVector(859, 537));
+		p4.add(new EuVector(700, 625));
+		
+		navMesh.addPoly(new ConvexPoly(p4));
+		
+		ArrayList<EuVector> p5 = new ArrayList<EuVector>();
+		p5.add(new EuVector(700, 460));
+		p5.add(new EuVector(859, 390));
+		p5.add(new EuVector(1020, 460));
+		p5.add(new EuVector(859, 537));
+		
+		navMesh.addPoly(new ConvexPoly(p5));
+		
+		ArrayList<EuVector> p6 = new ArrayList<EuVector>();
+		p6.add(new EuVector(859, 537));
+		p6.add(new EuVector(1306, 322));
+		p6.add(new EuVector(1680, 290));
+		p6.add(new EuVector(1020, 625));
+		
+		navMesh.addPoly(new ConvexPoly(p6));
+		
+		return new GameMap(navMesh);
+		
 	}
 	
 }
