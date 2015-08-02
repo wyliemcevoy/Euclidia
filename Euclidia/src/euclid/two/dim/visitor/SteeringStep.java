@@ -2,32 +2,15 @@ package euclid.two.dim.visitor;
 
 import euclid.two.dim.Configuration;
 import euclid.two.dim.model.EuVector;
-import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Obstacle;
 import euclid.two.dim.model.Unit;
 import euclid.two.dim.path.Path;
-import euclid.two.dim.updater.UpdateVisitor;
-import euclid.two.dim.world.WorldState;
 
-public class SteeringStep implements UpdateVisitor {
-	private double timeStep;
-	private WorldState worldState;
+public class SteeringStep extends UpdateStep {
 
-	public SteeringStep(WorldState worldState, double timeStep) {
-		this.timeStep = timeStep;
-		this.worldState = worldState;
-	}
-
-	public void runStep() {
-		for (GameSpaceObject gso : worldState.getGameSpaceObjects()) {
-			gso.acceptUpdateVisitor(this);
-		}
-
-		for (GameSpaceObject gso : worldState.getGameSpaceObjects()) {
-			gso.travelToTheFuture();
-		}
+	public SteeringStep() {
 	}
 
 	private EuVector calculateSteeringForce(Unit unit) {
@@ -64,7 +47,6 @@ public class SteeringStep implements UpdateVisitor {
 				averageVelocity = averageVelocity.dividedBy(i);
 			}
 
-			// desiredVelocity.add(repulsion);
 			desiredVelocity.add(averageVelocity);
 
 			if (distToTarget < 50 && distToTarget > 0) {

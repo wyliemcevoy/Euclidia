@@ -8,24 +8,10 @@ import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Obstacle;
 import euclid.two.dim.model.Unit;
-import euclid.two.dim.updater.UpdateVisitor;
-import euclid.two.dim.world.WorldState;
 
-public class PhysicsStep implements UpdateVisitor {
-	private WorldState worldState;
+public class PhysicsStep extends UpdateStep {
 
-	public PhysicsStep(WorldState worldState) {
-		this.worldState = worldState;
-	}
-
-	public void runStep() {
-		for (GameSpaceObject gso : worldState.getGsos()) {
-			gso.acceptUpdateVisitor(this);
-		}
-
-		for (GameSpaceObject gso : worldState.getGsos()) {
-			gso.travelToTheFuture();
-		}
+	public PhysicsStep() {
 
 	}
 

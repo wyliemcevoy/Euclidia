@@ -2,7 +2,6 @@ package euclid.two.dim.updater;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -35,10 +34,11 @@ import euclid.two.dim.path.PathCalculator;
 import euclid.two.dim.team.Agent;
 import euclid.two.dim.team.Game;
 import euclid.two.dim.team.Team;
-import euclid.two.dim.visitor.EndStepManager;
+import euclid.two.dim.visitor.EndStep;
 import euclid.two.dim.visitor.EtherialVisitor;
 import euclid.two.dim.visitor.PhysicsStep;
 import euclid.two.dim.visitor.SteeringStep;
+import euclid.two.dim.visitor.UpdateStep;
 import euclid.two.dim.world.WorldState;
 
 public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisitor {
@@ -46,10 +46,20 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 	private long timeStep;
 	private ArrayList<Agent> agents;
 	private Game game;
+	private ArrayList<UpdateStep> updateSteps;
 
 	public UpdateEngine(Game game) {
 		this.agents = new ArrayList<Agent>();
 		this.game = game;
+		initializeSteps();
+	}
+
+	private void initializeSteps() {
+		this.updateSteps = new ArrayList<UpdateStep>();
+		this.updateSteps.add(new SteeringStep());
+		this.updateSteps.add(new PhysicsStep());
+		this.updateSteps.add(new EndStep());
+
 	}
 
 	public void addAgent(Agent agent) {
@@ -71,13 +81,11 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 		this.timeStep = timeStep;
 		processInput();
 
-		SteeringStep steeringStep = new SteeringStep(worldStateN, timeStep);
-		steeringStep.runStep();
+		for (UpdateStep updateStep : updateSteps) {
+			updateStep.runStep(worldStateN, timeStep);
+		}
 
-		PhysicsStep physicsStep = new PhysicsStep(worldStateN);
-		physicsStep.runStep();
-
-		List<GameSpaceObject> gsos = worldStateN.getGameSpaceObjects();
+		ArrayList<GameSpaceObject> gsos = worldStateN.getGameSpaceObjects();
 		for (GameSpaceObject gso : gsos) {
 			gso.acceptUpdateVisitor(this);
 		}
@@ -85,9 +93,6 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 		for (Etherial etherial : worldStateN.getEtherials()) {
 			etherial.accept(this);
 		}
-
-		EndStepManager endStep = new EndStepManager(worldStateN);
-		endStep.endPhase();
 
 		return this.worldStateN.deepCopy();
 	}

@@ -13,18 +13,16 @@ import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Obstacle;
-import euclid.two.dim.updater.UpdateVisitor;
 import euclid.two.dim.world.WorldState;
 
-public class EndStepManager implements UpdateVisitor, EtherialVisitor {
+public class EndStep extends UpdateStep implements EtherialVisitor {
 
 	private WorldState worldState;
 	private ArrayList<GameSpaceObject> dead;
 	private ArrayList<Etherial> expired;
 	private ArrayList<Etherial> created;
 
-	public EndStepManager(WorldState worldState) {
-		this.worldState = worldState;
+	public EndStep() {
 		this.dead = new ArrayList<GameSpaceObject>();
 		this.expired = new ArrayList<Etherial>();
 		this.created = new ArrayList<Etherial>();
@@ -116,6 +114,28 @@ public class EndStepManager implements UpdateVisitor, EtherialVisitor {
 			expired.add(circleGraphic);
 		}
 
+	}
+
+	@Override
+	public void runStep(WorldState worldState, double timeStep) {
+		this.worldState = worldState;
+		this.dead = new ArrayList<GameSpaceObject>();
+		this.expired = new ArrayList<Etherial>();
+		this.created = new ArrayList<Etherial>();
+
+		for (GameSpaceObject gso : worldState.getGsos()) {
+			gso.acceptUpdateVisitor(this);
+		}
+
+		for (GameSpaceObject gso : worldState.getGsos()) {
+			gso.travelToTheFuture();
+		}
+
+		for (Etherial etherial : worldState.getEtherials()) {
+			etherial.accept(this);
+		}
+
+		endPhase();
 	}
 
 }
