@@ -28,7 +28,6 @@ import euclid.two.dim.etherial.ZergDeath;
 import euclid.two.dim.input.InputCommand;
 import euclid.two.dim.input.InputManager;
 import euclid.two.dim.model.EuVector;
-import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
@@ -45,8 +44,7 @@ import euclid.two.dim.visitor.PhysicsStep;
 import euclid.two.dim.visitor.SteeringStep;
 import euclid.two.dim.world.WorldState;
 
-public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisitor, CommandVisitor
-{
+public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisitor, CommandVisitor {
 	private ArrayBlockingQueue<WorldState> rendererQueue;
 	private WorldState worldStateN;
 	private long now, then, timeStep;
@@ -54,510 +52,376 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 	private boolean stopRequested;
 	private ArrayList<Agent> agents;
 	private Game game;
-	
-	public UpdateEngine(ArrayBlockingQueue<WorldState> rendererQueue, InputManager inputManager, Game game)
-	{
+
+	public UpdateEngine(ArrayBlockingQueue<WorldState> rendererQueue, InputManager inputManager, Game game) {
 		this.rendererQueue = rendererQueue;
 		this.inputManager = inputManager;
 		this.stopRequested = false;
 		this.agents = new ArrayList<Agent>();
 		this.game = game;
 	}
-	
-	public void addAgent(Agent agent)
-	{
+
+	public void addAgent(Agent agent) {
 		this.agents.add(agent);
 	}
-	
-	public void setWorldState(WorldState worldState)
-	{
+
+	public void setWorldState(WorldState worldState) {
 		this.worldStateN = worldState;
 	}
-	
-	private void processInput()
-	{
+
+	private void processInput() {
 		// Read through queue of input events and process them
-		
-		for (Command command : game.getCommands())
-		{
+
+		for (Command command : game.getCommands()) {
 			command.accept(this);
 		}
-		
-		if (inputManager.hasUnprocessedEvents())
-		{
-			
-			for (InputCommand inputCommand : inputManager.getInputCommands())
-			{
-				//inputCommand.execute();
+
+		if (inputManager.hasUnprocessedEvents()) {
+
+			for (InputCommand inputCommand : inputManager.getInputCommands()) {
+				// inputCommand.execute();
 			}
 		}
 	}
-	
-	public void run()
-	{
+
+	public void run() {
 		now = System.currentTimeMillis();
 		then = System.currentTimeMillis();
-		while (!stopRequested)
-		{
+		while (!stopRequested) {
 			// Update time step
 			then = now;
 			now = System.currentTimeMillis();
 			timeStep = now - then;
 			randomCommand();
-			
+
 			processInput();
-			
+
 			update(worldStateN, timeStep / 2);
-			
-			for (Etherial etherial : worldStateN.getEtherials())
-			{
+
+			for (Etherial etherial : worldStateN.getEtherials()) {
 				etherial.accept(this);
 			}
-			
-			//worldStateN.purgeExpired();
-			
+
+			// worldStateN.purgeExpired();
+
 			EndStepManager endStep = new EndStepManager(worldStateN);
 			endStep.endPhase();
-			//purgeExpired();
-			
+			// purgeExpired();
+
 			WorldState nPlusOne = worldStateN.deepCopy();
 			WorldState playerCopy = worldStateN.deepCopy();
-			
+
 			game.updatePlayers(playerCopy);
-			
-			try
-			{
+
+			try {
 				rendererQueue.put(nPlusOne);
-			} catch (InterruptedException e)
-			{
+			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
 	}
-	
-	public void update(WorldState worldState, long timeStep)
-	{
-		
+
+	public void update(WorldState worldState, long timeStep) {
+
 		SteeringStep steeringStep = new SteeringStep(worldState, timeStep);
 		steeringStep.runStep();
-		
+
 		PhysicsStep physicsStep = new PhysicsStep(worldState);
 		physicsStep.runStep();
-		
+
 		List<GameSpaceObject> gsos = worldState.getGameSpaceObjects();
-		for (GameSpaceObject gso : gsos)
-		{
+		for (GameSpaceObject gso : gsos) {
 			gso.acceptUpdateVisitor(this);
 		}
-		
-		/*
-		for (GameSpaceObject fishi : gsos)
-		{
-			fishi.update(timeStep);
-		}
-		
-		for (GameSpaceObject fishi : gsos)
-		
-		{
-			fishi.travelToTheFuture();
-		}
-		
-		for (GameSpaceObject fishi : gsos)
-		
-		{
-			fishi.separate();
-		}
-		
-		for (GameSpaceObject fishi : gsos)
-		
-		{
-			fishi.travelToTheFuture();
-		}
-		
-		Iterator<Explosion> it = explosions.iterator();
-		while (it.hasNext())
-		{
-			Explosion explosion = it.next();
-			if (explosion.hasExpired())
-			{
-				it.remove();
-			}
-		}
-		*/
-		
-		/*
-		for (GameSpaceObject gso : worldState.getGsos())
-		{
-			gso.acceptUpdateVisitor(this);
-		}
-		*/
 	}
-	
-	public void requestStop()
-	{
+
+	public void requestStop() {
 		stopRequested = true;
 	}
-	
-	public WorldState getCurrentWorldState()
-	{
+
+	public WorldState getCurrentWorldState() {
 		return worldStateN;
 	}
-	
-	public double getZoom()
-	{
+
+	public double getZoom() {
 		return this.getCurrentWorldState().getCamera().getZoom();
 	}
-	
-	public void setZoom(double zoom)
-	{
+
+	public void setZoom(double zoom) {
 		this.getCurrentWorldState().getCamera().setZoom(zoom);
 	}
-	
-	public void visit(Unit unit)
-	{
+
+	public void visit(Unit unit) {
 		unit.getAttack().update(timeStep);
-		
+
 		Unit target = worldStateN.getUnit(unit.getTarget());
-		
+
 		// Check to see if the units target still is alive / exists
-		if (target == null || unit.getPosition() == null || target.getPosition() == null)
-		{
-			//pickNewTarget(unit);
-			
+		if (target == null || unit.getPosition() == null || target.getPosition() == null) {
+			// pickNewTarget(unit);
+
 			return;
 		}
-		
+
 		double distSqrd = VectorMath.getDistanceSquared(target.getPosition(), unit.getPosition());
 		double rangeSqrd = unit.getAttack().getRange() * unit.getAttack().getRange();
-		
-		// Check and see if the unit is capable of attacking (basic attack off cooldown)
-		if (unit.getAttack().isReloaded())
-		{
-			if (distSqrd <= rangeSqrd)
-			{
+
+		// Check and see if the unit is capable of attacking (basic attack off
+		// cooldown)
+		if (unit.getAttack().isReloaded()) {
+			if (distSqrd <= rangeSqrd) {
 				// Unit is alive and within range
 				target.getHealth().add(-1 * unit.getAttack().getDamage());
 				unit.getAttack().attack();
-				
+
 				worldStateN.addEtherial(new Slash(target.getPosition(), unit.getPosition()));
 			}
 		}
-		
-		if (distSqrd > rangeSqrd)
-		{
+
+		if (distSqrd > rangeSqrd) {
 			RoomPath roomPath = PathCalculator.calculateRoomPath(worldStateN, unit.getPosition(), target.getPosition());
 			unit.setPath(roomPath.toPath());
 		}
-		
+
 	}
-	
+
 	@Override
-	public void visit(Minion unit)
-	{
+	public void visit(Minion unit) {
 		visit((Unit) unit);
 		/*
-		
-		unit.getAttack().update(timeStep);
-		
-		Unit target = worldStateN.getUnit(unit.getTarget());
-		
-		// Check to see if the units target still is alive / exists
-		if (target == null || unit.getPosition() == null || target.getPosition() == null)
-		{
-			pickNewTarget(unit);
-			
-			return;
-		}
-		
-		double distSqrd = VectorMath.getDistanceSquared(target.getPosition(), unit.getPosition());
-		double rangeSqrd = unit.getAttack().getRange() * unit.getAttack().getRange();
-		
-		// Check and see if the unit is capable of attacking (basic attack off cooldown)
-		if (unit.getAttack().isReloaded())
-		{
-			if (distSqrd <= rangeSqrd)
-			{
-				// Unit is alive and within range
-				target.getHealth().add(-1 * unit.getAttack().getDamage());
-				unit.getAttack().attack();
-				
-				worldStateN.addEtherial(new Slash(target.getPosition(), unit.getPosition()));
-			}
-		}
-		
-		if (distSqrd > rangeSqrd)
-		{
-			RoomPath roomPath = PathCalculator.calculateRoomPath(worldStateN, unit.getPosition(), target.getPosition());
-			unit.setPath(roomPath.toPath());
-		}
-		
-		/*
-		ArrayList<GameSpaceObject> fishes = worldState.getGsos();
-		futurePosition = new EuVector(position);
-		EuVector update = new EuVector(0, 0);
-		for (GameSpaceObject fish : fishes)
-		{
-			EuVector distTo = position.subtract(fish.getPosition());
-			double mag = distTo.getMagnitude();
-			if (!this.equals(fish) && mag < 15)
-			{
-				EuVector plus = distTo.normalize().dividedBy(mag * mag / (fish.getRadius() * 10));
-				update = update.add(plus);
-			}
-		}
-		
-		if (update.getMagnitude() > 2)
-		{
-			update = update.normalize().multipliedBy(2);
-		}
-		if (update.getMagnitude() < .15)
-		{
-			return;
-		}
-		//futureVelocity = futureVelocity.add(update);
-		futurePosition = futurePosition.add(update);
-		
-		*/
+		 * 
+		 * unit.getAttack().update(timeStep);
+		 * 
+		 * Unit target = worldStateN.getUnit(unit.getTarget());
+		 * 
+		 * // Check to see if the units target still is alive / exists if
+		 * (target == null || unit.getPosition() == null || target.getPosition()
+		 * == null) { pickNewTarget(unit);
+		 * 
+		 * return; }
+		 * 
+		 * double distSqrd = VectorMath.getDistanceSquared(target.getPosition(),
+		 * unit.getPosition()); double rangeSqrd = unit.getAttack().getRange() *
+		 * unit.getAttack().getRange();
+		 * 
+		 * // Check and see if the unit is capable of attacking (basic attack
+		 * off cooldown) if (unit.getAttack().isReloaded()) { if (distSqrd <=
+		 * rangeSqrd) { // Unit is alive and within range
+		 * target.getHealth().add(-1 * unit.getAttack().getDamage());
+		 * unit.getAttack().attack();
+		 * 
+		 * worldStateN.addEtherial(new Slash(target.getPosition(),
+		 * unit.getPosition())); } }
+		 * 
+		 * if (distSqrd > rangeSqrd) { RoomPath roomPath =
+		 * PathCalculator.calculateRoomPath(worldStateN, unit.getPosition(),
+		 * target.getPosition()); unit.setPath(roomPath.toPath()); }
+		 * 
+		 * /* ArrayList<GameSpaceObject> fishes = worldState.getGsos();
+		 * futurePosition = new EuVector(position); EuVector update = new
+		 * EuVector(0, 0); for (GameSpaceObject fish : fishes) { EuVector distTo
+		 * = position.subtract(fish.getPosition()); double mag =
+		 * distTo.getMagnitude(); if (!this.equals(fish) && mag < 15) { EuVector
+		 * plus = distTo.normalize().dividedBy(mag * mag / (fish.getRadius() *
+		 * 10)); update = update.add(plus); } }
+		 * 
+		 * if (update.getMagnitude() > 2) { update =
+		 * update.normalize().multipliedBy(2); } if (update.getMagnitude() <
+		 * .15) { return; } //futureVelocity = futureVelocity.add(update);
+		 * futurePosition = futurePosition.add(update);
+		 */
 	}
-	
-	private void pickNewTarget(Minion unit)
-	{
-		for (GameSpaceObject gso : worldStateN.getGameSpaceObjects())
-		{
-			if ((gso instanceof Minion) && gso != unit)
-			{
+
+	private void pickNewTarget(Minion unit) {
+		for (GameSpaceObject gso : worldStateN.getGameSpaceObjects()) {
+			if ((gso instanceof Minion) && gso != unit) {
 				Minion minion = (Minion) gso;
-				if (unit.getTeam() != Team.Blue)
-				{
+				if (unit.getTeam() != Team.Blue) {
 					unit.setTarget(minion.getId());
 				}
 			}
 		}
-		
+
 	}
-	
+
 	@Override
-	public void visit(Obstacle obstacle)
-	{
-		
+	public void visit(Obstacle obstacle) {
+
 	}
-	
-	public void update(long timeStep)
-	{
-		for (GameSpaceObject gso : worldStateN.getGameSpaceObjects())
-		{
+
+	public void update(long timeStep) {
+		for (GameSpaceObject gso : worldStateN.getGameSpaceObjects()) {
 			gso.acceptUpdateVisitor(this);
 		}
 	}
-	
-	public void randomCommand()
-	{
+
+	public void randomCommand() {
 		Random rand = new Random();
-		if (rand.nextDouble() > .99)
-		{
-			
-			for (Agent agent : agents)
-			{
+		if (rand.nextDouble() > .99) {
+
+			for (Agent agent : agents) {
 				/*
-				for (InputCommand command : agent.getCommands())
-				{
-					command.execute();
-				}
-				*/
+				 * for (InputCommand command : agent.getCommands()) {
+				 * command.execute(); }
+				 */
 			}
 		}
 	}
-	
+
 	@Override
-	public void visit(Explosion explosion)
-	{
+	public void visit(Explosion explosion) {
 		explosion.update(timeStep);
-		if (explosion.hasExpired())
-		{
+		if (explosion.hasExpired()) {
 			worldStateN.registerAsExpired(explosion);
 		}
 	}
-	
+
 	@Override
-	public void visit(Projectile projectile)
-	{
+	public void visit(Projectile projectile) {
 		projectile.update(timeStep);
-		
+
 		Unit target = worldStateN.getUnit(projectile.getTarget());
-		
-		if (projectile.hasExpired() || target == null)
-		{
+
+		if (projectile.hasExpired() || target == null) {
 			projectile.setAsExpired();
-		} else
-		{
+		}
+		else {
 			EuVector targetLocation = target.getPosition();
-			
+
 			EuVector dT = targetLocation.subtract(projectile.getLocation()).normalize().multipliedBy(2);
 			projectile.setLocation(projectile.getLocation().add(dT));
-			
-			if (projectile.getLocation().subtract(targetLocation).getMagnitude() < 3)
-			{
+
+			if (projectile.getLocation().subtract(targetLocation).getMagnitude() < 3) {
 				target.getHealth().add(-projectile.getDamage());
 				projectile.setAsExpired();
 			}
 		}
 	}
-	
+
 	@Override
-	public void visit(Fish fish)
-	{
-		
-	}
-	
-	@Override
-	public void visit(Slash slash)
-	{
+	public void visit(Slash slash) {
 		slash.update(timeStep);
-		if (slash.hasExpired())
-		{
+		if (slash.hasExpired()) {
 			worldStateN.registerAsExpired(slash);
 		}
 	}
-	
+
 	@Override
-	public void visit(ZergDeath zergDeath)
-	{
+	public void visit(ZergDeath zergDeath) {
 		zergDeath.update(timeStep);
-		if (zergDeath.hasExpired())
-		{
+		if (zergDeath.hasExpired()) {
 			worldStateN.registerAsExpired(zergDeath);
 		}
 	}
-	
-	private void purgeExpired()
-	{
+
+	private void purgeExpired() {
 		Iterator<GameSpaceObject> it = worldStateN.getGsos().iterator();
 		DeathVisitor deathVisitor = new DeathVisitor();
-		
-		while (it.hasNext())
-		{
+
+		while (it.hasNext()) {
 			GameSpaceObject gso = it.next();
-			
+
 			gso.acceptUpdateVisitor(deathVisitor);
-			if (deathVisitor.isDead())
-			{
+			if (deathVisitor.isDead()) {
 				it.remove();
 				worldStateN.addEtherial(new ZergDeath(gso.getPosition(), (int) gso.getRadius()));
-				
+
 			}
 		}
 	}
-	
+
 	@Override
-	public void visit(Hero hero)
-	{
-		
+	public void visit(Hero hero) {
+
 		visit((Unit) hero);
-		
+
 	}
-	
+
 	@Override
-	public void visit(MoveCommand moveCommand)
-	{
-		
-		for (UUID id : moveCommand.getIds())
-		{
+	public void visit(MoveCommand moveCommand) {
+
+		for (UUID id : moveCommand.getIds()) {
 			Unit unit = worldStateN.getUnit(id);
-			
-			if (unit != null)
-			{
+
+			if (unit != null) {
 				unit.setPath(new Path(new EuVector(moveCommand.getLocation())));
 			}
-			
+
 		}
 	}
-	
+
 	@Override
-	public void visit(UseLocationAbilityCommand command)
-	{
+	public void visit(UseLocationAbilityCommand command) {
 		command.getHeroId();
 		command.getAbilityIndex();
-		
+
 		worldStateN.addEtherial(new Explosion(command.getLocation()));
-		
+
 	}
-	
+
 	@Override
-	public void visit(UseTargetedAbilityCommand useTargetedAbilityCommand)
-	{
-		
+	public void visit(UseTargetedAbilityCommand useTargetedAbilityCommand) {
+
 	}
-	
+
 	@Override
-	public void visit(AttackCommand attackCommand)
-	{
-		if (attackCommand.getIds().size() > 0)
-		{
-			for (UUID id : attackCommand.getIds())
-			{
+	public void visit(AttackCommand attackCommand) {
+		if (attackCommand.getIds().size() > 0) {
+			for (UUID id : attackCommand.getIds()) {
 				Unit unit = worldStateN.getUnit(id);
 				Unit target = worldStateN.getUnit(attackCommand.getTargetId());
-				if (unit != null && unit.getTeam() != target.getTeam())
-				{
+				if (unit != null && unit.getTeam() != target.getTeam()) {
 					unit.setTarget(attackCommand.getTargetId());
 				}
 			}
 		}
 	}
-	
+
 	@Override
-	public void visit(AbilityCommand abilityCommand)
-	{
-		
+	public void visit(AbilityCommand abilityCommand) {
+
 		AbilityRequest abilityRequest = abilityCommand.getAbilityRequest();
-		
+
 		Hero hero = worldStateN.getHero(abilityRequest.getHeroId());
-		
+
 		// Verify hero is still in existence
-		if (hero != null)
-		{
+		if (hero != null) {
 			Ability ability = hero.getAbility(abilityRequest.getAbilityType());
-			
+
 			// Verify ability is valid
-			if (ability != null)
-			{
+			if (ability != null) {
 				ability.processRequest(abilityRequest, worldStateN);
 			}
 		}
-		
+
 	}
-	
+
 	@Override
-	public void visit(ExplosiveProjectile projectile)
-	{
+	public void visit(ExplosiveProjectile projectile) {
 		projectile.update(timeStep);
-		
-		if (projectile.hasExpired())
-		{
+
+		if (projectile.hasExpired()) {
 			projectile.setAsExpired();
-		} else
-		{
+		}
+		else {
 			EuVector targetLocation = projectile.getDestination();
-			
+
 			EuVector dT = targetLocation.subtract(projectile.getLocation()).normalize().multipliedBy(2);
 			projectile.setLocation(projectile.getLocation().add(dT));
-			
-			if (projectile.getLocation().subtract(targetLocation).getMagnitude() < 3)
-			{
-				for (Unit unit : worldStateN.getUnitsInRange(projectile.getLocation(), projectile.getExplosionRadius()))
-				{
+
+			if (projectile.getLocation().subtract(targetLocation).getMagnitude() < 3) {
+				for (Unit unit : worldStateN.getUnitsInRange(projectile.getLocation(), projectile.getExplosionRadius())) {
 					unit.getHealth().add(-60);
 				}
-				
+
 				projectile.setAsExpired();
 			}
 		}
 	}
-	
+
 	@Override
-	public void visit(CircleGraphic circleGraphic)
-	{
+	public void visit(CircleGraphic circleGraphic) {
 		circleGraphic.update(timeStep);
-		
+
 	}
 }

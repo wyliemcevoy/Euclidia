@@ -1,6 +1,5 @@
 package euclid.two.dim.visitor;
 
-import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
@@ -76,13 +75,7 @@ public class CombatStep implements UpdateVisitor
 		
 	}
 	
-	@Override
-	public void visit(Fish fish)
-	{
-		// TODO Auto-generated method stub
-		
-	}
-	
+
 	@Override
 	public void visit(Obstacle obstacle)
 	{

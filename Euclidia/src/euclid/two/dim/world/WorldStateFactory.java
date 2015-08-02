@@ -16,7 +16,6 @@ import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.NavMesh;
 import euclid.two.dim.model.Obstacle;
 import euclid.two.dim.model.Room;
-import euclid.two.dim.render.Camera;
 import euclid.two.dim.team.Team;
 
 public class WorldStateFactory
@@ -31,27 +30,7 @@ public class WorldStateFactory
 	public WorldState createRandomWorldState()
 	{
 		WorldState worldState = new WorldState();
-		/*
-		EuVector one = randVect();
-		
-		for (int i = 0; i < Configuration.numFish; i++)
-		{
-			Path path = new Path(new EuVector(one));
-			EuVector vect = new EuVector(rand.nextInt(Configuration.width), rand.nextInt(Configuration.height))
-			Unit fish = new Unit(worldState, path, vect,);
-			worldState.addObject(fish);
-		}
-		worldState.addObject(new Obstacle(new EuVector(500, 500), worldState));
-		worldState.addObject(new Obstacle(new EuVector(300, 500), worldState));
-		worldState.addObject(new Obstacle(new EuVector(700, 500), worldState));
-		worldState.addObject(new Obstacle(new EuVector(400, 600), worldState));
-		worldState.addObject(new Obstacle(new EuVector(600, 600), worldState));
-		
-		for (int i = 0; i < 40; i++)
-		{
-			buildBoid(new EuVector(one), worldState, randVect());
-		}
-		*/
+
 		return worldState;
 		
 	}

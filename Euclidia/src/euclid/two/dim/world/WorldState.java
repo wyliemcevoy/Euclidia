@@ -17,9 +17,6 @@ import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Room;
 import euclid.two.dim.model.Unit;
-import euclid.two.dim.render.Camera;
-import euclid.two.dim.render.RenderCreator;
-import euclid.two.dim.render.Renderable;
 
 public class WorldState
 {
@@ -326,14 +323,7 @@ public class WorldState
 		expired = new ArrayList<Etherial>();
 	}
 	
-	public List<Renderable> getRenderables()
-	{
-		
-		RenderCreator renderCreator = new RenderCreator(this);
-		
-		return renderCreator.getRenderables();
-	}
-	
+
 	public List<Etherial> getEtherials()
 	{
 		return etherials;

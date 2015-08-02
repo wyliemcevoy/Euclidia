@@ -1,4 +1,4 @@
-package euclid.two.dim.render;
+package euclid.two.dim.world;
 
 import euclid.two.dim.Configuration;
 import euclid.two.dim.model.EuVector;

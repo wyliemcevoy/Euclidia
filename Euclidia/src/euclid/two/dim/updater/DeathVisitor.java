@@ -1,48 +1,34 @@
 package euclid.two.dim.updater;
 
-import euclid.two.dim.model.Fish;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Obstacle;
 
-public class DeathVisitor implements UpdateVisitor
-{
+public class DeathVisitor implements UpdateVisitor {
 	private boolean dead;
-	
-	public DeathVisitor()
-	{
+
+	public DeathVisitor() {
 		this.dead = false;
 	}
-	
+
 	@Override
-	public void visit(Minion unit)
-	{
+	public void visit(Minion unit) {
 		dead = unit.getHealth().isDead();
 	}
-	
+
 	@Override
-	public void visit(Fish fish)
-	{
-		dead = false;
-		
-	}
-	
-	@Override
-	public void visit(Obstacle obstacle)
-	{
+	public void visit(Obstacle obstacle) {
 		dead = false;
 	}
-	
-	public boolean isDead()
-	{
+
+	public boolean isDead() {
 		return dead;
 	}
-	
+
 	@Override
-	public void visit(Hero hero)
-	{
+	public void visit(Hero hero) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 }

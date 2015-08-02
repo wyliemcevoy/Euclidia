@@ -11,29 +11,25 @@ import euclid.two.dim.combat.Health;
 import euclid.two.dim.render.ZerglingRenderComponent;
 import euclid.two.dim.team.Team;
 
-public abstract class Unit extends GameSpaceObject
-{
+public abstract class Unit extends GameSpaceObject {
 	protected UUID enemyTarget;
-	
+
 	protected int actionIndex;
 	protected Health health;
 	protected Attack attack;
 	protected int detectionRange;
 	protected CombatBehavior combatBehavior;
 	protected boolean hasTarget;
-	
-	public boolean hasTarget()
-	{
+
+	public boolean hasTarget() {
 		return hasTarget;
 	}
-	
-	public void setHasTarget(boolean hasTarget)
-	{
+
+	public void setHasTarget(boolean hasTarget) {
 		this.hasTarget = hasTarget;
 	}
-	
-	public Unit(Team team, EuVector position)
-	{
+
+	public Unit(Team team, EuVector position) {
 		this.position = position;
 		this.futurePosition = new EuVector(position);
 		this.future = new EuVector(position);
@@ -45,9 +41,8 @@ public abstract class Unit extends GameSpaceObject
 		this.path = new Path(new EuVector(position));
 		initialize();
 	}
-	
-	private void initialize()
-	{
+
+	private void initialize() {
 		this.radius = 8;
 		this.isSelected = true;
 		this.mass = 10;
@@ -55,69 +50,57 @@ public abstract class Unit extends GameSpaceObject
 		this.combatBehavior = CombatBehavior.AttackIfInRange;
 		this.renderComponent = new ZerglingRenderComponent();
 	}
-	
-	public Unit(Unit copy)
-	{
+
+	public Unit(Unit copy) {
 		super(copy);
-		
+
 		this.enemyTarget = copy.getTarget();
 		this.team = copy.getTeam();
 		this.actionIndex = copy.getActionIndex();
 		this.health = copy.getHealth().deepCopy();
 		this.attack = copy.getAttack().deepCopy();
-		
+
 	}
-	
-	public Attack getAttack()
-	{
+
+	public Attack getAttack() {
 		return attack;
 	}
-	
-	public Health getHealth()
-	{
+
+	public Health getHealth() {
 		return this.health;
 	}
-	
-	public int getActionIndex()
-	{
+
+	public int getActionIndex() {
 		return actionIndex;
 	}
-	
-	public UUID getTarget()
-	{
-		// TODO Auto-generated method stub
+
+	public UUID getTarget() {
 		return enemyTarget;
 	}
-	
-	public void setTarget(UUID uuid)
-	{
+
+	public void setTarget(UUID uuid) {
 		this.enemyTarget = uuid;
 	}
-	
+
 	@Override
-	public boolean hasExpired()
-	{
+	public boolean hasExpired() {
 		return health.isDead();
 	}
-	
-	public int getDetectionRange()
-	{
+
+	public int getDetectionRange() {
 		return detectionRange;
 	}
-	
-	public void setDetectionRange(int detectionRange)
-	{
+
+	public void setDetectionRange(int detectionRange) {
 		this.detectionRange = detectionRange;
 	}
-	
-	public CombatBehavior getCombatBehavior()
-	{
+
+	public CombatBehavior getCombatBehavior() {
 		return combatBehavior;
 	}
-	
-	public void setCombatBehavior(CombatBehavior combatBehavior)
-	{
+
+	public void setCombatBehavior(CombatBehavior combatBehavior) {
 		this.combatBehavior = combatBehavior;
 	}
-	
+
 }
