@@ -10,7 +10,6 @@ public class Minion extends Unit
 	public Minion(Team team, EuVector position)
 	{
 		super(team, position);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public Minion(Minion copy)
@@ -27,7 +26,6 @@ public class Minion extends Unit
 	@Override
 	public Updatable deepCopy()
 	{
-		// TODO Auto-generated method stub
 		return new Minion(this);
 	}
 	

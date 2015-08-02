@@ -4,40 +4,31 @@ import java.util.ArrayList;
 
 import euclid.two.dim.map.ConvexPoly;
 
-public class NavMesh
-{
+public class NavMesh {
 	private ArrayList<ConvexPoly> polys;
-	
-	public NavMesh()
-	{
+
+	public NavMesh() {
 		this.polys = new ArrayList<ConvexPoly>();
 	}
-	
-	public void addPoly(ConvexPoly poly)
-	{
+
+	public void addPoly(ConvexPoly poly) {
 		polys.add(poly);
 	}
-	
-	public void preCalculatePaths()
-	{
+
+	public void preCalculatePaths() {
 		// TODO run A* on every possible path and store it in memory?
 	}
-	
-	public ConvexPoly getRoom(EuVector point)
-	{
+
+	public ConvexPoly getRoom(EuVector point) {
 		// Bad implementation (fix with a grid and then store rooms inside)
-		for (ConvexPoly poly : polys)
-		{
+		for (ConvexPoly poly : polys) {
 			if (poly.contains(point))
 				return poly;
 		}
 		return null;
 	}
-	
-	public ArrayList<ConvexPoly> getRooms()
-	{
-		// TODO Auto-generated method stub
+
+	public ArrayList<ConvexPoly> getRooms() {
 		return polys;
-		
 	}
 }

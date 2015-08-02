@@ -8,74 +8,47 @@ import euclid.two.dim.model.Unit;
 import euclid.two.dim.updater.UpdateEngine;
 import euclid.two.dim.world.WorldState;
 
-public class ClickEvent implements InputCommand
-{
+public class ClickEvent implements InputCommand {
 	private int x, y;
 	private UpdateEngine updateEngine;
-	
-	public ClickEvent(int x, int y, UpdateEngine updateEngine)
-	{
+
+	public ClickEvent(int x, int y, UpdateEngine updateEngine) {
 		this.x = x;
 		this.y = y;
 		this.updateEngine = updateEngine;
 	}
-	
-	public ClickEvent(ClickEvent clone)
-	{
+
+	public ClickEvent(ClickEvent clone) {
 		this.x = clone.getX();
 		this.y = clone.getY();
 	}
-	
-	public int getX()
-	{
+
+	public int getX() {
 		return x;
 	}
-	
-	public int getY()
-	{
+
+	public int getY() {
 		return y;
 	}
-	
+
 	@Override
-	public void execute()
-	{
+	public void execute() {
 		WorldState worldState = updateEngine.getCurrentWorldState();
 		EuVector adjustedTarget = new EuVector(x / worldState.getCamera().getZoom(), y / worldState.getCamera().getZoom());
 		worldState.addEtherial(new Explosion(new EuVector(adjustedTarget)));
-		
+
 		Unit unit = (Unit) worldState.getSelected().get(0);
 		Minion target = null;
-		
-		for (GameSpaceObject gso : worldState.getGameSpaceObjects())
-		{
-			if (adjustedTarget.subtract(gso.getPosition()).getMagnitudeSquared() < gso.getRadius() * gso.getRadius())
-			{
+
+		for (GameSpaceObject gso : worldState.getGameSpaceObjects()) {
+			if (adjustedTarget.subtract(gso.getPosition()).getMagnitudeSquared() < gso.getRadius() * gso.getRadius()) {
 				unit.setTarget(gso.getId());
 			}
 		}
-		
-		for (GameSpaceObject fish : worldState.getSelected())
-		{
-			/*
-			
-			if (fish instanceof Minion && ((Minion) fish).getPlayer().getColor().equals(Color.RED))
-			{
-				
-				RoomPath roomPath = PathCalculator.calculateRoomPath(worldState, fish.getPosition(), adjustedTarget);
-				fish.setPath(roomPath.toPath());
-				
-				unit = (Minion) fish;
-			}
-			if (fish instanceof Minion && ((Minion) fish).getPlayer().getColor().equals(Color.BLUE) && unit != null)
-			{
-				
-				target = (Minion) fish;
-				Projectile projectile = new Projectile(unit, target);
-				worldState.addEtherial(projectile);
-			}
-			
-			*/
+
+		for (GameSpaceObject fish : worldState.getSelected()) {
+
 		}
-		
+
 	}
 }
