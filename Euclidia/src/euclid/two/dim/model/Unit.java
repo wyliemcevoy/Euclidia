@@ -2,12 +2,12 @@ package euclid.two.dim.model;
 
 import java.util.UUID;
 
-import euclid.two.dim.Path;
 import euclid.two.dim.attack.Attack;
 import euclid.two.dim.attack.SwordAttack;
 import euclid.two.dim.behavior.CombatBehavior;
 import euclid.two.dim.behavior.SteeringBehavior;
 import euclid.two.dim.combat.Health;
+import euclid.two.dim.path.Path;
 import euclid.two.dim.render.ZerglingRenderComponent;
 import euclid.two.dim.team.Team;
 

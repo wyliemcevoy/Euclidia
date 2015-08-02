@@ -1,8 +1,8 @@
 package euclid.two.dim.behavior;
 
-import euclid.two.dim.Path;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
+import euclid.two.dim.path.Path;
 
 public abstract class SteeringType
 {

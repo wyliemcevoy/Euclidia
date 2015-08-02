@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import euclid.two.dim.Configuration;
-import euclid.two.dim.Path;
 import euclid.two.dim.ability.BlinkAbility;
 import euclid.two.dim.ability.EplosiveProjectileAbility;
 import euclid.two.dim.map.ConvexPoly;
@@ -15,6 +14,7 @@ import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.NavMesh;
 import euclid.two.dim.model.Room;
+import euclid.two.dim.path.Path;
 import euclid.two.dim.team.Team;
 
 public class WorldStateFactory {

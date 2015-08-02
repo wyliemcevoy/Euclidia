@@ -5,8 +5,8 @@ import java.util.Random;
 import java.util.UUID;
 
 import euclid.two.dim.Configuration;
-import euclid.two.dim.Path;
 import euclid.two.dim.behavior.SteeringBehavior;
+import euclid.two.dim.path.Path;
 import euclid.two.dim.render.RenderComponent;
 import euclid.two.dim.team.Team;
 import euclid.two.dim.updater.Updatable;

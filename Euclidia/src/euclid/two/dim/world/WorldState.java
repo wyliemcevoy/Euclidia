@@ -18,10 +18,8 @@ import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Room;
 import euclid.two.dim.model.Unit;
 
-public class WorldState
-{
+public class WorldState {
 	private ArrayList<GameSpaceObject> gsos;
-	private WorldGrid worldGrids;
 	private ArrayList<Room> rooms;
 	private ArrayList<Door> doors;
 	private Camera camera;
@@ -29,344 +27,250 @@ public class WorldState
 	private ArrayList<Etherial> etherials;
 	private ArrayList<Etherial> expired;
 	private GameMap gameMap;
-	
+
 	/**
 	 * @param rooms
 	 *            the rooms to set
 	 */
-	public void setRooms(ArrayList<Room> rooms)
-	{
+	public void setRooms(ArrayList<Room> rooms) {
 		this.rooms = rooms;
 	}
-	
-	public WorldGrid getWorldGrid()
-	{
-		return worldGrids;
-	}
-	
-	public void setWorldGrid(WorldGrid worldGrid)
-	{
-		this.worldGrids = worldGrid;
-	}
-	
-	public WorldState()
-	{
+
+	public WorldState() {
 		this.gsos = new ArrayList<GameSpaceObject>();
-		this.worldGrids = new WorldGrid();
 		this.rooms = new ArrayList<Room>();
 		this.doors = new ArrayList<Door>();
 		this.explosions = new ArrayList<Explosion>();
 		this.etherials = new ArrayList<Etherial>();
 		this.expired = new ArrayList<Etherial>();
 	}
-	
-	public List<GameSpaceObject> getUnfriendliesInRage(Minion unit)
-	{
+
+	public List<GameSpaceObject> getUnfriendliesInRage(Minion unit) {
 		ArrayList<GameSpaceObject> targets = new ArrayList<GameSpaceObject>();
-		
+
 		EuVector unitLocation = new EuVector(unit.getPosition());
-		
-		for (GameSpaceObject gso : gsos)
-		{
+
+		for (GameSpaceObject gso : gsos) {
 			EuVector dist = VectorMath.subtract(gso.getPosition(), unitLocation);
-			
-			if (dist.getMagnitude() < unit.getDetectionRange())
-			{
+
+			if (dist.getMagnitude() < unit.getDetectionRange()) {
 				targets.add(gso);
 			}
 		}
-		
+
 		return targets;
 	}
-	
-	public double getDistanceBetween(GameSpaceObject one, GameSpaceObject two)
-	{
+
+	public double getDistanceBetween(GameSpaceObject one, GameSpaceObject two) {
 		return VectorMath.subtract(one.getPosition(), two.getPosition()).getMagnitude() - (one.getRadius() + two.getRadius());
 	}
-	
-	public GameSpaceObject getClosestUnfriendly(Unit unit)
-	{
+
+	public GameSpaceObject getClosestUnfriendly(Unit unit) {
 		GameSpaceObject target = null;
 		double minDist = Double.MAX_VALUE;
-		
-		for (GameSpaceObject gso : gsos)
-		{
-			if (gso.getTeam() != unit.getTeam())
-			{
+
+		for (GameSpaceObject gso : gsos) {
+			if (gso.getTeam() != unit.getTeam()) {
 				double dist = getDistanceBetween(gso, unit);
-				if (dist < unit.getDetectionRange() && dist < minDist)
-				{
+				if (dist < unit.getDetectionRange() && dist < minDist) {
 					target = gso;
 					minDist = dist;
 				}
-				
+
 			}
-			
+
 		}
-		
+
 		return target;
 	}
-	
-	public void addObject(GameSpaceObject gso)
-	{
+
+	public void addObject(GameSpaceObject gso) {
 		gsos.add(gso);
-		worldGrids.add(gso);
 	}
-	
-	public void update(long timeStep)
-	{/*
-		for (GameSpaceObject fishi : gsos)
-		{
-			fishi.update(timeStep);
-		}
-		
-		for (GameSpaceObject fishi : gsos)
-		{
-			fishi.travelToTheFuture();
-		}
-		
-		for (GameSpaceObject fishi : gsos)
-		
-		{
-			fishi.separate();
-		}
-		
-		for (GameSpaceObject fishi : gsos)
-		
-		{
-			fishi.travelToTheFuture();
-		}
-		*/
+
+	public void update(long timeStep) {
 		Iterator<Explosion> it = explosions.iterator();
-		while (it.hasNext())
-		{
+		while (it.hasNext()) {
 			Explosion explosion = it.next();
-			if (explosion.hasExpired())
-			{
+			if (explosion.hasExpired()) {
 				it.remove();
 			}
 		}
-		
 	}
-	
-	public ArrayList<GameSpaceObject> getSelected()
-	{
+
+	public ArrayList<GameSpaceObject> getSelected() {
 		ArrayList<GameSpaceObject> build = new ArrayList<GameSpaceObject>();
-		for (GameSpaceObject gso : this.gsos)
-		{
-			if (gso.isSelected())
-			{
+		for (GameSpaceObject gso : this.gsos) {
+			if (gso.isSelected()) {
 				build.add(gso);
 			}
 		}
 		return build;
 	}
-	
+
 	/**
 	 * @return the fish
 	 */
-	public ArrayList<GameSpaceObject> getGsos()
-	{
+	public ArrayList<GameSpaceObject> getGsos() {
 		return gsos;
 	}
-	
+
 	/**
 	 * @param fish
 	 *            the fish to set
 	 */
-	public void setFish(ArrayList<GameSpaceObject> fish)
-	{
+	public void setFish(ArrayList<GameSpaceObject> fish) {
 		this.gsos = fish;
 	}
-	
-	public WorldState deepCopy()
-	{
+
+	public WorldState deepCopy() {
 		WorldState copy = new WorldState();
-		
+
 		for (GameSpaceObject gso : gsos)
-		
+
 		{
-			
-			if (gso instanceof Minion)
-			{
+
+			if (gso instanceof Minion) {
 				copy.addObject(new Minion((Minion) gso));
 			}
-			if (gso instanceof Hero)
-			{
+			if (gso instanceof Hero) {
 				copy.addObject(new Hero((Hero) gso));
 			}
-			
+
 		}
-		
-		/*
-		ArrayList<Room> newRooms = new ArrayList<Room>();
-		for (Room room : rooms)
-		{
-			newRooms.add(new Room(room));
-		} */
+
 		copy.setDoors(doors);
 		copy.setRooms(rooms);
 		copy.setCamera(this.camera);
 		copy.setGameMap(gameMap);
-		for (Etherial updatable : etherials)
-		{
+		for (Etherial updatable : etherials) {
 			copy.addEtherial(updatable);
 		}
-		
+
 		return copy;
 	}
-	
-	public void addDoor(Door door)
-	{
+
+	public void addDoor(Door door) {
 		this.doors.add(door);
 	}
-	
-	public void setDoors(ArrayList<Door> doors)
-	{
+
+	public void setDoors(ArrayList<Door> doors) {
 		this.doors = doors;
 	}
-	
-	public ArrayList<Room> getRooms()
-	{
-		
+
+	public ArrayList<Room> getRooms() {
+
 		return rooms;
 	}
-	
-	public ArrayList<Door> getDoors()
-	{
+
+	public ArrayList<Door> getDoors() {
 		// TODO Auto-generated method stub
 		return doors;
 	}
-	
-	public Room getRoom(EuVector point)
-	{
+
+	public Room getRoom(EuVector point) {
 		// Bad implementation (fix with a grid and then store rooms inside)
-		for (Room room : rooms)
-		{
+		for (Room room : rooms) {
 			if (room.contains(point))
 				return room;
 		}
 		return null;
 	}
-	
-	public Camera getCamera()
-	{
+
+	public Camera getCamera() {
 		return camera;
 	}
-	
-	public void setCamera(Camera camera)
-	{
+
+	public void setCamera(Camera camera) {
 		this.camera = camera;
 	}
-	
-	public AffineTransform buildTransform()
-	{
+
+	public AffineTransform buildTransform() {
 		AffineTransform aTransform = new AffineTransform();
 		aTransform.setToTranslation(000, 000);
 		aTransform.rotate(camera.getRotation());
 		aTransform.scale(camera.getZoom(), camera.getZoom());
-		
+
 		return aTransform;
 	}
-	
-	public ArrayList<GameSpaceObject> getGameSpaceObjects()
-	{
+
+	public ArrayList<GameSpaceObject> getGameSpaceObjects() {
 		return gsos;
 	}
-	
-	public Unit getUnit(UUID id)
-	{
+
+	public Unit getUnit(UUID id) {
 		// Horrible implementation (change to map)
-		for (GameSpaceObject gso : gsos)
-		{
-			if (gso.getId().equals(id))
-			{
+		for (GameSpaceObject gso : gsos) {
+			if (gso.getId().equals(id)) {
 				return (Unit) gso;
 			}
 		}
 		return null;
 	}
-	
-	public ArrayList<Explosion> getExplosions()
-	{
+
+	public ArrayList<Explosion> getExplosions() {
 		explosions = new ArrayList<Explosion>();
-		
-		for (Etherial updatable : etherials)
-		{
-			if (updatable instanceof Explosion)
-			{
+
+		for (Etherial updatable : etherials) {
+			if (updatable instanceof Explosion) {
 				explosions.add((Explosion) updatable);
 			}
 		}
-		
+
 		return explosions;
 	}
-	
-	public void addEtherial(Etherial etherial)
-	{
+
+	public void addEtherial(Etherial etherial) {
 		this.etherials.add(etherial);
 	}
-	
-	public ArrayList<Etherial> getUpdatable()
-	{
+
+	public ArrayList<Etherial> getUpdatable() {
 		return etherials;
 	}
-	
-	public void registerAsExpired(Etherial etherial)
-	{
+
+	public void registerAsExpired(Etherial etherial) {
 		this.expired.add(etherial);
 	}
-	
-	public void purgeExpired()
-	{
+
+	public void purgeExpired() {
 		etherials.removeAll(expired);
 		expired = new ArrayList<Etherial>();
 	}
-	
 
-	public List<Etherial> getEtherials()
-	{
+	public List<Etherial> getEtherials() {
 		return etherials;
 	}
-	
-	public Hero getHero(UUID id)
-	{
+
+	public Hero getHero(UUID id) {
 		// Horrible implementation (change to map)
-		for (GameSpaceObject gso : gsos)
-		{
-			if (gso.getId().equals(id))
-			{
+		for (GameSpaceObject gso : gsos) {
+			if (gso.getId().equals(id)) {
 				return (Hero) gso;
 			}
 		}
 		return null;
 	}
-	
-	public ArrayList<Unit> getUnitsInRange(EuVector location, int explosionRadius)
-	{
+
+	public ArrayList<Unit> getUnitsInRange(EuVector location, int explosionRadius) {
 		ArrayList<Unit> result = new ArrayList<Unit>();
-		
-		for (GameSpaceObject gso : gsos)
-		{
+
+		for (GameSpaceObject gso : gsos) {
 			EuVector distance = VectorMath.subtract(gso.getPosition(), location);
-			
-			if (gso instanceof Unit && distance.getMagnitude() - gso.getRadius() < explosionRadius)
-			{
+
+			if (gso instanceof Unit && distance.getMagnitude() - gso.getRadius() < explosionRadius) {
 				result.add((Unit) gso);
 			}
 		}
-		
+
 		return result;
 	}
-	
-	public GameMap getGameMap()
-	{
+
+	public GameMap getGameMap() {
 		return gameMap;
 	}
-	
-	public void setGameMap(GameMap gameMap)
-	{
+
+	public void setGameMap(GameMap gameMap) {
 		this.gameMap = gameMap;
 	}
-	
+
 }

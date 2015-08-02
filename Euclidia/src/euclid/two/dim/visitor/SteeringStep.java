@@ -1,13 +1,13 @@
 package euclid.two.dim.visitor;
 
 import euclid.two.dim.Configuration;
-import euclid.two.dim.Path;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Obstacle;
 import euclid.two.dim.model.Unit;
+import euclid.two.dim.path.Path;
 import euclid.two.dim.updater.UpdateVisitor;
 import euclid.two.dim.world.WorldState;
 

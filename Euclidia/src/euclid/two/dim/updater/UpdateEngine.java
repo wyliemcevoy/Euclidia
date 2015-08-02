@@ -5,9 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.ArrayBlockingQueue;
 
-import euclid.two.dim.Path;
 import euclid.two.dim.VectorMath;
 import euclid.two.dim.ability.internal.Ability;
 import euclid.two.dim.ability.request.AbilityRequest;
@@ -25,8 +23,6 @@ import euclid.two.dim.etherial.ExplosiveProjectile;
 import euclid.two.dim.etherial.Projectile;
 import euclid.two.dim.etherial.Slash;
 import euclid.two.dim.etherial.ZergDeath;
-import euclid.two.dim.input.InputCommand;
-import euclid.two.dim.input.InputManager;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Hero;
@@ -34,6 +30,7 @@ import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Obstacle;
 import euclid.two.dim.model.RoomPath;
 import euclid.two.dim.model.Unit;
+import euclid.two.dim.path.Path;
 import euclid.two.dim.path.PathCalculator;
 import euclid.two.dim.team.Agent;
 import euclid.two.dim.team.Game;
@@ -44,19 +41,13 @@ import euclid.two.dim.visitor.PhysicsStep;
 import euclid.two.dim.visitor.SteeringStep;
 import euclid.two.dim.world.WorldState;
 
-public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisitor, CommandVisitor {
-	private ArrayBlockingQueue<WorldState> rendererQueue;
+public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisitor {
 	private WorldState worldStateN;
-	private long now, then, timeStep;
-	private InputManager inputManager;
-	private boolean stopRequested;
+	private long timeStep;
 	private ArrayList<Agent> agents;
 	private Game game;
 
-	public UpdateEngine(ArrayBlockingQueue<WorldState> rendererQueue, InputManager inputManager, Game game) {
-		this.rendererQueue = rendererQueue;
-		this.inputManager = inputManager;
-		this.stopRequested = false;
+	public UpdateEngine(Game game) {
 		this.agents = new ArrayList<Agent>();
 		this.game = game;
 	}
@@ -70,73 +61,35 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 	}
 
 	private void processInput() {
-		// Read through queue of input events and process them
-
+		// Read through queue of commands from players and process them
 		for (Command command : game.getCommands()) {
 			command.accept(this);
 		}
-
-		if (inputManager.hasUnprocessedEvents()) {
-
-			for (InputCommand inputCommand : inputManager.getInputCommands()) {
-				// inputCommand.execute();
-			}
-		}
 	}
 
-	public void run() {
-		now = System.currentTimeMillis();
-		then = System.currentTimeMillis();
-		while (!stopRequested) {
-			// Update time step
-			then = now;
-			now = System.currentTimeMillis();
-			timeStep = now - then;
-			randomCommand();
+	public WorldState update(long timeStep) {
+		this.timeStep = timeStep;
+		processInput();
 
-			processInput();
-
-			update(worldStateN, timeStep / 2);
-
-			for (Etherial etherial : worldStateN.getEtherials()) {
-				etherial.accept(this);
-			}
-
-			// worldStateN.purgeExpired();
-
-			EndStepManager endStep = new EndStepManager(worldStateN);
-			endStep.endPhase();
-			// purgeExpired();
-
-			WorldState nPlusOne = worldStateN.deepCopy();
-			WorldState playerCopy = worldStateN.deepCopy();
-
-			game.updatePlayers(playerCopy);
-
-			try {
-				rendererQueue.put(nPlusOne);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	public void update(WorldState worldState, long timeStep) {
-
-		SteeringStep steeringStep = new SteeringStep(worldState, timeStep);
+		SteeringStep steeringStep = new SteeringStep(worldStateN, timeStep);
 		steeringStep.runStep();
 
-		PhysicsStep physicsStep = new PhysicsStep(worldState);
+		PhysicsStep physicsStep = new PhysicsStep(worldStateN);
 		physicsStep.runStep();
 
-		List<GameSpaceObject> gsos = worldState.getGameSpaceObjects();
+		List<GameSpaceObject> gsos = worldStateN.getGameSpaceObjects();
 		for (GameSpaceObject gso : gsos) {
 			gso.acceptUpdateVisitor(this);
 		}
-	}
 
-	public void requestStop() {
-		stopRequested = true;
+		for (Etherial etherial : worldStateN.getEtherials()) {
+			etherial.accept(this);
+		}
+
+		EndStepManager endStep = new EndStepManager(worldStateN);
+		endStep.endPhase();
+
+		return this.worldStateN.deepCopy();
 	}
 
 	public WorldState getCurrentWorldState() {
@@ -188,48 +141,6 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 	@Override
 	public void visit(Minion unit) {
 		visit((Unit) unit);
-		/*
-		 * 
-		 * unit.getAttack().update(timeStep);
-		 * 
-		 * Unit target = worldStateN.getUnit(unit.getTarget());
-		 * 
-		 * // Check to see if the units target still is alive / exists if
-		 * (target == null || unit.getPosition() == null || target.getPosition()
-		 * == null) { pickNewTarget(unit);
-		 * 
-		 * return; }
-		 * 
-		 * double distSqrd = VectorMath.getDistanceSquared(target.getPosition(),
-		 * unit.getPosition()); double rangeSqrd = unit.getAttack().getRange() *
-		 * unit.getAttack().getRange();
-		 * 
-		 * // Check and see if the unit is capable of attacking (basic attack
-		 * off cooldown) if (unit.getAttack().isReloaded()) { if (distSqrd <=
-		 * rangeSqrd) { // Unit is alive and within range
-		 * target.getHealth().add(-1 * unit.getAttack().getDamage());
-		 * unit.getAttack().attack();
-		 * 
-		 * worldStateN.addEtherial(new Slash(target.getPosition(),
-		 * unit.getPosition())); } }
-		 * 
-		 * if (distSqrd > rangeSqrd) { RoomPath roomPath =
-		 * PathCalculator.calculateRoomPath(worldStateN, unit.getPosition(),
-		 * target.getPosition()); unit.setPath(roomPath.toPath()); }
-		 * 
-		 * /* ArrayList<GameSpaceObject> fishes = worldState.getGsos();
-		 * futurePosition = new EuVector(position); EuVector update = new
-		 * EuVector(0, 0); for (GameSpaceObject fish : fishes) { EuVector distTo
-		 * = position.subtract(fish.getPosition()); double mag =
-		 * distTo.getMagnitude(); if (!this.equals(fish) && mag < 15) { EuVector
-		 * plus = distTo.normalize().dividedBy(mag * mag / (fish.getRadius() *
-		 * 10)); update = update.add(plus); } }
-		 * 
-		 * if (update.getMagnitude() > 2) { update =
-		 * update.normalize().multipliedBy(2); } if (update.getMagnitude() <
-		 * .15) { return; } //futureVelocity = futureVelocity.add(update);
-		 * futurePosition = futurePosition.add(update);
-		 */
 	}
 
 	private void pickNewTarget(Minion unit) {
@@ -246,13 +157,7 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 
 	@Override
 	public void visit(Obstacle obstacle) {
-
-	}
-
-	public void update(long timeStep) {
-		for (GameSpaceObject gso : worldStateN.getGameSpaceObjects()) {
-			gso.acceptUpdateVisitor(this);
-		}
+		// Do nothing
 	}
 
 	public void randomCommand() {
@@ -346,7 +251,6 @@ public class UpdateEngine extends Thread implements UpdateVisitor, EtherialVisit
 			if (unit != null) {
 				unit.setPath(new Path(new EuVector(moveCommand.getLocation())));
 			}
-
 		}
 	}
 

@@ -2,7 +2,7 @@ package euclid.two.dim.model;
 
 import java.util.ArrayList;
 
-import euclid.two.dim.Path;
+import euclid.two.dim.path.Path;
 
 public class RoomPath
 {

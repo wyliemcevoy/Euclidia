@@ -1,4 +1,4 @@
-package euclid.two.dim;
+package euclid.two.dim.path;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

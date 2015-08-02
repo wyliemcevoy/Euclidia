@@ -7,9 +7,9 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import euclid.two.dim.Path;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Minion;
+import euclid.two.dim.path.Path;
 import euclid.two.dim.team.Team;
 
 public class MinionTest {
