@@ -2,8 +2,6 @@ package euclid.two.dim.model;
 
 import java.util.ArrayList;
 
-import euclid.two.dim.map.ConvexPoly;
-
 public class NavMesh {
 	private ArrayList<ConvexPoly> polys;
 
@@ -19,7 +17,7 @@ public class NavMesh {
 		// TODO run A* on every possible path and store it in memory?
 	}
 
-	public ConvexPoly getRoom(EuVector point) {
+	public ConvexPoly getPoly(EuVector point) {
 		// Bad implementation (fix with a grid and then store rooms inside)
 		for (ConvexPoly poly : polys) {
 			if (poly.contains(point))
@@ -28,7 +26,7 @@ public class NavMesh {
 		return null;
 	}
 
-	public ArrayList<ConvexPoly> getRooms() {
+	public ArrayList<ConvexPoly> getAllPolygons() {
 		return polys;
 	}
 }

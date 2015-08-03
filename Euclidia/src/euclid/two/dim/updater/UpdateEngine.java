@@ -2,7 +2,6 @@ package euclid.two.dim.updater;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Random;
 import java.util.UUID;
 
 import euclid.two.dim.VectorMath;
@@ -29,7 +28,6 @@ import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Obstacle;
 import euclid.two.dim.model.RoomPath;
 import euclid.two.dim.model.Unit;
-import euclid.two.dim.path.Path;
 import euclid.two.dim.path.PathCalculator;
 import euclid.two.dim.team.Agent;
 import euclid.two.dim.team.Game;
@@ -165,19 +163,6 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 		// Do nothing
 	}
 
-	public void randomCommand() {
-		Random rand = new Random();
-		if (rand.nextDouble() > .99) {
-
-			for (Agent agent : agents) {
-				/*
-				 * for (InputCommand command : agent.getCommands()) {
-				 * command.execute(); }
-				 */
-			}
-		}
-	}
-
 	@Override
 	public void visit(Explosion explosion) {
 		explosion.update(timeStep);
@@ -252,9 +237,8 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 
 		for (UUID id : moveCommand.getIds()) {
 			Unit unit = worldStateN.getUnit(id);
-
 			if (unit != null) {
-				unit.setPath(new Path(new EuVector(moveCommand.getLocation())));
+				unit.setPath(PathCalculator.calculateRoomPath(worldStateN, unit.getPosition(), moveCommand.getLocation()).toPath());
 			}
 		}
 	}

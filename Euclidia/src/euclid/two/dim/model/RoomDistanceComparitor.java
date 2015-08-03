@@ -4,9 +4,9 @@ import java.util.Comparator;
 
 public class RoomDistanceComparitor implements Comparator<RoomPath>
 {
-	private Room goal;
+	private ConvexPoly goal;
 
-	public RoomDistanceComparitor(Room goal)
+	public RoomDistanceComparitor(ConvexPoly goal)
 	{
 		this.goal = goal;
 	}

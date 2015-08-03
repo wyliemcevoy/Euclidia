@@ -9,36 +9,22 @@ import euclid.two.dim.VectorMath;
 import euclid.two.dim.etherial.Etherial;
 import euclid.two.dim.etherial.Explosion;
 import euclid.two.dim.map.GameMap;
-import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
-import euclid.two.dim.model.Room;
 import euclid.two.dim.model.Unit;
 
 public class WorldState {
 	private ArrayList<GameSpaceObject> gsos;
-	private ArrayList<Room> rooms;
-	private ArrayList<Door> doors;
 	private Camera camera;
 	private ArrayList<Explosion> explosions;
 	private ArrayList<Etherial> etherials;
 	private ArrayList<Etherial> expired;
 	private GameMap gameMap;
 
-	/**
-	 * @param rooms
-	 *            the rooms to set
-	 */
-	public void setRooms(ArrayList<Room> rooms) {
-		this.rooms = rooms;
-	}
-
 	public WorldState() {
 		this.gsos = new ArrayList<GameSpaceObject>();
-		this.rooms = new ArrayList<Room>();
-		this.doors = new ArrayList<Door>();
 		this.explosions = new ArrayList<Explosion>();
 		this.etherials = new ArrayList<Etherial>();
 		this.expired = new ArrayList<Etherial>();
@@ -115,8 +101,7 @@ public class WorldState {
 	}
 
 	/**
-	 * @param fish
-	 *            the fish to set
+	 * @param fish the fish to set
 	 */
 	public void setFish(ArrayList<GameSpaceObject> fish) {
 		this.gsos = fish;
@@ -138,8 +123,6 @@ public class WorldState {
 
 		}
 
-		copy.setDoors(doors);
-		copy.setRooms(rooms);
 		copy.setCamera(this.camera);
 		copy.setGameMap(gameMap);
 		for (Etherial updatable : etherials) {
@@ -147,32 +130,6 @@ public class WorldState {
 		}
 
 		return copy;
-	}
-
-	public void addDoor(Door door) {
-		this.doors.add(door);
-	}
-
-	public void setDoors(ArrayList<Door> doors) {
-		this.doors = doors;
-	}
-
-	public ArrayList<Room> getRooms() {
-
-		return rooms;
-	}
-
-	public ArrayList<Door> getDoors() {
-		return doors;
-	}
-
-	public Room getRoom(EuVector point) {
-		// Bad implementation (fix with a grid and then store rooms inside)
-		for (Room room : rooms) {
-			if (room.contains(point))
-				return room;
-		}
-		return null;
 	}
 
 	public Camera getCamera() {
