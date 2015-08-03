@@ -175,7 +175,13 @@ public class WorldStateFactory {
 		navMesh.addPoly(new ConvexPoly(p6));
 
 		return new GameMap(navMesh);
+	}
 
+	public GameMap buildRtsBoard() {
+
+		NavMesh navMesh = new NavMesh();
+
+		return new GameMap(navMesh);
 	}
 
 }

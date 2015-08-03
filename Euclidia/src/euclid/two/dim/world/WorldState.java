@@ -1,6 +1,5 @@
 package euclid.two.dim.world;
 
-import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -164,7 +163,6 @@ public class WorldState {
 	}
 
 	public ArrayList<Door> getDoors() {
-		// TODO Auto-generated method stub
 		return doors;
 	}
 
@@ -183,15 +181,6 @@ public class WorldState {
 
 	public void setCamera(Camera camera) {
 		this.camera = camera;
-	}
-
-	public AffineTransform buildTransform() {
-		AffineTransform aTransform = new AffineTransform();
-		aTransform.setToTranslation(000, 000);
-		aTransform.rotate(camera.getRotation());
-		aTransform.scale(camera.getZoom(), camera.getZoom());
-
-		return aTransform;
 	}
 
 	public ArrayList<GameSpaceObject> getGameSpaceObjects() {
