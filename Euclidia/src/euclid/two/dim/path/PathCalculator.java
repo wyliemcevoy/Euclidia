@@ -7,6 +7,7 @@ import euclid.two.dim.map.GameMap;
 import euclid.two.dim.model.ConvexPoly;
 import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;
+import euclid.two.dim.model.NavMesh;
 import euclid.two.dim.model.RoomDistanceComparitor;
 import euclid.two.dim.model.RoomPath;
 import euclid.two.dim.world.WorldState;
@@ -16,11 +17,27 @@ public class PathCalculator {
 
 	}
 
-	public static RoomPath calculateRoomPath(WorldState worldState, EuVector start, EuVector stop) {
+	public static Path calculatePath(WorldState worldState, EuVector start, EuVector stop) {
 		GameMap gameMap = worldState.getGameMap();
 		// Get rooms associated with input points
 		ConvexPoly startRoom = gameMap.getNavMesh().getPoly(start);
 		ConvexPoly stopRoom = gameMap.getNavMesh().getPoly(stop);
+
+		if (stopRoom == null || startRoom == null) {
+			Path failPath = new Path(start);
+			failPath.addTarget(stop);
+
+			return failPath;
+		}
+		else {
+			return calculateRoomPath(gameMap.getNavMesh(), start, stop).toPath();
+		}
+	}
+
+	public static RoomPath calculateRoomPath(NavMesh navMesh, EuVector start, EuVector stop) {
+
+		ConvexPoly startRoom = navMesh.getPoly(start);
+		ConvexPoly stopRoom = navMesh.getPoly(stop);
 
 		// A* using crow's flight distance from center of each room
 		RoomDistanceComparitor comparitor = new RoomDistanceComparitor(stopRoom);
@@ -62,15 +79,15 @@ public class PathCalculator {
 		// No path could be found
 
 		try {
-			gameMap.getNavMesh().getPoly(start);
+			navMesh.getPoly(start);
 		} catch (Exception e) {
-			RoomPath failPath = new RoomPath(gameMap.getNavMesh().getAllPolygons().get(0), start);
+			RoomPath failPath = new RoomPath(navMesh.getAllPolygons().get(0), start);
 			failPath.addPoint(stop);
 
 			return failPath;
 		}
 
-		RoomPath failPath = new RoomPath(gameMap.getNavMesh().getAllPolygons().get(0), start);
+		RoomPath failPath = new RoomPath(navMesh.getAllPolygons().get(0), start);
 		return failPath;
 
 	}

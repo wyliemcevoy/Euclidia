@@ -13,7 +13,6 @@ import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.NavMesh;
-import euclid.two.dim.path.Path;
 import euclid.two.dim.team.Team;
 
 public class WorldStateFactory {
@@ -34,7 +33,6 @@ public class WorldStateFactory {
 		WorldState worldState = new WorldState();
 		Team blueTeam = Team.Blue;
 		for (int i = 0; i < 200; i++) {
-			Path path = new Path(new EuVector(150, 250));
 			Minion fish = new Minion(blueTeam, randVect(100, 200, 100, 200));
 			worldState.addObject(fish);
 		}
@@ -67,7 +65,6 @@ public class WorldStateFactory {
 		rooms.add(rBR);
 		rooms.add(rTR);
 
-		worldState.setCamera(new Camera());
 		return worldState;
 	}
 
@@ -90,9 +87,6 @@ public class WorldStateFactory {
 			Minion unit = new Minion(team, randVect(100, 200, 100, 200));
 			worldState.addObject(unit);
 		}
-
-		Camera camera = new Camera();
-		worldState.setCamera(camera);
 
 		worldState.setGameMap(createSpacePlatform());
 
@@ -121,7 +115,7 @@ public class WorldStateFactory {
 		p1.add(new EuVector(556, 254));
 		p1.add(new EuVector(414, 316));
 		ConvexPoly cp1 = new ConvexPoly(p1);
-
+		cp1.setId(1);
 		navMesh.addPoly(cp1);
 
 		ArrayList<EuVector> p2 = new ArrayList<EuVector>();
@@ -130,8 +124,8 @@ public class WorldStateFactory {
 		p2.add(new EuVector(1160, 254));
 		p2.add(new EuVector(556, 254));
 		ConvexPoly cp2 = new ConvexPoly(p2);
-
-		navMesh.addPoly(new ConvexPoly(p2));
+		cp2.setId(2);
+		navMesh.addPoly(cp2);
 
 		ArrayList<EuVector> p3 = new ArrayList<EuVector>();
 		p3.add(new EuVector(1160, 32));
@@ -140,6 +134,7 @@ public class WorldStateFactory {
 		p3.add(new EuVector(1160, 254));
 
 		ConvexPoly cp3 = new ConvexPoly(p3);
+		cp3.setId(3);
 		navMesh.addPoly(cp3);
 
 		ArrayList<EuVector> p4 = new ArrayList<EuVector>();
@@ -149,6 +144,7 @@ public class WorldStateFactory {
 		p4.add(new EuVector(700, 625));
 
 		ConvexPoly cp4 = new ConvexPoly(p4);
+		cp4.setId(4);
 		navMesh.addPoly(cp4);
 
 		ArrayList<EuVector> p5 = new ArrayList<EuVector>();
@@ -158,6 +154,7 @@ public class WorldStateFactory {
 		p5.add(new EuVector(859, 537));
 
 		ConvexPoly cp5 = new ConvexPoly(p5);
+		cp5.setId(5);
 		navMesh.addPoly(cp5);
 
 		ArrayList<EuVector> p6 = new ArrayList<EuVector>();
@@ -167,17 +164,18 @@ public class WorldStateFactory {
 		p6.add(new EuVector(1020, 625));
 
 		ConvexPoly cp6 = new ConvexPoly(p6);
+		cp6.setId(6);
 		navMesh.addPoly(cp6);
 
-		Door d1 = new Door(cp1, cp2);
+		Door d1 = new Door(cp1, cp4);
 		d1.setPointTwo(new EuVector(33, 289));
 		d1.setPointOne(new EuVector(414, 316));
 
-		Door d2 = new Door(cp2, cp3);
+		Door d2 = new Door(cp1, cp2);
 		d2.setPointTwo(new EuVector(556, 254));
 		d2.setPointOne(new EuVector(556, 32));
 
-		Door d3 = new Door(cp3, cp4);
+		Door d3 = new Door(cp2, cp3);
 		d3.setPointTwo(new EuVector(1160, 32));
 		d3.setPointOne(new EuVector(1160, 254));
 

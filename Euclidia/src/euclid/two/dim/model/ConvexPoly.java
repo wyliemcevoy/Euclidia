@@ -10,10 +10,12 @@ public class ConvexPoly {
 	private ArrayList<EuVector> points;
 	private ArrayList<Segment> segments;
 	private EuVector center;
+	private int id;
 
 	public ConvexPoly(ArrayList<EuVector> points) {
 		this.points = points;
 		this.doors = new ArrayList<Door>();
+		this.setId(-100);
 	}
 
 	public boolean contains(EuVector test) {
@@ -74,10 +76,41 @@ public class ConvexPoly {
 
 	public EuVector getCenter() {
 		if (center == null) {
-			center = points.get(0).deepCopy();
+			double minX = points.get(0).getX();
+			double minY = points.get(0).getY();
+			double maxX = points.get(0).getX();
+			double maxY = points.get(0).getY();
+
+			// not correct way to calculate centroid, but fast to calculate
+
+			for (EuVector point : points) {
+				if (point.getX() > maxX) {
+					maxX = point.getX();
+				}
+				else if (point.getX() < minX) {
+					minX = point.getX();
+				}
+
+				if (point.getY() > maxY) {
+					maxY = point.getY();
+				}
+				else if (point.getY() < minY) {
+					minY = point.getY();
+				}
+			}
+
+			center = new EuVector((minX + maxX) / 2, (minY + maxY) / 2);
 		}
 
 		return center;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 }

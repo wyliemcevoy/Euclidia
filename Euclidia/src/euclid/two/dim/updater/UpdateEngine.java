@@ -26,8 +26,8 @@ import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Obstacle;
-import euclid.two.dim.model.RoomPath;
 import euclid.two.dim.model.Unit;
+import euclid.two.dim.path.Path;
 import euclid.two.dim.path.PathCalculator;
 import euclid.two.dim.team.Agent;
 import euclid.two.dim.team.Game;
@@ -99,14 +99,6 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 		return worldStateN;
 	}
 
-	public double getZoom() {
-		return this.getCurrentWorldState().getCamera().getZoom();
-	}
-
-	public void setZoom(double zoom) {
-		this.getCurrentWorldState().getCamera().setZoom(zoom);
-	}
-
 	public void visit(Unit unit) {
 		unit.getAttack().update(timeStep);
 
@@ -122,8 +114,7 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 		double distSqrd = VectorMath.getDistanceSquared(target.getPosition(), unit.getPosition());
 		double rangeSqrd = unit.getAttack().getRange() * unit.getAttack().getRange();
 
-		// Check and see if the unit is capable of attacking (basic attack off
-		// cooldown)
+		// Check and see if the unit is capable of attacking (basic attack off cool-down)
 		if (unit.getAttack().isReloaded()) {
 			if (distSqrd <= rangeSqrd) {
 				// Unit is alive and within range
@@ -135,8 +126,8 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 		}
 
 		if (distSqrd > rangeSqrd) {
-			RoomPath roomPath = PathCalculator.calculateRoomPath(worldStateN, unit.getPosition(), target.getPosition());
-			unit.setPath(roomPath.toPath());
+			Path path = PathCalculator.calculatePath(worldStateN, unit.getPosition(), target.getPosition());
+			unit.setPath(path);
 		}
 
 	}
@@ -237,8 +228,8 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 
 		for (UUID id : moveCommand.getIds()) {
 			Unit unit = worldStateN.getUnit(id);
-			if (unit != null) {
-				unit.setPath(PathCalculator.calculateRoomPath(worldStateN, unit.getPosition(), moveCommand.getLocation()).toPath());
+			if (unit != null && moveCommand.getLocation() != null) {
+				unit.setPath(PathCalculator.calculatePath(worldStateN, unit.getPosition(), moveCommand.getLocation()));
 			}
 		}
 	}
@@ -315,6 +306,5 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 	@Override
 	public void visit(CircleGraphic circleGraphic) {
 		circleGraphic.update(timeStep);
-
 	}
 }

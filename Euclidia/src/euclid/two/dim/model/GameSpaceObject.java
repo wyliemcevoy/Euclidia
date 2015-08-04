@@ -11,8 +11,7 @@ import euclid.two.dim.render.RenderComponent;
 import euclid.two.dim.team.Team;
 import euclid.two.dim.updater.Updatable;
 
-public abstract class GameSpaceObject implements Updatable
-{
+public abstract class GameSpaceObject implements Updatable {
 	protected double radius;
 	protected EuVector position;
 	protected EuVector futurePosition;
@@ -30,63 +29,52 @@ public abstract class GameSpaceObject implements Updatable
 	protected RenderComponent renderComponent;
 	protected SteeringBehavior steeringBehavior;
 	protected Team team;
-	
-	public SteeringBehavior getSteeringBehavior()
-	{
+
+	public SteeringBehavior getSteeringBehavior() {
 		return steeringBehavior;
 	}
-	
-	public void setSteeringBehavior(SteeringBehavior steeringBehavior)
-	{
+
+	public void setSteeringBehavior(SteeringBehavior steeringBehavior) {
 		this.steeringBehavior = steeringBehavior;
 	}
-	
-	public double getMass()
-	{
+
+	public double getMass() {
 		return mass;
 	}
-	
-	public void setMass(double mass)
-	{
+
+	public void setMass(double mass) {
 		this.mass = mass;
 	}
-	
-	public void setRadius(double radius)
-	{
+
+	public void setRadius(double radius) {
 		this.radius = radius;
 	}
-	
-	public void setTheta(double theta)
-	{
+
+	public void setTheta(double theta) {
 		this.theta = theta;
 	}
-	
+
 	/**
 	 * @return the isSelected
 	 */
-	public boolean isSelected()
-	{
+	public boolean isSelected() {
 		return isSelected;
 	}
-	
-	public void setFutureVelocity(EuVector euVector)
-	{
+
+	public void setFutureVelocity(EuVector euVector) {
 		futureVelocity = euVector;
 	}
-	
+
 	public abstract boolean hasExpired();
-	
+
 	/**
-	 * @param isSelected
-	 *            the isSelected to set
+	 * @param isSelected the isSelected to set
 	 */
-	public void setSelected(boolean isSelected)
-	{
+	public void setSelected(boolean isSelected) {
 		this.isSelected = isSelected;
 	}
-	
-	public GameSpaceObject()
-	{
+
+	public GameSpaceObject() {
 		Random rand = new Random();
 		this.color = new Color(rand.nextInt(250), rand.nextInt(250), rand.nextInt(250));
 		this.id = UUID.randomUUID();
@@ -95,24 +83,20 @@ public abstract class GameSpaceObject implements Updatable
 		this.steeringBehavior = SteeringBehavior.Flock;
 		this.team = Team.Neutral;
 	}
-	
-	public double getRadius()
-	{
+
+	public double getRadius() {
 		return radius;
 	}
-	
-	public Color getColor()
-	{
+
+	public Color getColor() {
 		return color;
 	}
-	
-	public UUID getId()
-	{
+
+	public UUID getId() {
 		return id;
 	}
-	
-	public GameSpaceObject(GameSpaceObject copy)
-	{
+
+	public GameSpaceObject(GameSpaceObject copy) {
 		this.position = new EuVector(copy.getPosition());
 		this.color = copy.getColor();
 		this.radius = copy.getRadius();
@@ -126,118 +110,91 @@ public abstract class GameSpaceObject implements Updatable
 		this.steeringBehavior = copy.getSteeringBehavior();
 		this.path = copy.getPath().deepCopy();
 	}
-	
-	public Team getTeam()
-	{
+
+	public Team getTeam() {
 		return team;
 	}
-	
-	public RenderComponent getRenderComponent()
-	{
+
+	public RenderComponent getRenderComponent() {
 		return renderComponent;
 	}
-	
-	public boolean isAtRest()
-	{
+
+	public boolean isAtRest() {
 		return isAtRest;
 	}
-	
-	public double getTheta()
-	{
+
+	public double getTheta() {
 		return theta;
 	}
-	
-	public EuVector getFuture()
-	{
+
+	public EuVector getFuture() {
 		return future;
 	}
-	
-	public double getMaxSpeed()
-	{
+
+	public double getMaxSpeed() {
 		return maxSpeed;
 	}
-	
-	public EuVector getPosition()
-	{
+
+	public EuVector getPosition() {
 		return position;
 	}
-	
-	public void setPosition(EuVector position)
-	{
+
+	public void setPosition(EuVector position) {
 		this.position = position;
 	}
-	
-	public void setVelocity(EuVector velocity)
-	{
+
+	public void setVelocity(EuVector velocity) {
 		this.velocity = velocity;
 	}
-	
-	public void setMaxSpeed(double maxSpeed)
-	{
+
+	public void setMaxSpeed(double maxSpeed) {
 		this.maxSpeed = maxSpeed;
 	}
-	
-	public EuVector getVelocity()
-	{
+
+	public EuVector getVelocity() {
 		return velocity;
 	}
-	
-	public void update(double timeStep)
-	{
-		
+
+	public void update(double timeStep) {
+
 	}
-	
-	private void toroidify(int width, int height)
-	{
-		futurePosition.setX(futurePosition.getX() % width);
-		futurePosition.setY(futurePosition.getY() % height);
-	}
-	
-	public void travelToTheFuture()
-	{
+
+	public void travelToTheFuture() {
 		position = new EuVector(futurePosition);
 		velocity = new EuVector(futureVelocity);
-		toroidify(Configuration.width, Configuration.height);
 	}
-	
-	public EuVector getFuturePosition()
-	{
+
+	public EuVector getFuturePosition() {
 		return futurePosition;
 	}
-	
-	public void setFuturePosition(EuVector futurePosition)
-	{
+
+	public void setFuturePosition(EuVector futurePosition) {
 		this.futurePosition = futurePosition;
 	}
-	
+
 	@Override
-	public boolean equals(Object o)
-	{
-		if (o instanceof GameSpaceObject)
-		{
+	public boolean equals(Object o) {
+		if (o instanceof GameSpaceObject) {
 			return ((GameSpaceObject) o).getId() == id;
-		} else
+		}
+		else
 			return false;
 	}
-	
+
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return "[" + position + futurePosition + velocity + "]";
 	}
-	
-	public void setPath(Path path)
-	{
+
+	public void setPath(Path path) {
 		this.path = path;
 	}
-	
-	public Path getPath()
-	{
+
+	public Path getPath() {
 		return path;
 	}
-	
-	public void setTeam(Team team)
-	{
+
+	public void setTeam(Team team) {
 		this.team = team;
 	}
 }

@@ -17,7 +17,6 @@ import euclid.two.dim.model.Unit;
 
 public class WorldState {
 	private ArrayList<GameSpaceObject> gsos;
-	private Camera camera;
 	private ArrayList<Explosion> explosions;
 	private ArrayList<Etherial> etherials;
 	private ArrayList<Etherial> expired;
@@ -123,21 +122,12 @@ public class WorldState {
 
 		}
 
-		copy.setCamera(this.camera);
 		copy.setGameMap(gameMap);
 		for (Etherial updatable : etherials) {
 			copy.addEtherial(updatable);
 		}
 
 		return copy;
-	}
-
-	public Camera getCamera() {
-		return camera;
-	}
-
-	public void setCamera(Camera camera) {
-		this.camera = camera;
 	}
 
 	public ArrayList<GameSpaceObject> getGameSpaceObjects() {
