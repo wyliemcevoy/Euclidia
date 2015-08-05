@@ -11,8 +11,8 @@ public class RoomDistanceComparitor implements Comparator<RoomPath> {
 
 	@Override
 	public int compare(RoomPath one, RoomPath two) {
-		double oneDist = goal.getCenter().subtract(one.getStop().getCenter()).getMagnitude();
-		double twoDist = goal.getCenter().subtract(two.getStop().getCenter()).getMagnitude();
+		double oneDist = goal.getCenter().subtract(one.getStop().getCenter()).getMagnitude() + one.getCost();
+		double twoDist = goal.getCenter().subtract(two.getStop().getCenter()).getMagnitude() + two.getCost();
 
 		if (oneDist < twoDist) {
 			return -1;

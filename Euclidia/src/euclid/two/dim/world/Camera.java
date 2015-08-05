@@ -8,6 +8,7 @@ public class Camera {
 	private double width, height;
 	private double zoom;
 	private double rotation;
+	private double mapWidth, mapHeight;
 
 	public Camera(Camera clone) {
 		this.mapX = clone.getMapX();
@@ -16,6 +17,16 @@ public class Camera {
 		this.height = clone.getHeight();
 		this.zoom = clone.getZoom();
 		this.rotation = clone.getRotation();
+		this.mapWidth = clone.getMapWidth();
+		this.mapHeight = clone.getMapHeight();
+	}
+
+	private double getMapHeight() {
+		return mapHeight;
+	}
+
+	private double getMapWidth() {
+		return mapWidth;
 	}
 
 	public Camera() {
@@ -25,6 +36,8 @@ public class Camera {
 		this.height = 1000;
 		this.zoom = Configuration.initialZoom;
 		this.rotation = Configuration.rotation;
+		this.mapWidth = 2000;
+		this.mapHeight = 2000;
 	}
 
 	public double getRotation() {
@@ -36,7 +49,7 @@ public class Camera {
 	}
 
 	public void setMapX(double mapX) {
-		this.mapX = Math.max(Math.min(mapX, width * 1.5), -.5 * width);
+		this.mapX = Math.max(Math.min(mapX, mapWidth * 1.5 * zoom), -.5 * mapWidth * zoom);
 	}
 
 	public double getMapY() {
@@ -44,7 +57,7 @@ public class Camera {
 	}
 
 	public void setMapY(double mapY) {
-		this.mapY = Math.max(Math.min(mapY, height * 1.5), -.5 * height);
+		this.mapY = Math.max(Math.min(mapY, mapHeight * 1.5 * zoom), -.5 * mapHeight * zoom);
 	}
 
 	public double getWidth() {

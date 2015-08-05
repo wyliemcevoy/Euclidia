@@ -7,11 +7,12 @@ import euclid.two.dim.path.Path;
 public class RoomPath {
 	private ArrayList<ConvexPoly> theRooms;
 	private ArrayList<EuVector> thePoints;
+	private double cost;
 
 	public RoomPath(ConvexPoly startRoom, EuVector startPoint) {
 		this.theRooms = new ArrayList<ConvexPoly>();
 		this.theRooms.add(startRoom);
-
+		this.cost = 0;
 		this.thePoints = new ArrayList<EuVector>();
 		this.thePoints.add(startPoint);
 	}
@@ -19,15 +20,17 @@ public class RoomPath {
 	public RoomPath(RoomPath copy) {
 		this.theRooms = new ArrayList<ConvexPoly>();
 		this.thePoints = new ArrayList<EuVector>();
-
 		for (ConvexPoly room : copy.getRooms()) {
 			this.theRooms.add(room);
 		}
 
 		for (EuVector point : copy.getPoints()) {
-			this.thePoints.add(point);
+			this.thePoints.add(point.deepCopy());
 		}
+	}
 
+	public double getCost() {
+		return cost;
 	}
 
 	public Path toPath() {
@@ -64,11 +67,11 @@ public class RoomPath {
 	}
 
 	public void addPoint(EuVector point) {
+		cost += point.subtract(getLastPoint()).getMagnitude();
 		thePoints.add(point);
 	}
 
 	public EuVector getLastPoint() {
-		// TODO Auto-generated method stub
 		return thePoints.get(thePoints.size() - 1);
 	}
 

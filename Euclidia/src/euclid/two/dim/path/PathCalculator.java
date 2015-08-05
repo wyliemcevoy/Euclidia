@@ -147,13 +147,13 @@ public class PathCalculator {
 
 			if ((x < door.getPointOne().getX() && x < door.getPointTwo().getX())) {
 				EuVector additionalStop = door.getPointOne();
-				if (door.getPointOne().getX() < door.getPointTwo().getX()) {
+				if (door.getPointOne().getX() > door.getPointTwo().getX()) {
 					additionalStop = door.getPointTwo();
 				}
 				return additionalStop;
 			}
 
-			if (x > door.getPointOne().getX() && x > door.getPointTwo().getX()) {
+			if (x > door.getPointOne().getX() && x < door.getPointTwo().getX()) {
 
 				EuVector additionalStop = door.getPointOne();
 				if (door.getPointOne().getX() > door.getPointTwo().getX()) {
@@ -220,12 +220,12 @@ public class PathCalculator {
 				if (Math.abs(distToD1 + distToD2 - distBetween) > 1) {
 					if (distToD1 < distToD2) {
 						EuVector buffer = door.getPointTwo().subtract(door.getPointOne()).truncate(bufferRadius);
-
+						buffer = new EuVector(0, 0);
 						return door.getPointOne().add(buffer);
 					}
 					else {
 						EuVector buffer = door.getPointOne().subtract(door.getPointTwo()).truncate(bufferRadius);
-
+						buffer = new EuVector(0, 0);
 						return door.getPointTwo().add(buffer);
 					}
 				}
