@@ -36,7 +36,7 @@ public class Camera {
 	}
 
 	public void setMapX(double mapX) {
-		this.mapX = mapX;
+		this.mapX = Math.max(Math.min(mapX, width * 1.5), -.5 * width);
 	}
 
 	public double getMapY() {
@@ -44,7 +44,7 @@ public class Camera {
 	}
 
 	public void setMapY(double mapY) {
-		this.mapY = mapY;
+		this.mapY = Math.max(Math.min(mapY, height * 1.5), -.5 * height);
 	}
 
 	public double getWidth() {
@@ -68,12 +68,12 @@ public class Camera {
 	}
 
 	public void setZoom(double zoom) {
-		this.zoom = zoom;
+		this.zoom = Math.max(Math.min(zoom, 4), .5);
 	}
 
 	public EuVector veiwToMap(EuVector vect) {
-		double x = mapX + vect.getX() / zoom;
-		double y = mapY + vect.getY() / zoom;
+		double x = -mapX / zoom + vect.getX() / zoom;
+		double y = -mapY / zoom + vect.getY() / zoom;
 
 		return new EuVector(x, y);
 	}

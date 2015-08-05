@@ -44,6 +44,37 @@ public class ConvexPoly {
 		return segments;
 	}
 
+	public EuVector getClosestPointToTarget(EuVector target) {
+		if (this.contains(target)) {
+			return target;
+		}
+		else {
+			Door first = doors.get(0);
+			EuVector closest = first.getPointOne();
+			double minDist = target.subtract(closest).getMagnitude();
+
+			ArrayList<EuVector> points = new ArrayList<EuVector>();
+
+			for (Door door : doors) {
+				points.add(door.getPointOne());
+				points.add(door.getPointTwo());
+			}
+
+			for (EuVector point : points) {
+
+				double currentDist = point.subtract(target).getMagnitude();
+				if (currentDist < minDist) {
+					closest = point;
+					minDist = currentDist;
+				}
+
+			}
+
+			return closest;
+		}
+
+	}
+
 	public ConvexPoly(double x, double y, double width, double height) {
 
 		this.points = new ArrayList<EuVector>();

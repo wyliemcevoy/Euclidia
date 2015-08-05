@@ -1,7 +1,6 @@
 package euclid.two.dim;
 
-public class Configuration
-{
+public class Configuration {
 	public static final int roomSize = 100;
 	public static final int width = 1000;
 	public static final int height = 1000;
@@ -12,4 +11,5 @@ public class Configuration
 	public static final double rotation = Math.toRadians(0);
 	public static final boolean cameraFollowPlayer = true;
 	public static final double initialZoom = 2;
+	public static final double threshold = .0000001;
 }

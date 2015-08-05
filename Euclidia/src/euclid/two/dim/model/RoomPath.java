@@ -4,13 +4,11 @@ import java.util.ArrayList;
 
 import euclid.two.dim.path.Path;
 
-public class RoomPath
-{
+public class RoomPath {
 	private ArrayList<ConvexPoly> theRooms;
 	private ArrayList<EuVector> thePoints;
 
-	public RoomPath(ConvexPoly startRoom, EuVector startPoint)
-	{
+	public RoomPath(ConvexPoly startRoom, EuVector startPoint) {
 		this.theRooms = new ArrayList<ConvexPoly>();
 		this.theRooms.add(startRoom);
 
@@ -18,67 +16,60 @@ public class RoomPath
 		this.thePoints.add(startPoint);
 	}
 
-	public RoomPath(RoomPath copy)
-	{
+	public RoomPath(RoomPath copy) {
 		this.theRooms = new ArrayList<ConvexPoly>();
 		this.thePoints = new ArrayList<EuVector>();
 
-		for (ConvexPoly room : copy.getRooms())
-		{
+		for (ConvexPoly room : copy.getRooms()) {
 			this.theRooms.add(room);
 		}
 
-		for (EuVector point : copy.getPoints())
-		{
+		for (EuVector point : copy.getPoints()) {
 			this.thePoints.add(point);
 		}
 
 	}
 
-	public Path toPath()
-	{
+	public Path toPath() {
 		Path path = new Path(thePoints.get(0));
 
-		for (int i = 1; i < thePoints.size(); i++)
-		{
+		for (int i = 1; i < thePoints.size(); i++) {
 			path.addTarget(thePoints.get(i));
 		}
 		return path;
 	}
 
-	public ArrayList<EuVector> getPoints()
-	{
+	public ArrayList<EuVector> getPoints() {
 		return thePoints;
 	}
 
-	public ConvexPoly getStart()
-	{
+	public ConvexPoly getStart() {
 		return theRooms.get(0);
 	}
 
-	public ConvexPoly getStop()
-	{
+	public ConvexPoly getStop() {
 		return theRooms.get(theRooms.size() - 1);
 	}
 
-	public void addRoom(ConvexPoly room)
-	{
+	public void addRoom(ConvexPoly room) {
 		theRooms.add(room);
 	}
 
-	public int size()
-	{
+	public int size() {
 		return theRooms.size();
 	}
 
-	private ArrayList<ConvexPoly> getRooms()
-	{
+	private ArrayList<ConvexPoly> getRooms() {
 		return theRooms;
 	}
 
-	public void addPoint(EuVector point)
-	{
+	public void addPoint(EuVector point) {
 		thePoints.add(point);
+	}
+
+	public EuVector getLastPoint() {
+		// TODO Auto-generated method stub
+		return thePoints.get(thePoints.size() - 1);
 	}
 
 }

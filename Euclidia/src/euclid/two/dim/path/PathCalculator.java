@@ -3,6 +3,7 @@ package euclid.two.dim.path;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 
+import euclid.two.dim.Configuration;
 import euclid.two.dim.map.GameMap;
 import euclid.two.dim.model.ConvexPoly;
 import euclid.two.dim.model.Door;
@@ -13,6 +14,9 @@ import euclid.two.dim.model.RoomPath;
 import euclid.two.dim.world.WorldState;
 
 public class PathCalculator {
+
+	private static final double bufferRadius = 75;
+
 	public PathCalculator() {
 
 	}
@@ -70,7 +74,12 @@ public class PathCalculator {
 				if (!visited.contains(room)) {
 					RoomPath newOpenPath = new RoomPath(currentPath);
 					newOpenPath.addRoom(room);
-					newOpenPath.addPoint(door.getMidPoint());
+
+					EuVector throughDoor = findPointToTravelThroughDoor(newOpenPath.getLastPoint(), stop, door);
+
+					// throughDoor = door.getMidPoint();
+
+					newOpenPath.addPoint(throughDoor);
 					openPaths.add(newOpenPath);
 				}
 			}
@@ -92,4 +101,145 @@ public class PathCalculator {
 
 	}
 
+	private EuVector getHesseNormalFormForLineWithTheseTwoPoints(EuVector one, EuVector two) {
+		double r = 0;
+		double theta = 0;
+
+		if (Math.abs(one.getX() - two.getX()) < Configuration.threshold) {
+			// line is horizontal
+			return new EuVector(one.getX(), Math.PI / 2);
+		}
+		else {
+			// y = mx+b
+			double m = (two.getY() - one.getY()) / (one.getX() - one.getX());
+			double b = one.getY() - (one.getX() * m);
+
+			return new EuVector(r, theta);
+		}
+	}
+
+	private static EuVector findPointToTravelThroughDoor(EuVector start, EuVector target, Door door) {
+
+		System.out.println(" start " + start + " target " + target + " door1 " + door.getPointOne() + " door2 " + door.getPointTwo());
+
+		if (start.equals(target)) {
+			// Already arrived (don't add any additional points)
+			return start;
+		}
+
+		if (Math.abs(start.getX() - target.getX()) < Configuration.threshold) {
+			// line between start and target is vertical
+
+			EuVector doorRiseRun = getRiseRun(door.getPointOne(), door.getPointTwo());
+			// solve intersection of two lines, with y guaranteed to be start.getY()
+			// (because the line between start and target is horizontal).
+
+			double m = doorRiseRun.getX();
+			double b = doorRiseRun.getY();
+			double y = start.getX();
+			double x = (y - b) / m;
+			EuVector intersectionPoint = new EuVector(x, y);
+			System.out.println("path vertical Intersection point " + intersectionPoint);
+
+			// Now determine if the intersection point lies on the segment that is the door
+			// Since the path line is vertical, just check if the intersection point
+			// is less than both x values in the door or greater than both x in the door.
+
+			if ((x < door.getPointOne().getX() && x < door.getPointTwo().getX())) {
+				EuVector additionalStop = door.getPointOne();
+				if (door.getPointOne().getX() < door.getPointTwo().getX()) {
+					additionalStop = door.getPointTwo();
+				}
+				return additionalStop;
+			}
+
+			if (x > door.getPointOne().getX() && x > door.getPointTwo().getX()) {
+
+				EuVector additionalStop = door.getPointOne();
+				if (door.getPointOne().getX() > door.getPointTwo().getX()) {
+					additionalStop = door.getPointTwo();
+				}
+				return additionalStop;
+			}
+
+			return intersectionPoint;
+		}
+		else {
+			// line between start and target is not vertical so calculate y = mx+b
+			double m = (target.getY() - start.getY()) / (target.getX() - start.getX());
+			double b = start.getY() - (start.getX() * m);
+
+			// Check to see if door is horizontal
+			if (door.getPointOne().getX() - door.getPointTwo().getX() < Configuration.threshold) {
+				// Door is horizontal
+				double x = door.getPointOne().getX();
+				double y = m * x + b;
+				EuVector intersectionPoint = new EuVector(x, y);
+				System.out.println("door vertical Intersection point " + intersectionPoint);
+
+				// intersection point below the door
+				if (y < door.getPointOne().getY() && y < door.getPointTwo().getY()) {
+					EuVector additionalStop = door.getPointOne();
+					if (door.getPointOne().getY() > door.getPointTwo().getY()) {
+						additionalStop = door.getPointTwo();
+					}
+					return additionalStop;
+				}
+
+				// intersection point above the door
+				if (y > door.getPointOne().getY() && y > door.getPointTwo().getY()) {
+					EuVector additionalStop = door.getPointOne();
+					if (door.getPointOne().getY() < door.getPointTwo().getY()) {
+						additionalStop = door.getPointTwo();
+					}
+					return additionalStop;
+				}
+
+				return intersectionPoint;
+			}
+			else {
+				// neither path between start and target nor the door are vertical
+
+				EuVector doorRiseRun = getRiseRun(door.getPointOne(), door.getPointTwo());
+				double mDoor = doorRiseRun.getX();
+				double bDoor = doorRiseRun.getY();
+
+				// solve two equations two unknowns
+				double x = (bDoor - b) / (m - mDoor);
+				double y = m * x + b;
+				EuVector intersectionPoint = new EuVector(x, y);
+				System.out.println("No verticles Intersection point " + intersectionPoint);
+
+				// Need to determine if (x,y) is inside the door
+				//
+				double distToD1 = (door.getPointOne().subtract(intersectionPoint)).getMagnitude();
+				double distToD2 = (door.getPointTwo().subtract(intersectionPoint)).getMagnitude();
+				double distBetween = (door.getPointOne().subtract(door.getPointTwo())).getMagnitude();
+				System.out.println(distToD1 + " " + distToD2 + " dist between " + distBetween + " " + (distToD1 + distToD2 + .1 > distBetween));
+
+				if (Math.abs(distToD1 + distToD2 - distBetween) > 1) {
+					if (distToD1 < distToD2) {
+						EuVector buffer = door.getPointTwo().subtract(door.getPointOne()).truncate(bufferRadius);
+
+						return door.getPointOne().add(buffer);
+					}
+					else {
+						EuVector buffer = door.getPointOne().subtract(door.getPointTwo()).truncate(bufferRadius);
+
+						return door.getPointTwo().add(buffer);
+					}
+				}
+				else {
+					return intersectionPoint;
+				}
+			}
+		}
+	}
+
+	private static EuVector getRiseRun(EuVector one, EuVector two) {
+		// y = mx+b
+		double m = (two.getY() - one.getY()) / (two.getX() - one.getX());
+		double b = one.getY() - (one.getX() * m);
+		return new EuVector(m, b);
+	}
 }

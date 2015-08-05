@@ -30,11 +30,11 @@ public class Door {
 	}
 
 	public EuVector getPointOne() {
-		return pointOne;
+		return pointOne.deepCopy();
 	}
 
 	public EuVector getPointTwo() {
-		return pointTwo;
+		return pointTwo.deepCopy();
 	}
 
 	public EuVector getMidPoint() {
