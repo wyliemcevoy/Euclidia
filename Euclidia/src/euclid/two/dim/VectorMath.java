@@ -49,4 +49,38 @@ public class VectorMath {
 		return getMagnintudeSquared(subtract(one, two));
 	}
 
+	public static EuVector getIntersectionPointOfTwoLineSegments(EuVector p0, EuVector p1, EuVector p2, EuVector p3) {
+		double p0_x = p0.getX();
+		double p0_y = p0.getY();
+		double p1_x = p1.getX();
+		double p1_y = p1.getY();
+		double p2_x = p2.getX();
+		double p2_y = p2.getY();
+		double p3_x = p3.getX();
+		double p3_y = p3.getY();
+
+		double s1_x, s1_y, s2_x, s2_y;
+		s1_x = p1_x - p0_x;
+		s1_y = p1_y - p0_y;
+		s2_x = p3_x - p2_x;
+		s2_y = p3_y - p2_y;
+
+		double s, t;
+		s = (-s1_y * (p0_x - p2_x) + s1_x * (p0_y - p2_y)) / (-s2_x * s1_y + s1_x * s2_y);
+		t = (s2_x * (p0_y - p2_y) - s2_y * (p0_x - p2_x)) / (-s2_x * s1_y + s1_x * s2_y);
+
+		if (s >= 0 && s <= 1 && t >= 0 && t <= 1) {
+			// Collision detected
+			return new EuVector(p0_x + (t * s1_x), p0_y + (t * s1_y));
+
+		}
+		// No collision
+
+		return null;
+	}
+
+	public static double dot(EuVector one, EuVector two) {
+		return (one.getX() * two.getX()) + (one.getY() * two.getY());
+	}
+
 }

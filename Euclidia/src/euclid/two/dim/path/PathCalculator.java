@@ -44,7 +44,7 @@ public class PathCalculator {
 		ConvexPoly stopRoom = navMesh.getPoly(stop);
 
 		// A* using crow's flight distance from center of each room
-		RoomDistanceComparitor comparitor = new RoomDistanceComparitor(stopRoom);
+		RoomDistanceComparitor comparitor = new RoomDistanceComparitor(stop);
 
 		// Build visited room list
 		ArrayList<ConvexPoly> visited = new ArrayList<ConvexPoly>();
@@ -130,7 +130,7 @@ public class PathCalculator {
 		if (Math.abs(start.getX() - target.getX()) < Configuration.threshold) {
 			// line between start and target is vertical
 
-			EuVector doorRiseRun = getRiseRun(door.getPointOne(), door.getPointTwo());
+			EuVector doorRiseRun = getMXPlusB(door.getPointOne(), door.getPointTwo());
 			// solve intersection of two lines, with y guaranteed to be start.getY()
 			// (because the line between start and target is horizontal).
 
@@ -170,37 +170,41 @@ public class PathCalculator {
 			double b = start.getY() - (start.getX() * m);
 
 			// Check to see if door is horizontal
-			if (door.getPointOne().getX() - door.getPointTwo().getX() < Configuration.threshold) {
+			if (Math.abs(door.getPointOne().getX() - door.getPointTwo().getX()) < Configuration.threshold) {
 				// Door is horizontal
+
+				System.out.println("Door is verticle " + door.toString());
 				double x = door.getPointOne().getX();
 				double y = m * x + b;
 				EuVector intersectionPoint = new EuVector(x, y);
-				System.out.println("door vertical Intersection point " + intersectionPoint);
 
 				// intersection point below the door
 				if (y < door.getPointOne().getY() && y < door.getPointTwo().getY()) {
+					// EuVector[] temp = { intersectionPoint, door.getPointOne(), door.getPointTwo() };
+					// return getClosestPoint(temp, target);
 					EuVector additionalStop = door.getPointOne();
 					if (door.getPointOne().getY() > door.getPointTwo().getY()) {
 						additionalStop = door.getPointTwo();
 					}
 					return additionalStop;
 				}
-
 				// intersection point above the door
 				if (y > door.getPointOne().getY() && y > door.getPointTwo().getY()) {
+					// EuVector[] temp = { intersectionPoint, door.getPointOne(), door.getPointTwo() };
+					// return getClosestPoint(temp, target);
 					EuVector additionalStop = door.getPointOne();
 					if (door.getPointOne().getY() < door.getPointTwo().getY()) {
 						additionalStop = door.getPointTwo();
 					}
 					return additionalStop;
 				}
-
 				return intersectionPoint;
+
 			}
 			else {
 				// neither path between start and target nor the door are vertical
 
-				EuVector doorRiseRun = getRiseRun(door.getPointOne(), door.getPointTwo());
+				EuVector doorRiseRun = getMXPlusB(door.getPointOne(), door.getPointTwo());
 				double mDoor = doorRiseRun.getX();
 				double bDoor = doorRiseRun.getY();
 
@@ -208,14 +212,11 @@ public class PathCalculator {
 				double x = (bDoor - b) / (m - mDoor);
 				double y = m * x + b;
 				EuVector intersectionPoint = new EuVector(x, y);
-				System.out.println("No verticles Intersection point " + intersectionPoint);
 
 				// Need to determine if (x,y) is inside the door
-				//
 				double distToD1 = (door.getPointOne().subtract(intersectionPoint)).getMagnitude();
 				double distToD2 = (door.getPointTwo().subtract(intersectionPoint)).getMagnitude();
 				double distBetween = (door.getPointOne().subtract(door.getPointTwo())).getMagnitude();
-				System.out.println(distToD1 + " " + distToD2 + " dist between " + distBetween + " " + (distToD1 + distToD2 + .1 > distBetween));
 
 				if (Math.abs(distToD1 + distToD2 - distBetween) > 1) {
 					if (distToD1 < distToD2) {
@@ -236,7 +237,29 @@ public class PathCalculator {
 		}
 	}
 
-	private static EuVector getRiseRun(EuVector one, EuVector two) {
+	private static EuVector getClosestPoint(EuVector[] points, EuVector target) {
+		if (points.length > 0) {
+			EuVector closest = points[0];
+			double minDistSquared = closest.subtract(target).getMagnitudeSquared();
+
+			for (int i = 1; i < points.length; i++) {
+				EuVector current = points[i];
+				double currentDistSquared = current.subtract(target).getMagnitudeSquared();
+				if (currentDistSquared < minDistSquared) {
+					minDistSquared = currentDistSquared;
+					closest = current;
+				}
+			}
+
+			return closest;
+		}
+		else {
+			return null;
+		}
+
+	}
+
+	private static EuVector getMXPlusB(EuVector one, EuVector two) {
 		// y = mx+b
 		double m = (two.getY() - one.getY()) / (two.getX() - one.getX());
 		double b = one.getY() - (one.getX() * m);

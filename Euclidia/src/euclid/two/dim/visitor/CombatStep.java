@@ -58,7 +58,6 @@ public class CombatStep extends UpdateStep {
 	@Override
 	public void visit(Obstacle obstacle) {
 		// Do nothing
-
 	}
 
 	@Override

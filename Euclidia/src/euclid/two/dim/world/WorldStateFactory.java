@@ -140,6 +140,7 @@ public class WorldStateFactory {
 		ArrayList<EuVector> p4 = new ArrayList<EuVector>();
 		p4.add(new EuVector(33, 289));
 		p4.add(new EuVector(414, 316));
+		p4.add(new EuVector(700, 460));
 		p4.add(new EuVector(859, 537));
 		p4.add(new EuVector(700, 625));
 
@@ -159,8 +160,11 @@ public class WorldStateFactory {
 
 		ArrayList<EuVector> p6 = new ArrayList<EuVector>();
 		p6.add(new EuVector(859, 537));
+		p6.add(new EuVector(1020, 460));
 		p6.add(new EuVector(1306, 322));
+
 		p6.add(new EuVector(1680, 290));
+
 		p6.add(new EuVector(1020, 625));
 
 		ConvexPoly cp6 = new ConvexPoly(p6);

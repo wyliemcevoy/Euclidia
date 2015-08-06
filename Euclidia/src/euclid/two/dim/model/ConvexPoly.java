@@ -9,6 +9,7 @@ public class ConvexPoly {
 	private ArrayList<Door> doors;
 	private ArrayList<EuVector> points;
 	private ArrayList<Segment> segments;
+	private ArrayList<Segment> walls;
 	private EuVector center;
 	private int id;
 
@@ -144,4 +145,26 @@ public class ConvexPoly {
 		this.id = id;
 	}
 
+	public ArrayList<Segment> getWalls() {
+		if (walls == null) {
+			walls = new ArrayList<Segment>();
+			for (Segment segment : getSegments()) {
+				boolean shouldAdd = true;
+
+				for (Door door : doors) {
+					if ((door.getPointOne().equals(segment.getOne()) && door.getPointTwo().equals(segment.getTwo())) || ((door.getPointOne().equals(segment.getTwo()) && door.getPointTwo().equals(segment.getOne())))) {
+						// dont add
+						shouldAdd = false;
+						break;
+					}
+				}
+				if (shouldAdd) {
+					walls.add(segment);
+				}
+
+			}
+
+		}
+		return walls;
+	}
 }

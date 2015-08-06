@@ -3,16 +3,16 @@ package euclid.two.dim.model;
 import java.util.Comparator;
 
 public class RoomDistanceComparitor implements Comparator<RoomPath> {
-	private ConvexPoly goal;
+	private EuVector goal;
 
-	public RoomDistanceComparitor(ConvexPoly goal) {
+	public RoomDistanceComparitor(EuVector goal) {
 		this.goal = goal;
 	}
 
 	@Override
 	public int compare(RoomPath one, RoomPath two) {
-		double oneDist = goal.getCenter().subtract(one.getStop().getCenter()).getMagnitude() + one.getCost();
-		double twoDist = goal.getCenter().subtract(two.getStop().getCenter()).getMagnitude() + two.getCost();
+		double oneDist = goal.subtract(one.getLastPoint()).getMagnitude() + one.getCost();
+		double twoDist = goal.subtract(two.getLastPoint()).getMagnitude() + two.getCost();
 
 		if (oneDist < twoDist) {
 			return -1;

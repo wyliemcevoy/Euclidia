@@ -1,7 +1,6 @@
 package euclid.two.dim.updater;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.UUID;
 
 import euclid.two.dim.VectorMath;
@@ -31,7 +30,6 @@ import euclid.two.dim.path.Path;
 import euclid.two.dim.path.PathCalculator;
 import euclid.two.dim.team.Agent;
 import euclid.two.dim.team.Game;
-import euclid.two.dim.team.Team;
 import euclid.two.dim.visitor.EndStep;
 import euclid.two.dim.visitor.EtherialVisitor;
 import euclid.two.dim.visitor.PhysicsStep;
@@ -137,18 +135,6 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 		visit((Unit) unit);
 	}
 
-	private void pickNewTarget(Minion unit) {
-		for (GameSpaceObject gso : worldStateN.getGameSpaceObjects()) {
-			if ((gso instanceof Minion) && gso != unit) {
-				Minion minion = (Minion) gso;
-				if (unit.getTeam() != Team.Blue) {
-					unit.setTarget(minion.getId());
-				}
-			}
-		}
-
-	}
-
 	@Override
 	public void visit(Obstacle obstacle) {
 		// Do nothing
@@ -197,22 +183,6 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 		zergDeath.update(timeStep);
 		if (zergDeath.hasExpired()) {
 			worldStateN.registerAsExpired(zergDeath);
-		}
-	}
-
-	private void purgeExpired() {
-		Iterator<GameSpaceObject> it = worldStateN.getGsos().iterator();
-		DeathVisitor deathVisitor = new DeathVisitor();
-
-		while (it.hasNext()) {
-			GameSpaceObject gso = it.next();
-
-			gso.acceptUpdateVisitor(deathVisitor);
-			if (deathVisitor.isDead()) {
-				it.remove();
-				worldStateN.addEtherial(new ZergDeath(gso.getPosition(), (int) gso.getRadius()));
-
-			}
 		}
 	}
 

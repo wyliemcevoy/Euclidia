@@ -40,4 +40,9 @@ public class Door {
 	public EuVector getMidPoint() {
 		return new EuVector((pointOne.getX() + pointTwo.getX()) / 2, (pointOne.getY() + pointTwo.getY()) / 2);
 	}
+
+	@Override
+	public String toString() {
+		return "Door [" + pointOne.toString() + "  " + pointTwo.toString() + "]";
+	}
 }

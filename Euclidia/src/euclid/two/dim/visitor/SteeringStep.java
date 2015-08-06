@@ -36,12 +36,7 @@ public class SteeringStep extends UpdateStep {
 			EuVector averageVelocity = new EuVector(0, 0);
 			int i = 0;
 			/*
-			 * for (GameSpaceObject gso : worldState.getGsos()) { EuVector dist
-			 * = gso.getPosition().subtract(self.getPosition()); double
-			 * magnitude = dist.getMagnitude(); if (magnitude > .1 && magnitude
-			 * < 10) { // repulsion = repulsion.add(dist.dividedBy(-1 /
-			 * (magnitude * // 10))); averageVelocity =
-			 * averageVelocity.add(gso.getVelocity()); i++; } }
+			 * for (GameSpaceObject gso : worldState.getGsos()) { EuVector dist = gso.getPosition().subtract(self.getPosition()); double magnitude = dist.getMagnitude(); if (magnitude > .1 && magnitude < 10) { // repulsion = repulsion.add(dist.dividedBy(-1 / (magnitude * // 10))); averageVelocity = averageVelocity.add(gso.getVelocity()); i++; } }
 			 */
 			if (i > 0) {
 				averageVelocity = averageVelocity.dividedBy(i);
@@ -99,7 +94,6 @@ public class SteeringStep extends UpdateStep {
 		if (velocity.getMagnitude() > 1) {
 			unit.setTheta(Math.atan2(velocity.getX(), -1 * velocity.getY()));
 		}
-		//
 		unit.getRenderComponent().acceptUpdate(unit, timeStep);
 	}
 
