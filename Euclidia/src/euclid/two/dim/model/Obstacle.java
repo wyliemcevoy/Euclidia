@@ -9,7 +9,6 @@ public class Obstacle extends GameSpaceObject {
 	public Obstacle(EuVector position) {
 		this.position = position;
 		this.futurePosition = new EuVector(position);
-		this.future = new EuVector(position);
 		this.velocity = new EuVector(0, 0);
 		this.mass = 10;
 		this.isSelected = true;

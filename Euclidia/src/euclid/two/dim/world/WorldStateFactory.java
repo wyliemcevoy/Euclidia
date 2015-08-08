@@ -162,9 +162,7 @@ public class WorldStateFactory {
 		p6.add(new EuVector(859, 537));
 		p6.add(new EuVector(1020, 460));
 		p6.add(new EuVector(1306, 322));
-
 		p6.add(new EuVector(1680, 290));
-
 		p6.add(new EuVector(1020, 625));
 
 		ConvexPoly cp6 = new ConvexPoly(p6);

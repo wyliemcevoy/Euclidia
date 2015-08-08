@@ -29,14 +29,13 @@ public abstract class UpdateStep implements UpdateVisitor {
 				for (Segment segment : poly.getWalls()) {
 					EuVector collision = VectorMath.getIntersectionPointOfTwoLineSegments(gso.getPosition(), gso.getFuturePosition(), segment.getOne(), segment.getTwo());
 					if (collision != null) {
-
-						// EuVector changeOfPosition = gso.getFuture().subtract(gso.getPosition());
-						// EuVector wallVector = segment.getTwo().subtract(segment.getOne());
-						// System.out.println(gso.getPosition() + " " + gso.getFuture() + " change " + changeOfPosition + " " + wallVector);
-						// double dotProduct = VectorMath.dot(changeOfPosition, wallVector);
-						// EuVector correctedChangeOfPosition = wallVector.normalize(); // .multipliedBy(dotProduct);
-						// System.out.println(correctedChangeOfPosition + " " + dotProduct);
-						gso.setFuturePosition(gso.getPosition());
+						EuVector changeOfPosition = gso.getFuturePosition().subtract(gso.getPosition());
+						EuVector wallVector = segment.getTwo().subtract(segment.getOne()).normalize();
+						// System.out.println(this.getClass().getName() + " " + gso.getPosition() + " " + gso.getFuturePosition() + " change " + changeOfPosition + " " + wallVector);
+						double dotProduct = VectorMath.dot(changeOfPosition, wallVector);
+						EuVector correctedChangeOfPosition = wallVector.normalize().multipliedBy(dotProduct);
+						// System.out.println(changeOfPosition + " corrected " + correctedChangeOfPosition + " " + dotProduct);
+						gso.setFuturePosition(gso.getPosition().add(correctedChangeOfPosition));
 						break;
 					}
 				}

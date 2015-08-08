@@ -20,7 +20,6 @@ public abstract class GameSpaceObject implements Updatable {
 	protected double maxSpeed = Configuration.maxSpeed;
 	protected double mass;
 	protected Color color;
-	protected EuVector future;
 	protected Path path;
 	protected boolean isSelected;
 	protected UUID id;
@@ -102,7 +101,6 @@ public abstract class GameSpaceObject implements Updatable {
 		this.radius = copy.getRadius();
 		this.velocity = new EuVector(copy.getVelocity());
 		this.futurePosition = new EuVector(copy.getFuturePosition());
-		this.future = new EuVector(copy.getFuture());
 		this.id = copy.getId();
 		this.theta = copy.getTheta();
 		this.renderComponent = copy.getRenderComponent().deepCopy();
@@ -125,10 +123,6 @@ public abstract class GameSpaceObject implements Updatable {
 
 	public double getTheta() {
 		return theta;
-	}
-
-	public EuVector getFuture() {
-		return future;
 	}
 
 	public double getMaxSpeed() {

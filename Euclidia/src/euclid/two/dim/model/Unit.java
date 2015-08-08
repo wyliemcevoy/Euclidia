@@ -32,7 +32,6 @@ public abstract class Unit extends GameSpaceObject {
 	public Unit(Team team, EuVector position) {
 		this.position = position;
 		this.futurePosition = new EuVector(position);
-		this.future = new EuVector(position);
 		this.velocity = new EuVector(0, 0);
 		this.steeringBehavior = SteeringBehavior.Flock;
 		this.team = team;

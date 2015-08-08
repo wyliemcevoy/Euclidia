@@ -120,8 +120,6 @@ public class PathCalculator {
 
 	private static EuVector findPointToTravelThroughDoor(EuVector start, EuVector target, Door door) {
 
-		System.out.println(" start " + start + " target " + target + " door1 " + door.getPointOne() + " door2 " + door.getPointTwo());
-
 		if (start.equals(target)) {
 			// Already arrived (don't add any additional points)
 			return start;
@@ -139,7 +137,6 @@ public class PathCalculator {
 			double y = start.getX();
 			double x = (y - b) / m;
 			EuVector intersectionPoint = new EuVector(x, y);
-			System.out.println("path vertical Intersection point " + intersectionPoint);
 
 			// Now determine if the intersection point lies on the segment that is the door
 			// Since the path line is vertical, just check if the intersection point
@@ -173,7 +170,6 @@ public class PathCalculator {
 			if (Math.abs(door.getPointOne().getX() - door.getPointTwo().getX()) < Configuration.threshold) {
 				// Door is horizontal
 
-				System.out.println("Door is verticle " + door.toString());
 				double x = door.getPointOne().getX();
 				double y = m * x + b;
 				EuVector intersectionPoint = new EuVector(x, y);
