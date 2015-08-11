@@ -1,6 +1,7 @@
 package euclid.two.dim.visitor;
 
 import euclid.two.dim.Configuration;
+import euclid.two.dim.model.Building;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
@@ -15,7 +16,6 @@ public class SteeringStep extends UpdateStep {
 
 	private EuVector calculateSteeringForce(Unit unit) {
 
-		// SteeringType sb = unit.getSteeringType();
 		EuVector steeringForce = new EuVector(0, 0);
 
 		Path path = unit.getPath();
@@ -35,9 +35,7 @@ public class SteeringStep extends UpdateStep {
 
 			EuVector averageVelocity = new EuVector(0, 0);
 			int i = 0;
-			/*
-			 * for (GameSpaceObject gso : worldState.getGsos()) { EuVector dist = gso.getPosition().subtract(self.getPosition()); double magnitude = dist.getMagnitude(); if (magnitude > .1 && magnitude < 10) { // repulsion = repulsion.add(dist.dividedBy(-1 / (magnitude * // 10))); averageVelocity = averageVelocity.add(gso.getVelocity()); i++; } }
-			 */
+
 			if (i > 0) {
 				averageVelocity = averageVelocity.dividedBy(i);
 			}
@@ -47,10 +45,6 @@ public class SteeringStep extends UpdateStep {
 			if (distToTarget < 50 && distToTarget > 0) {
 				desiredVelocity = desiredVelocity.dividedBy(distToTarget / (Configuration.maxSpeed * 4));
 			}
-
-			// EuVector targetDisplacement =
-			// self.getVelocity().add(desiredVelocity.dividedBy(10));
-			// System.out.println(targetDisplacement.getMagnitude() / 3);
 
 			steeringForce = desiredVelocity;
 
@@ -105,5 +99,10 @@ public class SteeringStep extends UpdateStep {
 	@Override
 	public void visit(Hero hero) {
 		visit((Unit) hero);
+	}
+
+	@Override
+	public void accept(Building building) {
+		// do nothing
 	}
 }

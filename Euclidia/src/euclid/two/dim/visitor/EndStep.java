@@ -9,6 +9,7 @@ import euclid.two.dim.etherial.ExplosiveProjectile;
 import euclid.two.dim.etherial.Projectile;
 import euclid.two.dim.etherial.Slash;
 import euclid.two.dim.etherial.ZergDeath;
+import euclid.two.dim.model.Building;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
@@ -138,4 +139,10 @@ public class EndStep extends UpdateStep implements EtherialVisitor {
 		endPhase();
 	}
 
+	@Override
+	public void accept(Building building) {
+		if (building.hasExpired()) {
+			dead.add(building);
+		}
+	}
 }

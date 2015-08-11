@@ -20,6 +20,7 @@ import euclid.two.dim.etherial.ExplosiveProjectile;
 import euclid.two.dim.etherial.Projectile;
 import euclid.two.dim.etherial.Slash;
 import euclid.two.dim.etherial.ZergDeath;
+import euclid.two.dim.model.Building;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Hero;
@@ -276,5 +277,9 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 	@Override
 	public void visit(CircleGraphic circleGraphic) {
 		circleGraphic.update(timeStep);
+	}
+
+	@Override
+	public void accept(Building building) {
 	}
 }

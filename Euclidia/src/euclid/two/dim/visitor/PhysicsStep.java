@@ -2,6 +2,7 @@ package euclid.two.dim.visitor;
 
 import java.util.ArrayList;
 
+import euclid.two.dim.model.Building;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Hero;
@@ -22,17 +23,17 @@ public class PhysicsStep extends UpdateStep {
 	}
 
 	private void visit(Unit unit) {
-		ArrayList<GameSpaceObject> fishes = worldState.getGsos();
+		ArrayList<GameSpaceObject> gsos = worldState.getGsos();
 
 		EuVector position = new EuVector(unit.getPosition());
 
 		EuVector futurePosition = new EuVector(position);
 		EuVector update = new EuVector(0, 0);
-		for (GameSpaceObject fish : fishes) {
-			EuVector distTo = position.subtract(fish.getPosition());
-			double mag = distTo.getMagnitude();
-			if (!unit.equals(fish) && mag < 15) {
-				EuVector plus = distTo.normalize().dividedBy(mag * mag / (fish.getRadius() * 10));
+		for (GameSpaceObject gso : gsos) {
+			EuVector distTo = position.subtract(gso.getPosition());
+			double mag = distTo.getMagnitude(); // - gso.getRadius() - unit.getRadius();
+			if (!unit.equals(gso) && mag < 15) {
+				EuVector plus = distTo.normalize().dividedBy(mag * mag / (gso.getRadius() * 10));
 				update = update.add(plus);
 			}
 		}
@@ -58,4 +59,8 @@ public class PhysicsStep extends UpdateStep {
 		visit((Unit) hero);
 	}
 
+	@Override
+	public void accept(Building unit) {
+		// do nothing
+	}
 }

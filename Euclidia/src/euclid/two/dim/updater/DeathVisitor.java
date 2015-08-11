@@ -1,5 +1,6 @@
 package euclid.two.dim.updater;
 
+import euclid.two.dim.model.Building;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Obstacle;
@@ -33,6 +34,11 @@ public class DeathVisitor implements UpdateVisitor {
 
 	private void visit(Unit unit) {
 		dead = unit.getHealth().isDead();
+	}
+
+	@Override
+	public void accept(Building building) {
+		visit((Unit) building);
 	}
 
 }

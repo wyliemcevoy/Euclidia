@@ -1,5 +1,6 @@
 package euclid.two.dim.visitor;
 
+import euclid.two.dim.model.Building;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
@@ -37,7 +38,6 @@ public class CombatStep extends UpdateStep {
 					if (newTarget != null) {
 						unit.setTarget(newTarget.getId());
 					}
-
 				}
 			}
 
@@ -64,6 +64,11 @@ public class CombatStep extends UpdateStep {
 	public void visit(Hero hero) {
 		visit((Unit) hero);
 
+	}
+
+	@Override
+	public void accept(Building building) {
+		// do nothing
 	}
 
 }

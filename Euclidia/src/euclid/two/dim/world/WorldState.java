@@ -9,6 +9,7 @@ import euclid.two.dim.VectorMath;
 import euclid.two.dim.etherial.Etherial;
 import euclid.two.dim.etherial.Explosion;
 import euclid.two.dim.map.GameMap;
+import euclid.two.dim.model.Building;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Hero;
@@ -109,15 +110,16 @@ public class WorldState {
 	public WorldState deepCopy() {
 		WorldState copy = new WorldState();
 
-		for (GameSpaceObject gso : gsos)
-
-		{
+		for (GameSpaceObject gso : gsos) {
 
 			if (gso instanceof Minion) {
 				copy.addObject(new Minion((Minion) gso));
 			}
 			if (gso instanceof Hero) {
 				copy.addObject(new Hero((Hero) gso));
+			}
+			if (gso instanceof Building) {
+				copy.addObject(new Building((Building) gso));
 			}
 
 		}

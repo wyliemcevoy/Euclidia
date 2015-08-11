@@ -7,6 +7,7 @@ import euclid.two.dim.Configuration;
 import euclid.two.dim.ability.BlinkAbility;
 import euclid.two.dim.ability.EplosiveProjectileAbility;
 import euclid.two.dim.map.GameMap;
+import euclid.two.dim.model.Building;
 import euclid.two.dim.model.ConvexPoly;
 import euclid.two.dim.model.Door;
 import euclid.two.dim.model.EuVector;
@@ -88,6 +89,10 @@ public class WorldStateFactory {
 			worldState.addObject(unit);
 		}
 
+		Building redBase = new Building(Team.Red, new EuVector(227, 300));
+		Building blueBase = new Building(Team.Blue, new EuVector(1500, 300));
+		worldState.addObject(redBase);
+		worldState.addObject(blueBase);
 		worldState.setGameMap(createSpacePlatform());
 
 		return worldState;
