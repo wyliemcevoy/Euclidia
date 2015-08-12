@@ -31,7 +31,7 @@ public class PhysicsStep extends UpdateStep {
 		EuVector update = new EuVector(0, 0);
 		for (GameSpaceObject gso : gsos) {
 			EuVector distTo = position.subtract(gso.getPosition());
-			double mag = distTo.getMagnitude(); // - gso.getRadius() - unit.getRadius();
+			double mag = distTo.getMagnitude();
 			if (!unit.equals(gso) && mag < 15) {
 				EuVector plus = distTo.normalize().dividedBy(mag * mag / (gso.getRadius() * 10));
 				update = update.add(plus);

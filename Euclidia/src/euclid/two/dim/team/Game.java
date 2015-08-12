@@ -8,7 +8,6 @@ import euclid.two.dim.command.Command;
 import euclid.two.dim.world.WorldState;
 
 public class Game {
-	private GameState gameState;
 	private ArrayList<Player> players;
 
 	public Game() {

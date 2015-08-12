@@ -4,32 +4,32 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import euclid.two.dim.ability.internal.Ability;
-import euclid.two.dim.ability.request.AbilityRequest;
-import euclid.two.dim.command.AbilityCommand;
 import euclid.two.dim.command.AttackCommand;
 import euclid.two.dim.command.Command;
 import euclid.two.dim.command.MoveCommand;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
-import euclid.two.dim.model.Hero;
 import euclid.two.dim.team.Team;
 import euclid.two.dim.world.WorldState;
 
-public class HumanMobaPlayer extends HumanPlayer {
-	private UUID heroId;
-	private int selectedAbility;
+public class HumanRtsPlayer extends HumanPlayer {
+	private ArrayList<UUID> selectedUnits;
 	private static final Object lock = new Object();
+	private int selectedAbility;
 
-	public HumanMobaPlayer(Team team, UUID heroId) {
+	public HumanRtsPlayer(Team team) {
 		this.team = team;
-		this.heroId = heroId;
+		this.selectedUnits = new ArrayList<UUID>();
 		this.selectedAbility = -1;
 		this.commands = new ArrayList<Command>();
 	}
 
-	public void click(EuVector location) {
+	public Team getTeam() {
+		return team;
+	}
 
+	@Override
+	public void click(EuVector location) {
 		double x = location.getX();
 		double y = location.getY();
 
@@ -37,27 +37,21 @@ public class HumanMobaPlayer extends HumanPlayer {
 
 		for (GameSpaceObject gso : worldState.getGameSpaceObjects()) {
 			if (location.subtract(gso.getPosition()).getMagnitudeSquared() < gso.getRadius() * gso.getRadius()) {
-				commands.add(new AttackCommand(heroId, gso.getId()));
+				commands.add(new AttackCommand(selectedUnits, gso.getId()));
 			}
 		}
 
 		if (selectedAbility != -1) {
 
-			Hero hero = worldState.getHero(heroId);
-			List<Ability> abilities = hero.getAbilities();
-			if (abilities.size() > selectedAbility) {
-				Ability ability = hero.getAbilities().get(selectedAbility);
-				AbilityRequest request = ability.toRequest(heroId, worldState, location);
-
-				commands.add(new AbilityCommand(request));
-			}
-
-			selectedAbility = -1;
 		}
 		else {
-			commands.add(new MoveCommand(heroId, location));
+			commands.add(new MoveCommand(selectedUnits, location));
 		}
+	}
 
+	@Override
+	public void keyPressed(char c) {
+		// TODO Auto-generated method stub
 	}
 
 	@Override
@@ -69,41 +63,26 @@ public class HumanMobaPlayer extends HumanPlayer {
 
 			return result;
 		}
-
 	}
 
 	@Override
 	public void acceptWorldState(WorldState worldState) {
 		synchronized (lock) {
-			this.worldState = worldState.deepCopy();
+			this.worldState = worldState;
 		}
-	}
-
-	@Override
-	public void keyPressed(char c) {
-		switch (c) {
-		case 'q':
-			selectedAbility = 0;
-			break;
-		case 'w':
-			selectedAbility = 1;
-			break;
-		case 'e':
-			selectedAbility = 2;
-			break;
-		case 'r':
-			selectedAbility = 3;
-			break;
-
-		default:
-			selectedAbility = -1;
-		}
-
 	}
 
 	@Override
 	public void selectUnitsIn(EuVector mouseDown, EuVector mouseCurrent) {
-		// do nothing
+		synchronized (lock) {
+			System.out.println(worldState + " " + mouseDown + " " + mouseCurrent);
+			this.selectedUnits = this.worldState.getUnitsInsideRect(this.team, mouseDown, mouseCurrent);
+
+			for (UUID id : selectedUnits) {
+				System.out.println("Unit selected " + id);
+			}
+
+		}
 	}
 
 }

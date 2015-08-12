@@ -31,6 +31,7 @@ import euclid.two.dim.path.Path;
 import euclid.two.dim.path.PathCalculator;
 import euclid.two.dim.team.Agent;
 import euclid.two.dim.team.Game;
+import euclid.two.dim.team.Team;
 import euclid.two.dim.visitor.EndStep;
 import euclid.two.dim.visitor.EtherialVisitor;
 import euclid.two.dim.visitor.PhysicsStep;
@@ -200,6 +201,9 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 		for (UUID id : moveCommand.getIds()) {
 			Unit unit = worldStateN.getUnit(id);
 			if (unit != null && moveCommand.getLocation() != null) {
+				if (unit.getTeam() == Team.Blue) {
+					System.out.println("Running move command for " + unit.getTeam() + " " + id);
+				}
 				unit.setPath(PathCalculator.calculatePath(worldStateN, unit.getPosition(), moveCommand.getLocation()));
 			}
 		}

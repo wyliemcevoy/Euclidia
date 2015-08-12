@@ -12,62 +12,54 @@ import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.world.WorldState;
 
-public class BlinkAbility extends LocationAbility
-{
+public class BlinkAbility extends LocationAbility {
 	protected int radius;
-	
-	public BlinkAbility(BlinkAbility copy)
-	{
+
+	public BlinkAbility(BlinkAbility copy) {
 		initialize();
 	}
-	
-	public BlinkAbility()
-	{
+
+	public BlinkAbility() {
 		initialize();
 	}
-	
-	private void initialize()
-	{
-		
+
+	private void initialize() {
+
 		this.radius = 40;
 		this.reloadTime = 1000;
 		this.currentTime = reloadTime + 1;
 		this.abilityType = AbilityType.blink;
-		
+
 	}
-	
+
 	@Override
-	public void processRequest(AbilityRequest abilityRequest, WorldState worldState)
-	{
+	public void processRequest(AbilityRequest abilityRequest, WorldState worldState) {
 		// Sanity check to prevent a client sending invalid requests
-		if (isValidRequest(abilityRequest))
-		{
+		if (isValidRequest(abilityRequest)) {
 			EuVector destination = request.getLocation();
 			Hero hero = worldState.getHero(request.getHeroId());
 			worldState.addEtherial(new Explosion(hero.getPosition()));
-			
-			hero.setPosition(destination);
+
+			hero.setPosition(destination.deepCopy());
+			hero.setFuturePosition(destination.deepCopy());
 			worldState.addEtherial(new Explosion(hero.getPosition()));
-			//this.currentTime = 0;
 			closeRequest();
 		}
-		
+
 	}
-	
+
 	@Override
-	public AbilityRequest toRequest(UUID heroId, WorldState worldState, EuVector location)
-	{
+	public AbilityRequest toRequest(UUID heroId, WorldState worldState, EuVector location) {
 		LocationAbilityRequest request = new LocationAbilityRequest();
 		request.setHeroId(heroId);
 		request.setAbilityType(AbilityType.blink);
 		request.setLocation(location);
 		return request;
 	}
-	
+
 	@Override
-	public Ability deepCopy()
-	{
+	public Ability deepCopy() {
 		return new BlinkAbility(this);
 	}
-	
+
 }

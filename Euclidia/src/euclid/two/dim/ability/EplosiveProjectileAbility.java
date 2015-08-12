@@ -11,40 +11,33 @@ import euclid.two.dim.etherial.ExplosiveProjectile;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.world.WorldState;
 
-public class EplosiveProjectileAbility extends LocationAbility
-{
+public class EplosiveProjectileAbility extends LocationAbility {
 	protected int range;
 	protected int damage;
 	protected int radius;
-	
-	public int getRange()
-	{
+
+	public int getRange() {
 		return range;
 	}
-	
-	public int getDamage()
-	{
+
+	public int getDamage() {
 		return damage;
 	}
-	
-	public void attack()
-	{
+
+	public void attack() {
 		this.currentTime = 0;
 	}
-	
-	public EplosiveProjectileAbility(EplosiveProjectileAbility grenadeAbility)
-	{
+
+	public EplosiveProjectileAbility(EplosiveProjectileAbility grenadeAbility) {
 		initialize();
 		this.currentTime = grenadeAbility.getCurrentTime();
 	}
-	
-	public EplosiveProjectileAbility()
-	{
+
+	public EplosiveProjectileAbility() {
 		initialize();
 	}
-	
-	private void initialize()
-	{
+
+	private void initialize() {
 		this.damage = 100;
 		this.radius = 40;
 		this.reloadTime = 1000;
@@ -52,33 +45,28 @@ public class EplosiveProjectileAbility extends LocationAbility
 		this.range = 100;
 		this.abilityType = AbilityType.grenade;
 	}
-	
+
 	@Override
-	public Ability deepCopy()
-	{
+	public Ability deepCopy() {
 		return new EplosiveProjectileAbility(this);
 	}
-	
+
 	@Override
-	public void processRequest(AbilityRequest abilityRequest, WorldState worldState)
-	{
+	public void processRequest(AbilityRequest abilityRequest, WorldState worldState) {
 		// Sanity check to prevent a client sending invalid requests
-		if (isValidRequest(abilityRequest))
-		{
+		if (isValidRequest(abilityRequest)) {
 			worldState.addEtherial(new ExplosiveProjectile(request.getLocation(), worldState.getUnit(abilityRequest.getHeroId())));
-			//this.currentTime = 0;
 			closeRequest();
 		}
 	}
-	
+
 	@Override
-	public AbilityRequest toRequest(UUID heroId, WorldState worldState, EuVector location)
-	{
+	public AbilityRequest toRequest(UUID heroId, WorldState worldState, EuVector location) {
 		LocationAbilityRequest request = new LocationAbilityRequest();
 		request.setHeroId(heroId);
 		request.setAbilityType(AbilityType.grenade);
 		request.setLocation(location);
 		return request;
 	}
-	
+
 }

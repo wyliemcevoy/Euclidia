@@ -15,6 +15,7 @@ import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Unit;
+import euclid.two.dim.team.Team;
 
 public class WorldState {
 	private ArrayList<GameSpaceObject> gsos;
@@ -209,6 +210,37 @@ public class WorldState {
 
 	public void setGameMap(GameMap gameMap) {
 		this.gameMap = gameMap;
+	}
+
+	public ArrayList<UUID> getUnitsInsideRect(Team team, EuVector one, EuVector two) {
+
+		// bad implementation
+		ArrayList<UUID> units = new ArrayList<UUID>();
+		for (GameSpaceObject gso : gsos) {
+			EuVector pos = gso.getPosition();
+			double x = pos.getX();
+			double y = pos.getY();
+
+			double minX = two.getX();
+			double maxX = one.getX();
+			if (one.getX() < two.getX()) {
+				minX = one.getX();
+				maxX = two.getX();
+			}
+
+			double minY = two.getY();
+			double maxY = one.getY();
+
+			if (one.getY() < two.getY()) {
+				minY = one.getY();
+				maxY = two.getY();
+			}
+
+			if (gso.getTeam() == team && (minX < x && maxX > x) && (minY < y && maxY > y)) {
+				units.add(gso.getId());
+			}
+		}
+		return units;
 	}
 
 }
