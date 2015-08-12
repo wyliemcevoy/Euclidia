@@ -46,9 +46,10 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 	private Game game;
 	private ArrayList<UpdateStep> updateSteps;
 
-	public UpdateEngine(Game game) {
+	public UpdateEngine(Game game, WorldState worldState) {
 		this.agents = new ArrayList<Agent>();
 		this.game = game;
+		this.worldStateN = worldState;
 		initializeSteps();
 	}
 
@@ -68,16 +69,12 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 		this.worldStateN = worldState;
 	}
 
-	private void processInput() {
-		// Read through queue of commands from players and process them
-		for (Command command : game.getCommands()) {
+	public WorldState update(long timeStep, ArrayList<Command> commands) {
+		this.timeStep = timeStep;
+
+		for (Command command : commands) {
 			command.accept(this);
 		}
-	}
-
-	public WorldState update(long timeStep) {
-		this.timeStep = timeStep;
-		processInput();
 
 		for (UpdateStep updateStep : updateSteps) {
 			updateStep.runStep(worldStateN, timeStep);

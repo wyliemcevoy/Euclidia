@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import euclid.two.dim.Player;
 import euclid.two.dim.VectorMath;
 import euclid.two.dim.etherial.Etherial;
 import euclid.two.dim.etherial.Explosion;
@@ -243,4 +244,13 @@ public class WorldState {
 		return units;
 	}
 
+	public ArrayList<GameSpaceObject> getFriendlyUnits(Player player) {
+		ArrayList<GameSpaceObject> friendlies = new ArrayList<GameSpaceObject>();
+		for (GameSpaceObject gso : gsos) {
+			if (gso.getTeam() == player.getTeam()) {
+				friendlies.add(gso);
+			}
+		}
+		return friendlies;
+	}
 }

@@ -28,7 +28,7 @@ public class HumanRtsPlayer extends HumanPlayer {
 		return team;
 	}
 
-	@Override
+	// @Override
 	public void click(EuVector location) {
 		double x = location.getX();
 		double y = location.getY();
@@ -49,7 +49,7 @@ public class HumanRtsPlayer extends HumanPlayer {
 		}
 	}
 
-	@Override
+	// @Override
 	public void keyPressed(char c) {
 		// TODO Auto-generated method stub
 	}
@@ -72,7 +72,7 @@ public class HumanRtsPlayer extends HumanPlayer {
 		}
 	}
 
-	@Override
+	// @Override
 	public void selectUnitsIn(EuVector mouseDown, EuVector mouseCurrent) {
 		synchronized (lock) {
 			System.out.println(worldState + " " + mouseDown + " " + mouseCurrent);
@@ -82,6 +82,13 @@ public class HumanRtsPlayer extends HumanPlayer {
 				System.out.println("Unit selected " + id);
 			}
 
+		}
+	}
+
+	@Override
+	public void addCommand(Command command) {
+		synchronized (lock) {
+			this.commands.add(command);
 		}
 	}
 

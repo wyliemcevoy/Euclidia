@@ -79,7 +79,7 @@ public class HumanMobaPlayer extends HumanPlayer {
 		}
 	}
 
-	@Override
+	// @Override
 	public void keyPressed(char c) {
 		switch (c) {
 		case 'q':
@@ -98,12 +98,18 @@ public class HumanMobaPlayer extends HumanPlayer {
 		default:
 			selectedAbility = -1;
 		}
-
 	}
 
-	@Override
+	// @Override
 	public void selectUnitsIn(EuVector mouseDown, EuVector mouseCurrent) {
 		// do nothing
 	}
 
+	@Override
+	public void addCommand(Command command) {
+		synchronized (lock) {
+			this.commands.add(command);
+		}
+
+	}
 }
