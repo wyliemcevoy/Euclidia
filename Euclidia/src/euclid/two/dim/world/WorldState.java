@@ -85,16 +85,6 @@ public class WorldState {
 		}
 	}
 
-	public ArrayList<GameSpaceObject> getSelected() {
-		ArrayList<GameSpaceObject> build = new ArrayList<GameSpaceObject>();
-		for (GameSpaceObject gso : this.gsos) {
-			if (gso.isSelected()) {
-				build.add(gso);
-			}
-		}
-		return build;
-	}
-
 	/**
 	 * @return the fish
 	 */

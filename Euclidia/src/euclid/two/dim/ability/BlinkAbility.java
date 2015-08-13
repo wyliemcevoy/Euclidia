@@ -10,6 +10,7 @@ import euclid.two.dim.ability.request.LocationAbilityRequest;
 import euclid.two.dim.etherial.Explosion;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Hero;
+import euclid.two.dim.path.Path;
 import euclid.two.dim.world.WorldState;
 
 public class BlinkAbility extends LocationAbility {
@@ -42,6 +43,7 @@ public class BlinkAbility extends LocationAbility {
 
 			hero.setPosition(destination.deepCopy());
 			hero.setFuturePosition(destination.deepCopy());
+			hero.setPath(new Path(destination.deepCopy()));
 			worldState.addEtherial(new Explosion(hero.getPosition()));
 			closeRequest();
 		}
