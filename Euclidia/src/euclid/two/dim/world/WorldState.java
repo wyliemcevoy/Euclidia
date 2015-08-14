@@ -7,6 +7,8 @@ import java.util.UUID;
 
 import euclid.two.dim.Player;
 import euclid.two.dim.VectorMath;
+import euclid.two.dim.datastructure.AABBNode;
+import euclid.two.dim.datastructure.AxisAlignedBoundingBox;
 import euclid.two.dim.etherial.Etherial;
 import euclid.two.dim.etherial.Explosion;
 import euclid.two.dim.map.GameMap;
@@ -24,6 +26,7 @@ public class WorldState {
 	private ArrayList<Etherial> etherials;
 	private ArrayList<Etherial> expired;
 	private GameMap gameMap;
+	private AABBNode root;
 
 	public WorldState() {
 		this.gsos = new ArrayList<GameSpaceObject>();
@@ -46,6 +49,23 @@ public class WorldState {
 		}
 
 		return targets;
+	}
+
+	public void recalculateAABBTree() {
+		this.root = new AABBNode(getAABB(gsos.get(0)));
+		for (int i = 1; i < gsos.size(); i++) {
+			root.add(new AABBNode(getAABB(gsos.get(i))));
+		}
+	}
+
+	private AxisAlignedBoundingBox getAABB(GameSpaceObject gso) {
+
+		EuVector pos = gso.getPosition().deepCopy();
+		double radius = gso.getRadius();
+		EuVector topLeft = new EuVector(pos.getX() - radius, pos.getY() - radius);
+		EuVector bottomRight = new EuVector(pos.getX() + radius, pos.getY() + radius);
+
+		return new AxisAlignedBoundingBox(topLeft, bottomRight);
 	}
 
 	public double getDistanceBetween(GameSpaceObject one, GameSpaceObject two) {
@@ -242,5 +262,9 @@ public class WorldState {
 			}
 		}
 		return friendlies;
+	}
+
+	public AABBNode getAABBRoot() {
+		return root;
 	}
 }
