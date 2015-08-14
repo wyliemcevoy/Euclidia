@@ -1,5 +1,6 @@
 package euclid.two.dim.ability;
 
+import java.util.Random;
 import java.util.UUID;
 
 import euclid.two.dim.ability.internal.Ability;
@@ -38,12 +39,16 @@ public class BlinkAbility extends LocationAbility {
 		// Sanity check to prevent a client sending invalid requests
 		if (isValidRequest(abilityRequest)) {
 			EuVector destination = request.getLocation();
+
 			Hero hero = worldState.getHero(request.getHeroId());
 			worldState.addEtherial(new Explosion(hero.getPosition()));
+			Random rand = new Random();
+			EuVector teleportLocation = new EuVector(destination.getX() + rand.nextDouble(), destination.getY() + rand.nextDouble());
 
-			hero.setPosition(destination.deepCopy());
-			hero.setFuturePosition(destination.deepCopy());
-			hero.setPath(new Path(destination.deepCopy()));
+			hero.setPosition(teleportLocation);
+			hero.setFuturePosition(teleportLocation);
+			hero.setPath(new Path(teleportLocation));
+
 			worldState.addEtherial(new Explosion(hero.getPosition()));
 			closeRequest();
 		}

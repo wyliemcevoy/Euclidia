@@ -3,7 +3,6 @@ package euclid.two.dim.world;
 import java.util.ArrayList;
 import java.util.Random;
 
-import euclid.two.dim.Configuration;
 import euclid.two.dim.ability.BlinkAbility;
 import euclid.two.dim.ability.EplosiveProjectileAbility;
 import euclid.two.dim.map.GameMap;
@@ -85,24 +84,18 @@ public class WorldStateFactory {
 		WorldState worldState = new WorldState();
 
 		for (int i = 0; i < 100; i++) {
-			Minion unit = new Minion(team, randVect(100, 200, 100, 200));
+			Minion unit = new Minion(team, randVect(300, 400, 300, 400));
 
 			worldState.addObject(unit);
 		}
-
-		Building redBase = new Building(Team.Red, new EuVector(227, 300));
-		Building blueBase = new Building(Team.Blue, new EuVector(1500, 300));
+		worldState.addObject(createHero(Team.Blue));
+		Building redBase = new Building(Team.Blue, new EuVector(227, 300));
+		Building blueBase = new Building(Team.Red, new EuVector(1500, 300));
 		worldState.addObject(redBase);
 		worldState.addObject(blueBase);
 		worldState.setGameMap(createSpacePlatform());
 
 		return worldState;
-	}
-
-	private EuVector randVect() {
-		int x = 25 + rand.nextInt(Configuration.width - 50);
-		int y = 25 + rand.nextInt(Configuration.height - 50);
-		return new EuVector(x, y);
 	}
 
 	private EuVector randVect(int lowX, int highX, int lowY, int highY) {

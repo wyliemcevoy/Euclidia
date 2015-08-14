@@ -199,7 +199,6 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 			Unit unit = worldStateN.getUnit(id);
 			if (unit != null && moveCommand.getLocation() != null) {
 				if (unit.getTeam() == Team.Blue) {
-					System.out.println("Running move command for " + unit.getTeam() + " " + id);
 				}
 				unit.setPath(PathCalculator.calculatePath(worldStateN, unit.getPosition(), moveCommand.getLocation()));
 			}
