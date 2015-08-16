@@ -1,5 +1,7 @@
 package euclid.two.dim.datastructure;
 
+import java.util.ArrayList;
+
 import euclid.two.dim.model.EuVector;
 
 public class AABBNode {
@@ -37,6 +39,41 @@ public class AABBNode {
 
 	public AxisAlignedBoundingBox getAabb() {
 		return aabb;
+	}
+
+	public void printArea() {
+		int totalCost = 0;
+		int totalNodes = 0;
+		ArrayList<Integer> levelCost = new ArrayList<Integer>();
+		ArrayList<AABBNode> currentLevel = new ArrayList<AABBNode>();
+		ArrayList<AABBNode> nextLevel = new ArrayList<AABBNode>();
+		currentLevel.add(this);
+
+		while (!currentLevel.isEmpty()) {
+			int currentLevelCost = 0;
+			nextLevel = new ArrayList<AABBNode>();
+			for (AABBNode node : currentLevel) {
+				currentLevelCost += node.getArea();
+				totalNodes++;
+				if (node.getLeft() != null) {
+					nextLevel.add(node.getLeft());
+				}
+				if (node.getRight() != null) {
+					nextLevel.add(node.getRight());
+				}
+			}
+			levelCost.add(currentLevelCost);
+			totalCost += currentLevelCost;
+
+			currentLevel = nextLevel;
+		}
+		String build = totalNodes + " nodes with total area: " + totalCost + " [ ";
+		for (Integer i : levelCost) {
+			build += i + " ";
+		}
+
+		build += "]";
+		System.out.println(build);
 	}
 
 	public void setAabb(AxisAlignedBoundingBox aabb) {
