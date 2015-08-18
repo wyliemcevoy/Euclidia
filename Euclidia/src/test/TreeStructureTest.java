@@ -29,6 +29,7 @@ public class TreeStructureTest {
 
 		root.add(new AABBNode(two));
 		root.add(new AABBNode(three));
+		root.printArea();
 		root.add(new AABBNode(four));
 
 		root.printArea();
