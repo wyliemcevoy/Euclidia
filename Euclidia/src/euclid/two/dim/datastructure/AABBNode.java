@@ -117,13 +117,9 @@ public class AABBNode {
 		inNode.setParent(this);
 		this.aabb = new AxisAlignedBoundingBox(left.getAabb(), inNode.getAabb());
 
-		// System.out.println("\t\t Rotation complete " + this);
-
 	}
 
 	public void add(AABBNode inNode) {
-
-		// System.out.println("adding " + inNode.getAabb() + " to " + aabb + " left: " + left + " right: " + right);
 
 		if (left == null) {
 			// Has no children (always add left before right)
@@ -149,11 +145,11 @@ public class AABBNode {
 		else {
 			// Determine if the new node's AABB would be contained
 			// inside this node's AABB.
-			// System.out.println("\tcost to add:" + calculateAreaOfAdd(inNode) + " " + inNode.getArea());
 
 			double leftArea = left.calculateAreaOfAdd(inNode);
 			double rightArea = right.calculateAreaOfAdd(inNode);
 			double inNodeArea = inNode.getArea();
+			double thisArea = getArea();
 
 			if (calculateAreaOfAdd(inNode) == 0) {
 				// inNode is inside this node's bounds, so recurse left
@@ -169,17 +165,16 @@ public class AABBNode {
 			}
 			else {
 
-				if (leftArea < getArea() * .25) {
+				if (leftArea < thisArea * .25) {
 					left.add(inNode);
 				}
-				else if (rightArea < getArea() * .25) {
+				else if (rightArea < thisArea * .25) {
 					right.add(inNode);
 				}
 				else {
 					// rotation required
 					rotationAdd(inNode);
 				}
-
 			}
 		}
 		recalculateBoundingBox();

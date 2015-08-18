@@ -29,8 +29,6 @@ import euclid.two.dim.model.Obstacle;
 import euclid.two.dim.model.Unit;
 import euclid.two.dim.path.Path;
 import euclid.two.dim.path.PathCalculator;
-import euclid.two.dim.team.Agent;
-import euclid.two.dim.team.Game;
 import euclid.two.dim.team.Team;
 import euclid.two.dim.visitor.EndStep;
 import euclid.two.dim.visitor.EtherialVisitor;
@@ -42,13 +40,10 @@ import euclid.two.dim.world.WorldState;
 public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisitor {
 	private WorldState worldStateN;
 	private long timeStep;
-	private ArrayList<Agent> agents;
-	private Game game;
+
 	private ArrayList<UpdateStep> updateSteps;
 
-	public UpdateEngine(Game game, WorldState worldState) {
-		this.agents = new ArrayList<Agent>();
-		this.game = game;
+	public UpdateEngine(WorldState worldState) {
 		this.worldStateN = worldState;
 		initializeSteps();
 	}
@@ -58,11 +53,6 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 		this.updateSteps.add(new SteeringStep());
 		this.updateSteps.add(new PhysicsStep());
 		this.updateSteps.add(new EndStep());
-
-	}
-
-	public void addAgent(Agent agent) {
-		this.agents.add(agent);
 	}
 
 	public void setWorldState(WorldState worldState) {
