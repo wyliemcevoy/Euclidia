@@ -9,7 +9,7 @@ public class AABBNode {
 	private AABBNode left, right, parent;
 
 	public AABBNode(AxisAlignedBoundingBox aabb) {
-		this.aabb = aabb;
+		this.aabb = aabb.deepCopy();
 	}
 
 	public void addNewNode(EuVector one, EuVector two) {
@@ -34,7 +34,7 @@ public class AABBNode {
 
 	public double calculateAreaOfAdd(AABBNode inNode) {
 		AxisAlignedBoundingBox combination = new AxisAlignedBoundingBox(aabb, inNode.getAabb());
-		return getArea() - combination.getArea();
+		return combination.getArea() - getArea();
 	}
 
 	public AxisAlignedBoundingBox getAabb() {
@@ -61,10 +61,11 @@ public class AABBNode {
 				if (node.getRight() != null) {
 					nextLevel.add(node.getRight());
 				}
+				System.out.print(node.getAabb() + " ");
 			}
 			levelCost.add(currentLevelCost);
 			totalCost += currentLevelCost;
-
+			System.out.println("");
 			currentLevel = nextLevel;
 		}
 		String build = totalNodes + " nodes with total area: " + totalCost + " [ ";
@@ -104,19 +105,39 @@ public class AABBNode {
 		this.parent = parent;
 	}
 
+	private void rotationAdd(AABBNode inNode) {
+		AABBNode newLeft = new AABBNode(aabb);
+		left.setParent(newLeft);
+		right.setParent(newLeft);
+		newLeft.setLeft(left);
+		newLeft.setRight(right);
+		newLeft.setParent(this);
+		this.right = inNode;
+		this.left = newLeft;
+		inNode.setParent(this);
+		this.aabb = new AxisAlignedBoundingBox(left.getAabb(), inNode.getAabb());
+
+		this.recalculateBoundingBox();
+		System.out.println("\t\t Rotation complete " + this);
+
+	}
+
 	public void add(AABBNode inNode) {
+
+		System.out.println("adding " + inNode.getAabb() + " to " + aabb + " left: " + left + " right: " + right);
+
 		if (left == null) {
 			// Has no children (always add left before right)
 			// Make the data from this node into a new child node
 			// on the left. This node becomes parent to that node
 			// as well as the inNode.
 
-			this.left = inNode;
 			this.left = new AABBNode(aabb);
 			this.aabb = new AxisAlignedBoundingBox(inNode.getAabb(), aabb);
 			this.right = inNode;
 			right.setParent(this);
 			left.setParent(this);
+
 		}
 		else if (right == null) {
 			// Has a left child but no right. Make the input node
@@ -127,43 +148,26 @@ public class AABBNode {
 			this.aabb = new AxisAlignedBoundingBox(inNode.getAabb(), left.getAabb());
 		}
 		else {
-			// Has two children, hand off inNode to whichever would
-			// increase area LEAST by accepting it.
-			double leftArea = left.calculateAreaOfAdd(inNode);
-			double rightArea = right.calculateAreaOfAdd(inNode);
+			// Determine if the new node's AABB would be contained
+			// inside this node's AABB.
+			System.out.println("\tcost to add:" + calculateAreaOfAdd(inNode) + " " + inNode.getArea());
 
-			if (leftArea < rightArea) {
-				if (leftArea < inNode.getArea()) {
+			if (calculateAreaOfAdd(inNode) > inNode.getArea() * 4) {
+				rotationAdd(inNode);
+			}
+			else {
+
+				// Has two children, hand off inNode to whichever would
+				// increase area LEAST by accepting it.
+				double leftArea = left.calculateAreaOfAdd(inNode);
+				double rightArea = right.calculateAreaOfAdd(inNode);
+
+				if (leftArea < rightArea) {
+					System.out.println("");
 					left.add(inNode);
 				}
 				else {
-					//
-					AABBNode newLeft = new AABBNode(aabb);
-					left.setParent(newLeft);
-					right.setParent(newLeft);
-					newLeft.setLeft(left);
-					newLeft.setRight(right);
-					newLeft.setParent(this);
-					this.right = inNode;
-					this.left = newLeft;
-					inNode.setParent(this);
-				}
-			}
-			else {
-				if (rightArea < inNode.getArea()) {
 					right.add(inNode);
-				}
-				else {
-					right.add(inNode);
-					AABBNode newRight = new AABBNode(aabb);
-					left.setParent(newRight);
-					right.setParent(newRight);
-					newRight.setLeft(left);
-					newRight.setRight(right);
-					newRight.setParent(this);
-					this.left = inNode;
-					this.right = newRight;
-					inNode.setParent(this);
 				}
 			}
 		}
@@ -174,11 +178,16 @@ public class AABBNode {
 	}
 
 	private void recalculateBoundingBox() {
-		if (right != null) {
+		if (left != null && right != null) {
+			// left.recalculateBoundingBox();
+			// right.recalculateBoundingBox();
 			this.aabb = new AxisAlignedBoundingBox(left.getAabb(), right.getAabb());
 		}
 		else {
-			this.aabb = new AxisAlignedBoundingBox(left.getAabb().getTopLeft(), left.getAabb().getBottomRight());
+			if (left != null) {
+				// left.recalculateBoundingBox();
+				this.aabb = new AxisAlignedBoundingBox(left.getAabb().getTopLeft(), left.getAabb().getBottomRight());
+			}
 		}
 	}
 
@@ -186,4 +195,8 @@ public class AABBNode {
 		return aabb.getArea();
 	}
 
+	@Override
+	public String toString() {
+		return aabb.toString();
+	}
 }

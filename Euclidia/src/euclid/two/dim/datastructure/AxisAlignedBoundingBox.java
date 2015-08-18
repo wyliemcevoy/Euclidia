@@ -36,6 +36,11 @@ public class AxisAlignedBoundingBox {
 		this.bottomRight = new EuVector(maxX, maxY);
 	}
 
+	public AxisAlignedBoundingBox(AxisAlignedBoundingBox clone) {
+		this.topLeft = clone.getTopLeft();
+		this.bottomRight = clone.getBottomRight();
+	}
+
 	public EuVector getTopLeft() {
 		return topLeft.deepCopy();
 	}
@@ -62,5 +67,15 @@ public class AxisAlignedBoundingBox {
 
 	public int getArea() {
 		return getWidth() * getHeight();
+	}
+
+	@Override
+	public String toString() {
+		return "[" + topLeft + " - " + getWidth() + "x" + getHeight() + "]";
+	}
+
+	public AxisAlignedBoundingBox deepCopy() {
+		// TODO Auto-generated method stub
+		return new AxisAlignedBoundingBox(this);
 	}
 }

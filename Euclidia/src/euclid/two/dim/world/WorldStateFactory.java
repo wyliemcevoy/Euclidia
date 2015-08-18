@@ -83,7 +83,7 @@ public class WorldStateFactory {
 	public WorldState createVsWorldState(Team team) {
 		WorldState worldState = new WorldState();
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 50; i++) {
 			Minion unit = new Minion(team, randVect(300, 400, 300, 400));
 
 			worldState.addObject(unit);
