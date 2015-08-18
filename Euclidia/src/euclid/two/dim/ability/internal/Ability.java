@@ -48,6 +48,8 @@ public abstract class Ability implements AbilityRequestVisitor {
 		}
 	}
 
+	public abstract boolean isImediate();
+
 	public boolean isOffCooldown() {
 		return currentTime > reloadTime;
 	}

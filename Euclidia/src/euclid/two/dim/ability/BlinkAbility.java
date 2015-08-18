@@ -35,6 +35,11 @@ public class BlinkAbility extends LocationAbility {
 	}
 
 	@Override
+	public boolean isImediate() {
+		return false;
+	}
+
+	@Override
 	public void processRequest(AbilityRequest abilityRequest, WorldState worldState) {
 		// Sanity check to prevent a client sending invalid requests
 		if (isValidRequest(abilityRequest, worldState)) {

@@ -18,6 +18,8 @@ import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Unit;
 import euclid.two.dim.team.Team;
+import euclid.two.dim.visitor.SingleTypeSelection;
+import euclid.two.dim.visitor.TypedSelection;
 
 public class WorldState {
 	private ArrayList<GameSpaceObject> gsos;
@@ -101,13 +103,6 @@ public class WorldState {
 		return gsos;
 	}
 
-	/**
-	 * @param fish the fish to set
-	 */
-	public void setFish(ArrayList<GameSpaceObject> fish) {
-		this.gsos = fish;
-	}
-
 	public WorldState deepCopy() {
 		WorldState copy = new WorldState();
 
@@ -137,15 +132,21 @@ public class WorldState {
 		return copy;
 	}
 
-	public ArrayList<GameSpaceObject> getGameSpaceObjects() {
-		return gsos;
-	}
-
 	public Unit getUnit(UUID id) {
 		// Horrible implementation (change to map)
 		for (GameSpaceObject gso : gsos) {
 			if (gso.getId().equals(id)) {
 				return (Unit) gso;
+			}
+		}
+		return null;
+	}
+
+	public GameSpaceObject getGso(UUID id) {
+		// Horrible implementation (change to map)
+		for (GameSpaceObject gso : gsos) {
+			if (gso.getId().equals(id)) {
+				return gso;
 			}
 		}
 		return null;
@@ -172,10 +173,26 @@ public class WorldState {
 		// Horrible implementation (change to map)
 		for (GameSpaceObject gso : gsos) {
 			if (gso.getId().equals(id)) {
-				return (CasterUnit) gso;
+				return (new SingleTypeSelection(gso)).getCaster();
 			}
 		}
 		return null;
+	}
+
+	public ArrayList<Building> getBuildings(ArrayList<UUID> ids) {
+		return (new TypedSelection(getGsos(ids))).getBuildings();
+	}
+
+	public ArrayList<GameSpaceObject> getGsos(ArrayList<UUID> ids) {
+		ArrayList<GameSpaceObject> result = new ArrayList<GameSpaceObject>();
+
+		for (UUID id : ids) {
+			GameSpaceObject gso = getGso(id);
+			if (gso != null) {
+				result.add(gso);
+			}
+		}
+		return result;
 	}
 
 	public ArrayList<Unit> getUnitsInRange(EuVector location, int explosionRadius) {
@@ -229,6 +246,37 @@ public class WorldState {
 			}
 		}
 		return units;
+	}
+
+	public TypedSelection getTypedSelectionInRect(Team team, EuVector one, EuVector two) {
+		ArrayList<GameSpaceObject> selected = new ArrayList<GameSpaceObject>();
+
+		for (GameSpaceObject gso : gsos) {
+			EuVector pos = gso.getPosition();
+			double x = pos.getX();
+			double y = pos.getY();
+
+			double minX = two.getX();
+			double maxX = one.getX();
+			if (one.getX() < two.getX()) {
+				minX = one.getX();
+				maxX = two.getX();
+			}
+
+			double minY = two.getY();
+			double maxY = one.getY();
+
+			if (one.getY() < two.getY()) {
+				minY = one.getY();
+				maxY = two.getY();
+			}
+
+			if (gso.getTeam() == team && (minX < x && maxX > x) && (minY < y && maxY > y)) {
+				selected.add(gso);
+			}
+		}
+
+		return new TypedSelection(selected);
 	}
 
 	public ArrayList<GameSpaceObject> getFriendlyUnits(Team team) {

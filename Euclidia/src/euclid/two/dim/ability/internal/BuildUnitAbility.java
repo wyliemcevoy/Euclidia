@@ -70,6 +70,10 @@ public abstract class BuildUnitAbility extends Ability {
 	@Override
 	public void closeRequest() {
 		this.request = null;
+	}
 
+	@Override
+	public boolean isImediate() {
+		return true;
 	}
 }

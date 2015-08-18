@@ -10,7 +10,7 @@ import euclid.two.dim.ability.internal.BuildUnitAbility;
 import euclid.two.dim.ability.request.AbilityRequest;
 import euclid.two.dim.ability.request.BuildUnitAbilityRequest;
 import euclid.two.dim.model.EuVector;
-import euclid.two.dim.model.Hero;
+import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Unit;
 import euclid.two.dim.path.Path;
 import euclid.two.dim.team.Team;
@@ -53,12 +53,12 @@ public class BuyUnitAbility extends BuildUnitAbility {
 
 			EuVector position = new EuVector(casterLocation.getX() + rand.nextInt(100), casterLocation.getY() + rand.nextInt(100));
 			// Unit clone = (Unit) unit.deepCopy();
-			Hero clone = new Hero(team, position.deepCopy());
+			Minion clone = new Minion(team, position.deepCopy());
 			clone.setTeam(team);
 			clone.setPosition(position);
 			clone.setFuturePosition(position);
-			clone.setPath(new Path(new EuVector(0, 0)));
-			System.out.println(team + " adding uint " + clone);
+			clone.setPath(new Path(position));
+
 			worldState.addObject(clone);
 		}
 		closeRequest();

@@ -69,4 +69,9 @@ public class EplosiveProjectileAbility extends LocationAbility {
 		return request;
 	}
 
+	@Override
+	public boolean isImediate() {
+		return false;
+	}
+
 }

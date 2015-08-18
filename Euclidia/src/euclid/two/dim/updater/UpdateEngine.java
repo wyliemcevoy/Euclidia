@@ -71,7 +71,7 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 			updateStep.runStep(worldStateN, timeStep);
 		}
 
-		ArrayList<GameSpaceObject> gsos = worldStateN.getGameSpaceObjects();
+		ArrayList<GameSpaceObject> gsos = worldStateN.getGsos();
 		for (GameSpaceObject gso : gsos) {
 			gso.acceptUpdateVisitor(this);
 		}
@@ -230,7 +230,6 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 
 		CasterUnit hero = worldStateN.getCaster(abilityRequest.getHeroId());
 
-		System.out.println("visiting " + abilityCommand + " caster: " + hero + " ");
 		// Verify hero is still in existence
 		if (hero != null) {
 			Ability ability = hero.getAbility(abilityRequest.getAbilityType());
