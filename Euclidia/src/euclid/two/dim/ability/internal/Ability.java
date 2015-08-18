@@ -7,60 +7,51 @@ import euclid.two.dim.ability.request.AbilityRequestVisitor;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.world.WorldState;
 
-public abstract class Ability implements AbilityRequestVisitor
-{
+public abstract class Ability implements AbilityRequestVisitor {
 	protected long reloadTime;
 	protected long currentTime;
 	protected AbilityType abilityType;
-	
+
 	/**
 	 * @return the abilityType
 	 */
-	public AbilityType getAbilityType()
-	{
+	public AbilityType getAbilityType() {
 		return abilityType;
 	}
-	
+
 	/**
-	 * @param abilityType
-	 *            the abilityType to set
+	 * @param abilityType the abilityType to set
 	 */
-	public void setAbilityType(AbilityType abilityType)
-	{
+	public void setAbilityType(AbilityType abilityType) {
 		this.abilityType = abilityType;
 	}
-	
+
 	public abstract AbilityRequest toRequest(UUID heroId, WorldState worldState, EuVector location);
-	
+
 	public abstract void processRequest(AbilityRequest abilityRequest, WorldState worldState);
-	
-	public abstract boolean isValidRequest(AbilityRequest abilityRequest);
-	
+
+	public abstract boolean isValidRequest(AbilityRequest abilityRequest, WorldState worldState);
+
 	public abstract void closeRequest();
-	
-	public long getCurrentTime()
-	{
+
+	public long getCurrentTime() {
 		return currentTime;
 	}
-	
-	public long getReloadTime()
-	{
+
+	public long getReloadTime() {
 		return reloadTime;
 	}
-	
-	public void update(long timeStep)
-	{
-		if (!isOffCooldown())
-		{
+
+	public void update(long timeStep) {
+		if (!isOffCooldown()) {
 			currentTime = currentTime + timeStep;
 		}
 	}
-	
-	public boolean isOffCooldown()
-	{
+
+	public boolean isOffCooldown() {
 		return currentTime > reloadTime;
 	}
-	
+
 	public abstract Ability deepCopy();
-	
+
 }

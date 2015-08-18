@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import euclid.two.dim.ability.BlinkAbility;
+import euclid.two.dim.ability.BuyUnitAbility;
 import euclid.two.dim.ability.EplosiveProjectileAbility;
 import euclid.two.dim.map.GameMap;
 import euclid.two.dim.model.Building;
@@ -89,13 +90,22 @@ public class WorldStateFactory {
 			worldState.addObject(unit);
 		}
 		worldState.addObject(createHero(Team.Blue));
-		Building redBase = new Building(Team.Blue, new EuVector(227, 300));
-		Building blueBase = new Building(Team.Red, new EuVector(1500, 300));
+		Building redBase = buildHatchery(Team.Blue, new EuVector(227, 300));
+		Building blueBase = buildHatchery(Team.Red, new EuVector(1500, 300));
 		worldState.addObject(redBase);
 		worldState.addObject(blueBase);
 		worldState.setGameMap(createSpacePlatform());
 
 		return worldState;
+	}
+
+	public Building buildHatchery(Team team, EuVector position) {
+		Building hatchery = new Building(team, position);
+		Minion zergling = new Minion(team, position);
+		BuyUnitAbility buyZergling = new BuyUnitAbility(zergling, 0, 25);
+		hatchery.addAbility(buyZergling);
+		return hatchery;
+
 	}
 
 	private EuVector randVect(int lowX, int highX, int lowY, int highY) {

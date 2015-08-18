@@ -38,9 +38,9 @@ public class EplosiveProjectileAbility extends LocationAbility {
 	}
 
 	private void initialize() {
-		this.damage = 100;
-		this.radius = 40;
-		this.reloadTime = 1000;
+		this.damage = 50;
+		this.radius = 10;
+		this.reloadTime = 15000;
 		this.currentTime = reloadTime + 1;
 		this.range = 100;
 		this.abilityType = AbilityType.grenade;
@@ -54,7 +54,7 @@ public class EplosiveProjectileAbility extends LocationAbility {
 	@Override
 	public void processRequest(AbilityRequest abilityRequest, WorldState worldState) {
 		// Sanity check to prevent a client sending invalid requests
-		if (isValidRequest(abilityRequest)) {
+		if (isValidRequest(abilityRequest, worldState)) {
 			worldState.addEtherial(new ExplosiveProjectile(request.getLocation(), worldState.getUnit(abilityRequest.getHeroId())));
 			closeRequest();
 		}

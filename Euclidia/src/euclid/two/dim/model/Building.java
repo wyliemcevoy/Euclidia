@@ -5,7 +5,7 @@ import euclid.two.dim.team.Team;
 import euclid.two.dim.updater.Updatable;
 import euclid.two.dim.updater.UpdateVisitor;
 
-public class Building extends Unit {
+public class Building extends CasterUnit {
 
 	public Building(Team team, EuVector position) {
 		super(team, position);
@@ -14,7 +14,7 @@ public class Building extends Unit {
 	}
 
 	public Building(Building clone) {
-		super((Unit) clone);
+		super(clone);
 	}
 
 	@Override

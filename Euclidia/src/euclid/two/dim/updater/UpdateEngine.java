@@ -21,6 +21,7 @@ import euclid.two.dim.etherial.Projectile;
 import euclid.two.dim.etherial.Slash;
 import euclid.two.dim.etherial.ZergDeath;
 import euclid.two.dim.model.Building;
+import euclid.two.dim.model.CasterUnit;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Hero;
@@ -227,18 +228,21 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 
 		AbilityRequest abilityRequest = abilityCommand.getAbilityRequest();
 
-		Hero hero = worldStateN.getHero(abilityRequest.getHeroId());
+		CasterUnit hero = worldStateN.getCaster(abilityRequest.getHeroId());
 
+		System.out.println("visiting " + abilityCommand + " caster: " + hero + " ");
 		// Verify hero is still in existence
 		if (hero != null) {
 			Ability ability = hero.getAbility(abilityRequest.getAbilityType());
 
 			// Verify ability is valid
 			if (ability != null) {
+
+				System.out.println(worldStateN.getGsos().size());
 				ability.processRequest(abilityRequest, worldStateN);
+				System.out.println(worldStateN.getGsos().size());
 			}
 		}
-
 	}
 
 	@Override

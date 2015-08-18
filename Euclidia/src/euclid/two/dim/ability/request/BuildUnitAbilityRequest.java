@@ -1,6 +1,6 @@
 package euclid.two.dim.ability.request;
 
-public class TargetedAbilityRequest extends AbilityRequest {
+public class BuildUnitAbilityRequest extends AbilityRequest {
 
 	@Override
 	public void accept(AbilityRequestVisitor visitor) {

@@ -1,7 +1,6 @@
 package euclid.two.dim.world;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,9 +9,9 @@ import euclid.two.dim.VectorMath;
 import euclid.two.dim.datastructure.AABBNode;
 import euclid.two.dim.datastructure.AxisAlignedBoundingBox;
 import euclid.two.dim.etherial.Etherial;
-import euclid.two.dim.etherial.Explosion;
 import euclid.two.dim.map.GameMap;
 import euclid.two.dim.model.Building;
+import euclid.two.dim.model.CasterUnit;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Hero;
@@ -22,17 +21,17 @@ import euclid.two.dim.team.Team;
 
 public class WorldState {
 	private ArrayList<GameSpaceObject> gsos;
-	private ArrayList<Explosion> explosions;
 	private ArrayList<Etherial> etherials;
 	private ArrayList<Etherial> expired;
 	private GameMap gameMap;
 	private AABBNode root;
+	private ArrayList<Player> players;
 
 	public WorldState() {
 		this.gsos = new ArrayList<GameSpaceObject>();
-		this.explosions = new ArrayList<Explosion>();
 		this.etherials = new ArrayList<Etherial>();
 		this.expired = new ArrayList<Etherial>();
+		this.players = new ArrayList<Player>();
 	}
 
 	public List<GameSpaceObject> getUnfriendliesInRage(Minion unit) {
@@ -95,16 +94,6 @@ public class WorldState {
 		gsos.add(gso);
 	}
 
-	public void update(long timeStep) {
-		Iterator<Explosion> it = explosions.iterator();
-		while (it.hasNext()) {
-			Explosion explosion = it.next();
-			if (explosion.hasExpired()) {
-				it.remove();
-			}
-		}
-	}
-
 	/**
 	 * @return the fish
 	 */
@@ -136,6 +125,10 @@ public class WorldState {
 
 		}
 
+		for (Player player : players) {
+			copy.addPlayer(player);
+		}
+
 		copy.setGameMap(gameMap);
 		for (Etherial updatable : etherials) {
 			copy.addEtherial(updatable);
@@ -158,24 +151,8 @@ public class WorldState {
 		return null;
 	}
 
-	public ArrayList<Explosion> getExplosions() {
-		explosions = new ArrayList<Explosion>();
-
-		for (Etherial updatable : etherials) {
-			if (updatable instanceof Explosion) {
-				explosions.add((Explosion) updatable);
-			}
-		}
-
-		return explosions;
-	}
-
 	public void addEtherial(Etherial etherial) {
 		this.etherials.add(etherial);
-	}
-
-	public ArrayList<Etherial> getUpdatable() {
-		return etherials;
 	}
 
 	public void registerAsExpired(Etherial etherial) {
@@ -191,11 +168,11 @@ public class WorldState {
 		return etherials;
 	}
 
-	public Hero getHero(UUID id) {
+	public CasterUnit getCaster(UUID id) {
 		// Horrible implementation (change to map)
 		for (GameSpaceObject gso : gsos) {
 			if (gso.getId().equals(id)) {
-				return (Hero) gso;
+				return (CasterUnit) gso;
 			}
 		}
 		return null;
@@ -254,10 +231,10 @@ public class WorldState {
 		return units;
 	}
 
-	public ArrayList<GameSpaceObject> getFriendlyUnits(Player player) {
+	public ArrayList<GameSpaceObject> getFriendlyUnits(Team team) {
 		ArrayList<GameSpaceObject> friendlies = new ArrayList<GameSpaceObject>();
 		for (GameSpaceObject gso : gsos) {
-			if (gso.getTeam() == player.getTeam()) {
+			if (gso.getTeam() == team) {
 				friendlies.add(gso);
 			}
 		}
@@ -266,5 +243,22 @@ public class WorldState {
 
 	public AABBNode getAABBRoot() {
 		return root;
+	}
+
+	public void addPlayer(Player player) {
+		players.add(player);
+	}
+
+	public ArrayList<Player> getPlayers() {
+		return players;
+	}
+
+	public Player getPlayer(Team team) {
+		for (Player player : players) {
+			if (player.getTeam() == team) {
+				return player;
+			}
+		}
+		return null;
 	}
 }

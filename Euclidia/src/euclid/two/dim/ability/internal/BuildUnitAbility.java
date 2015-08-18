@@ -2,14 +2,29 @@ package euclid.two.dim.ability.internal;
 
 import java.util.UUID;
 
+import euclid.two.dim.Player;
 import euclid.two.dim.ability.request.AbilityRequest;
 import euclid.two.dim.ability.request.BasicAbilityRequest;
+import euclid.two.dim.ability.request.BuildUnitAbilityRequest;
 import euclid.two.dim.ability.request.LocationAbilityRequest;
 import euclid.two.dim.ability.request.TargetedAbilityRequest;
+import euclid.two.dim.model.CasterUnit;
 import euclid.two.dim.model.EuVector;
+import euclid.two.dim.model.Unit;
 import euclid.two.dim.world.WorldState;
 
-public class BuildUnitAbility extends Ability {
+public abstract class BuildUnitAbility extends Ability {
+	protected BuildUnitAbilityRequest request;
+	protected int gasCost;
+	protected int mineralCost;
+	protected Unit unit;
+
+	public BuildUnitAbility(Unit unit, int gasCost, int mineralCost) {
+		this.unit = unit;
+		this.gasCost = gasCost;
+		this.mineralCost = mineralCost;
+		this.abilityType = AbilityType.build;
+	}
 
 	@Override
 	public void visit(BasicAbilityRequest basicAbilityRequest) {
@@ -27,32 +42,34 @@ public class BuildUnitAbility extends Ability {
 	}
 
 	@Override
+	public void visit(BuildUnitAbilityRequest request) {
+		this.request = request;
+	}
+
+	@Override
 	public AbilityRequest toRequest(UUID heroId, WorldState worldState, EuVector location) {
-		// TODO Auto-generated method stub
-		return null;
+		BuildUnitAbilityRequest request = new BuildUnitAbilityRequest();
+
+		return request;
 	}
 
 	@Override
-	public void processRequest(AbilityRequest abilityRequest, WorldState worldState) {
-		// TODO Auto-generated method stub
-	}
+	public boolean isValidRequest(AbilityRequest abilityRequest, WorldState worldState) {
+		abilityRequest.accept(this);
+		CasterUnit caster = worldState.getCaster(abilityRequest.getHeroId());
 
-	@Override
-	public boolean isValidRequest(AbilityRequest abilityRequest) {
-		// TODO Auto-generated method stub
-		return false;
+		if (caster == null || abilityRequest.getAbilityType() != this.abilityType) {
+			return false;
+		}
+
+		Player player = worldState.getPlayers().get(0);
+
+		return ((player.getMinerals() >= mineralCost) && (player.getGas() >= gasCost));
 	}
 
 	@Override
 	public void closeRequest() {
-		// TODO Auto-generated method stub
+		this.request = null;
 
 	}
-
-	@Override
-	public Ability deepCopy() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

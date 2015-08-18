@@ -9,8 +9,8 @@ import euclid.two.dim.ability.internal.LocationAbility;
 import euclid.two.dim.ability.request.AbilityRequest;
 import euclid.two.dim.ability.request.LocationAbilityRequest;
 import euclid.two.dim.etherial.Explosion;
+import euclid.two.dim.model.CasterUnit;
 import euclid.two.dim.model.EuVector;
-import euclid.two.dim.model.Hero;
 import euclid.two.dim.path.Path;
 import euclid.two.dim.world.WorldState;
 
@@ -37,10 +37,10 @@ public class BlinkAbility extends LocationAbility {
 	@Override
 	public void processRequest(AbilityRequest abilityRequest, WorldState worldState) {
 		// Sanity check to prevent a client sending invalid requests
-		if (isValidRequest(abilityRequest)) {
+		if (isValidRequest(abilityRequest, worldState)) {
 			EuVector destination = request.getLocation();
 
-			Hero hero = worldState.getHero(request.getHeroId());
+			CasterUnit hero = worldState.getCaster(request.getHeroId());
 			worldState.addEtherial(new Explosion(hero.getPosition()));
 			Random rand = new Random();
 			EuVector teleportLocation = new EuVector(destination.getX() + rand.nextDouble(), destination.getY() + rand.nextDouble());

@@ -72,7 +72,6 @@ public class VectorMath {
 		if (s >= 0 && s <= 1 && t >= 0 && t <= 1) {
 			// Collision detected
 			return new EuVector(p0_x + (t * s1_x), p0_y + (t * s1_y));
-
 		}
 		// No collision
 
