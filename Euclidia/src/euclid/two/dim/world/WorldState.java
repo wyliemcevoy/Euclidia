@@ -16,7 +16,9 @@ import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
+import euclid.two.dim.model.ResourcePatch;
 import euclid.two.dim.model.Unit;
+import euclid.two.dim.model.Worker;
 import euclid.two.dim.team.Team;
 import euclid.two.dim.visitor.SingleTypeSelection;
 import euclid.two.dim.visitor.TypedSelection;
@@ -116,6 +118,13 @@ public class WorldState {
 			}
 			if (gso instanceof Building) {
 				copy.addObject(new Building((Building) gso));
+			}
+
+			if (gso instanceof ResourcePatch) {
+				copy.addObject(new ResourcePatch((ResourcePatch) gso));
+			}
+			if (gso instanceof Worker) {
+				copy.addObject(new Worker((Worker) gso));
 			}
 
 		}
@@ -302,11 +311,22 @@ public class WorldState {
 	}
 
 	public Player getPlayer(Team team) {
+
 		for (Player player : players) {
 			if (player.getTeam() == team) {
 				return player;
 			}
 		}
 		return null;
+	}
+
+	public GameSpaceObject getGsoAt(EuVector location) {
+		for (GameSpaceObject gso : gsos) {
+			if (gso.getPosition().subtract(location).getMagnitudeSquared() < gso.getRadius() * gso.getRadius()) {
+				return gso;
+			}
+		}
+		return null;
+
 	}
 }

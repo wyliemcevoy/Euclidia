@@ -10,7 +10,7 @@ public class Player {
 	public Player(Team team) {
 		this.team = team;
 		this.gas = 0;
-		this.minerals = 50;
+		this.minerals = 5000;
 	}
 
 	public int getGas() {

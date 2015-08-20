@@ -19,7 +19,7 @@ public class Building extends CasterUnit {
 
 	@Override
 	public void acceptUpdateVisitor(UpdateVisitor updateVisitor) {
-		updateVisitor.accept(this);
+		updateVisitor.visit(this);
 	}
 
 	@Override

@@ -5,7 +5,8 @@ import euclid.two.dim.model.CasterUnit;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
-import euclid.two.dim.model.Obstacle;
+import euclid.two.dim.model.ResourcePatch;
+import euclid.two.dim.model.Worker;
 import euclid.two.dim.updater.UpdateVisitor;
 
 public class SingleTypeSelection implements UpdateVisitor {
@@ -13,7 +14,8 @@ public class SingleTypeSelection implements UpdateVisitor {
 	private Minion minion;
 	private Hero hero;
 	private Building building;
-	private Obstacle obstacle;
+	private ResourcePatch resourcePatch;
+	private Worker worker;
 
 	public SingleTypeSelection(GameSpaceObject gso) {
 		gso.acceptUpdateVisitor(this);
@@ -23,16 +25,16 @@ public class SingleTypeSelection implements UpdateVisitor {
 		return minion;
 	}
 
+	public ResourcePatch getResourcePatch() {
+		return resourcePatch;
+	}
+
 	public Hero getHero() {
 		return hero;
 	}
 
 	public Building getBuilding() {
 		return building;
-	}
-
-	public Obstacle getObstacle() {
-		return obstacle;
 	}
 
 	@Override
@@ -46,12 +48,12 @@ public class SingleTypeSelection implements UpdateVisitor {
 	}
 
 	@Override
-	public void visit(Obstacle obstacle) {
-		this.obstacle = obstacle;
+	public void visit(ResourcePatch resourcePatch) {
+		this.resourcePatch = resourcePatch;
 	}
 
 	@Override
-	public void accept(Building building) {
+	public void visit(Building building) {
 		this.building = building;
 	}
 
@@ -60,6 +62,12 @@ public class SingleTypeSelection implements UpdateVisitor {
 			return hero;
 		}
 		return building;
+
+	}
+
+	@Override
+	public void visit(Worker worker) {
+		this.worker = worker;
 
 	}
 }

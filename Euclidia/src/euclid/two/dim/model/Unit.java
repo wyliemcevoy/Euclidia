@@ -52,13 +52,11 @@ public abstract class Unit extends GameSpaceObject {
 
 	public Unit(Unit copy) {
 		super(copy);
-
 		this.enemyTarget = copy.getTarget();
 		this.team = copy.getTeam();
 		this.actionIndex = copy.getActionIndex();
 		this.health = copy.getHealth().deepCopy();
 		this.attack = copy.getAttack().deepCopy();
-
 	}
 
 	public Attack getAttack() {

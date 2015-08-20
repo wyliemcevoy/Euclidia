@@ -81,6 +81,7 @@ public abstract class GameSpaceObject implements Updatable {
 		this.isAtRest = true;
 		this.steeringBehavior = SteeringBehavior.Flock;
 		this.team = Team.Neutral;
+		this.theta = 1;
 	}
 
 	public double getRadius() {

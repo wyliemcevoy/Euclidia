@@ -12,7 +12,7 @@ import euclid.two.dim.ability.request.BuildUnitAbilityRequest;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Unit;
-import euclid.two.dim.path.Path;
+import euclid.two.dim.model.Worker;
 import euclid.two.dim.team.Team;
 import euclid.two.dim.world.WorldState;
 
@@ -52,14 +52,17 @@ public class BuyUnitAbility extends BuildUnitAbility {
 			player.setMinerals(player.getMinerals() - mineralCost);
 
 			EuVector position = new EuVector(casterLocation.getX() + rand.nextInt(100), casterLocation.getY() + rand.nextInt(100));
-			// Unit clone = (Unit) unit.deepCopy();
-			Minion clone = new Minion(team, position.deepCopy());
-			clone.setTeam(team);
-			clone.setPosition(position);
-			clone.setFuturePosition(position);
-			clone.setPath(new Path(position));
 
-			worldState.addObject(clone);
+			if (unit instanceof Worker) {
+				Worker worker = new Worker(team, position);
+				System.out.println("worker created");
+				worldState.addObject(worker);
+			}
+			else if (unit instanceof Minion) {
+				Minion minion = new Minion(team, position);
+				worldState.addObject(minion);
+			}
+
 		}
 		closeRequest();
 	}

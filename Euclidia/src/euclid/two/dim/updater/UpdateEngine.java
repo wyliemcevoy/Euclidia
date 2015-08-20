@@ -10,6 +10,7 @@ import euclid.two.dim.command.AbilityCommand;
 import euclid.two.dim.command.AttackCommand;
 import euclid.two.dim.command.Command;
 import euclid.two.dim.command.CommandVisitor;
+import euclid.two.dim.command.GatherCommand;
 import euclid.two.dim.command.MoveCommand;
 import euclid.two.dim.command.UseLocationAbilityCommand;
 import euclid.two.dim.command.UseTargetedAbilityCommand;
@@ -26,8 +27,9 @@ import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
-import euclid.two.dim.model.Obstacle;
+import euclid.two.dim.model.ResourcePatch;
 import euclid.two.dim.model.Unit;
+import euclid.two.dim.model.Worker;
 import euclid.two.dim.path.Path;
 import euclid.two.dim.path.PathCalculator;
 import euclid.two.dim.team.Team;
@@ -126,8 +128,8 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 	}
 
 	@Override
-	public void visit(Obstacle obstacle) {
-		// Do nothing
+	public void visit(ResourcePatch resourcePatch) {
+		resourcePatch.update(timeStep);
 	}
 
 	@Override
@@ -236,10 +238,7 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 
 			// Verify ability is valid
 			if (ability != null) {
-
-				System.out.println(worldStateN.getGsos().size());
 				ability.processRequest(abilityRequest, worldStateN);
-				System.out.println(worldStateN.getGsos().size());
 			}
 		}
 	}
@@ -273,6 +272,17 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 	}
 
 	@Override
-	public void accept(Building building) {
+	public void visit(Building building) {
+	}
+
+	@Override
+	public void visit(Worker worker) {
+		visit((Unit) worker);
+	}
+
+	@Override
+	public void visit(GatherCommand gatherCommand) {
+		// Deal with gathering
+
 	}
 }

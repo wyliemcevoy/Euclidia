@@ -13,7 +13,8 @@ import euclid.two.dim.model.Building;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
-import euclid.two.dim.model.Obstacle;
+import euclid.two.dim.model.ResourcePatch;
+import euclid.two.dim.model.Worker;
 import euclid.two.dim.world.WorldState;
 
 public class EndStep extends UpdateStep implements EtherialVisitor {
@@ -88,8 +89,10 @@ public class EndStep extends UpdateStep implements EtherialVisitor {
 	}
 
 	@Override
-	public void visit(Obstacle obstacle) {
-		// Do nothing
+	public void visit(ResourcePatch resourcePatch) {
+		if (resourcePatch.hasExpired()) {
+			dead.add(resourcePatch);
+		}
 	}
 
 	@Override
@@ -105,7 +108,7 @@ public class EndStep extends UpdateStep implements EtherialVisitor {
 		if (explosiveProjectile.hasExpired()) {
 			expired.add(explosiveProjectile);
 			created.add(new Explosion(explosiveProjectile.getLocation()));
-			created.add(new CircleGraphic(explosiveProjectile.getLocation(), explosiveProjectile.getExplosionRadius()));
+			// created.add(new CircleGraphic(explosiveProjectile.getLocation(), explosiveProjectile.getExplosionRadius()));
 		}
 	}
 
@@ -140,9 +143,17 @@ public class EndStep extends UpdateStep implements EtherialVisitor {
 	}
 
 	@Override
-	public void accept(Building building) {
+	public void visit(Building building) {
 		if (building.hasExpired()) {
 			dead.add(building);
+		}
+	}
+
+	@Override
+	public void visit(Worker unit) {
+		if (unit.hasExpired()) {
+			dead.add(unit);
+			worldState.addEtherial(new ZergDeath(unit.getPosition(), (int) unit.getRadius()));
 		}
 	}
 }

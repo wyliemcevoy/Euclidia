@@ -7,8 +7,9 @@ import euclid.two.dim.model.Building;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
-import euclid.two.dim.model.Obstacle;
+import euclid.two.dim.model.ResourcePatch;
 import euclid.two.dim.model.Unit;
+import euclid.two.dim.model.Worker;
 import euclid.two.dim.updater.UpdateVisitor;
 
 public class TypedSelection implements UpdateVisitor {
@@ -16,13 +17,15 @@ public class TypedSelection implements UpdateVisitor {
 	private ArrayList<Hero> heros;
 	private ArrayList<Building> buildings;
 	private ArrayList<Minion> minions;
-	private ArrayList<Obstacle> obstacles;
+	private ArrayList<ResourcePatch> resourcePatchs;
+	private ArrayList<Worker> workers;
 
 	public TypedSelection(ArrayList<GameSpaceObject> gsos) {
 		this.heros = new ArrayList<Hero>();
 		this.buildings = new ArrayList<Building>();
 		this.minions = new ArrayList<Minion>();
-		this.obstacles = new ArrayList<Obstacle>();
+		this.resourcePatchs = new ArrayList<ResourcePatch>();
+		this.workers = new ArrayList<Worker>();
 
 		for (GameSpaceObject gso : gsos) {
 			gso.acceptUpdateVisitor(this);
@@ -41,8 +44,8 @@ public class TypedSelection implements UpdateVisitor {
 		return minions;
 	}
 
-	public ArrayList<Obstacle> getObstacles() {
-		return obstacles;
+	public ArrayList<ResourcePatch> getResourcePatches() {
+		return resourcePatchs;
 	}
 
 	public ArrayList<Unit> getUnits() {
@@ -77,12 +80,12 @@ public class TypedSelection implements UpdateVisitor {
 	}
 
 	@Override
-	public void visit(Obstacle obstacle) {
-		obstacles.add(obstacle);
+	public void visit(ResourcePatch resourcePatch) {
+		resourcePatchs.add(resourcePatch);
 	}
 
 	@Override
-	public void accept(Building building) {
+	public void visit(Building building) {
 		buildings.add(building);
 	}
 
@@ -100,6 +103,26 @@ public class TypedSelection implements UpdateVisitor {
 		ArrayList<UUID> ids = new ArrayList<UUID>();
 
 		for (GameSpaceObject gso : heros) {
+			ids.add(gso.getId());
+		}
+
+		return ids;
+	}
+
+	@Override
+	public void visit(Worker worker) {
+		workers.add(worker);
+
+	}
+
+	public ArrayList<Worker> getWorkers() {
+		return workers;
+	}
+
+	public ArrayList<UUID> getWorkerIds() {
+		ArrayList<UUID> ids = new ArrayList<UUID>();
+
+		for (GameSpaceObject gso : workers) {
 			ids.add(gso.getId());
 		}
 

@@ -5,8 +5,9 @@ import euclid.two.dim.model.Building;
 import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
-import euclid.two.dim.model.Obstacle;
+import euclid.two.dim.model.ResourcePatch;
 import euclid.two.dim.model.Unit;
+import euclid.two.dim.model.Worker;
 import euclid.two.dim.path.Path;
 
 public class SteeringStep extends UpdateStep {
@@ -92,7 +93,7 @@ public class SteeringStep extends UpdateStep {
 	}
 
 	@Override
-	public void visit(Obstacle obstacle) {
+	public void visit(ResourcePatch resourcePatch) {
 		// do nothing
 	}
 
@@ -102,7 +103,13 @@ public class SteeringStep extends UpdateStep {
 	}
 
 	@Override
-	public void accept(Building building) {
+	public void visit(Building building) {
 		// do nothing
+	}
+
+	@Override
+	public void visit(Worker worker) {
+		visit((Unit) worker);
+
 	}
 }

@@ -3,8 +3,9 @@ package euclid.two.dim.updater;
 import euclid.two.dim.model.Building;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
-import euclid.two.dim.model.Obstacle;
+import euclid.two.dim.model.ResourcePatch;
 import euclid.two.dim.model.Unit;
+import euclid.two.dim.model.Worker;
 
 public class DeathVisitor implements UpdateVisitor {
 	private boolean dead;
@@ -19,7 +20,7 @@ public class DeathVisitor implements UpdateVisitor {
 	}
 
 	@Override
-	public void visit(Obstacle obstacle) {
+	public void visit(ResourcePatch resourcePatch) {
 		dead = false;
 	}
 
@@ -37,8 +38,12 @@ public class DeathVisitor implements UpdateVisitor {
 	}
 
 	@Override
-	public void accept(Building building) {
+	public void visit(Building building) {
 		visit((Unit) building);
 	}
 
+	@Override
+	public void visit(Worker worker) {
+		visit((Unit) worker);
+	}
 }

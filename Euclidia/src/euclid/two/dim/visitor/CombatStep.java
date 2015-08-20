@@ -4,8 +4,9 @@ import euclid.two.dim.model.Building;
 import euclid.two.dim.model.GameSpaceObject;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
-import euclid.two.dim.model.Obstacle;
+import euclid.two.dim.model.ResourcePatch;
 import euclid.two.dim.model.Unit;
+import euclid.two.dim.model.Worker;
 
 public class CombatStep extends UpdateStep {
 	public CombatStep() {
@@ -56,7 +57,7 @@ public class CombatStep extends UpdateStep {
 	}
 
 	@Override
-	public void visit(Obstacle obstacle) {
+	public void visit(ResourcePatch resourcePatch) {
 		// Do nothing
 	}
 
@@ -67,8 +68,14 @@ public class CombatStep extends UpdateStep {
 	}
 
 	@Override
-	public void accept(Building building) {
+	public void visit(Building building) {
 		// do nothing
+	}
+
+	@Override
+	public void visit(Worker worker) {
+		visit((Unit) worker);
+
 	}
 
 }

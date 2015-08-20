@@ -21,6 +21,7 @@ public abstract class BuildUnitAbility extends Ability {
 
 	public BuildUnitAbility(Unit unit, int gasCost, int mineralCost) {
 		this.unit = unit;
+
 		this.gasCost = gasCost;
 		this.mineralCost = mineralCost;
 		this.abilityType = AbilityType.build;
@@ -49,7 +50,6 @@ public abstract class BuildUnitAbility extends Ability {
 	@Override
 	public AbilityRequest toRequest(UUID heroId, WorldState worldState, EuVector location) {
 		BuildUnitAbilityRequest request = new BuildUnitAbilityRequest();
-
 		return request;
 	}
 
@@ -61,9 +61,7 @@ public abstract class BuildUnitAbility extends Ability {
 		if (caster == null || abilityRequest.getAbilityType() != this.abilityType) {
 			return false;
 		}
-
-		Player player = worldState.getPlayers().get(0);
-
+		Player player = worldState.getPlayer(worldState.getGso(abilityRequest.getHeroId()).getTeam());
 		return ((player.getMinerals() >= mineralCost) && (player.getGas() >= gasCost));
 	}
 

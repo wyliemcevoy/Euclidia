@@ -14,6 +14,8 @@ import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.NavMesh;
+import euclid.two.dim.model.ResourcePatch;
+import euclid.two.dim.model.Worker;
 import euclid.two.dim.team.Team;
 
 public class WorldStateFactory {
@@ -95,15 +97,27 @@ public class WorldStateFactory {
 		worldState.addObject(redBase);
 		worldState.addObject(blueBase);
 		worldState.setGameMap(createSpacePlatform());
+		worldState.addObject(buildMineralPatch(new EuVector(212, 230)));
+		worldState.addObject(buildMineralPatch(new EuVector(1515, 230)));
+		worldState.addObject(buildMineralPatch(new EuVector(167, 260)));
+		worldState.addObject(buildMineralPatch(new EuVector(1560, 260)));
+		worldState.addObject(buildMineralPatch(new EuVector(137, 290)));
+		worldState.addObject(buildMineralPatch(new EuVector(1590, 290)));
 
 		return worldState;
 	}
 
+	public ResourcePatch buildMineralPatch(EuVector location) {
+		ResourcePatch rp = new ResourcePatch(location);
+		rp.setMinerals(5000);
+
+		return rp;
+	}
+
 	public Building buildHatchery(Team team, EuVector position) {
 		Building hatchery = new Building(team, position);
-		Minion zergling = new Minion(team, position);
-		BuyUnitAbility buyZergling = new BuyUnitAbility(zergling, 0, 25);
-		hatchery.addAbility(buyZergling);
+		hatchery.addAbility(new BuyUnitAbility(new Minion(team, position), 0, 25));
+		hatchery.addAbility(new BuyUnitAbility(new Worker(team, position), 0, 50));
 		return hatchery;
 
 	}
