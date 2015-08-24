@@ -277,7 +277,7 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 	public void visit(Worker worker) {
 		visit((Unit) worker);
 
-		GameSpaceObject resource = worldStateN.getGso(worker.getResourceId());
+		worker.update(worldStateN);
 
 	}
 
@@ -294,6 +294,7 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 				if (worker != null) {
 					worker.setResourcePatch(gatherCommand.getTargetResource());
 					worker.setPath(PathCalculator.calculatePath(worldStateN, worker.getPosition(), resource.getPosition()));
+					worker.gather(gatherCommand.getTargetResource());
 				}
 			}
 		}

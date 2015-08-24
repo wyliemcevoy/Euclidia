@@ -33,4 +33,8 @@ public class Player {
 		return team;
 	}
 
+	public void addMinerals(int addedMinerals) {
+		this.minerals += addedMinerals;
+	}
+
 }
