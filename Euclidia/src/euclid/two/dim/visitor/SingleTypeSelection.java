@@ -70,4 +70,8 @@ public class SingleTypeSelection implements UpdateVisitor {
 		this.worker = worker;
 
 	}
+
+	public Worker getWorker() {
+		return worker;
+	}
 }

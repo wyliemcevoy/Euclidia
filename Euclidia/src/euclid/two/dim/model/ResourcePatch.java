@@ -18,6 +18,7 @@ public class ResourcePatch extends Obstacle {
 	public ResourcePatch(ResourcePatch resourcePatch) {
 		super(resourcePatch.getPosition().deepCopy());
 		this.radius = resourcePatch.getRadius();
+		this.id = resourcePatch.getId();
 	}
 
 	@Override

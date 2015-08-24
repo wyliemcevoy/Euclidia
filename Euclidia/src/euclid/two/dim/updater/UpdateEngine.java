@@ -32,10 +32,10 @@ import euclid.two.dim.model.Unit;
 import euclid.two.dim.model.Worker;
 import euclid.two.dim.path.Path;
 import euclid.two.dim.path.PathCalculator;
-import euclid.two.dim.team.Team;
 import euclid.two.dim.visitor.EndStep;
 import euclid.two.dim.visitor.EtherialVisitor;
 import euclid.two.dim.visitor.PhysicsStep;
+import euclid.two.dim.visitor.SingleTypeSelection;
 import euclid.two.dim.visitor.SteeringStep;
 import euclid.two.dim.visitor.UpdateStep;
 import euclid.two.dim.world.WorldState;
@@ -191,8 +191,6 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 		for (UUID id : moveCommand.getIds()) {
 			Unit unit = worldStateN.getUnit(id);
 			if (unit != null && moveCommand.getLocation() != null) {
-				if (unit.getTeam() == Team.Blue) {
-				}
 				unit.setPath(PathCalculator.calculatePath(worldStateN, unit.getPosition(), moveCommand.getLocation()));
 			}
 		}
@@ -278,11 +276,26 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 	@Override
 	public void visit(Worker worker) {
 		visit((Unit) worker);
+
+		GameSpaceObject resource = worldStateN.getGso(worker.getResourceId());
+
 	}
 
 	@Override
 	public void visit(GatherCommand gatherCommand) {
-		// Deal with gathering
 
+		GameSpaceObject resource = worldStateN.getGso(gatherCommand.getTargetResource());
+		if (resource != null) {
+			// Deal with gathering
+			for (UUID id : gatherCommand.getWorkers()) {
+				Worker worker = (new SingleTypeSelection(worldStateN.getUnit(id))).getWorker();
+
+				// worker could have died between command request and execution
+				if (worker != null) {
+					worker.setResourcePatch(gatherCommand.getTargetResource());
+					worker.setPath(PathCalculator.calculatePath(worldStateN, worker.getPosition(), resource.getPosition()));
+				}
+			}
+		}
 	}
 }

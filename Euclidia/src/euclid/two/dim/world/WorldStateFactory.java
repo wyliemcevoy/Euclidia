@@ -92,10 +92,9 @@ public class WorldStateFactory {
 			worldState.addObject(unit);
 		}
 		worldState.addObject(createHero(Team.Blue));
-		Building redBase = buildHatchery(Team.Blue, new EuVector(227, 300));
-		Building blueBase = buildHatchery(Team.Red, new EuVector(1500, 300));
-		worldState.addObject(redBase);
-		worldState.addObject(blueBase);
+		worldState.addObject(new Worker(Team.Blue, new EuVector(100, 100)));
+		worldState.addObject(buildHatchery(Team.Blue, new EuVector(227, 300)));
+		worldState.addObject(buildHatchery(Team.Red, new EuVector(1500, 300)));
 		worldState.setGameMap(createSpacePlatform());
 		worldState.addObject(buildMineralPatch(new EuVector(212, 230)));
 		worldState.addObject(buildMineralPatch(new EuVector(1515, 230)));

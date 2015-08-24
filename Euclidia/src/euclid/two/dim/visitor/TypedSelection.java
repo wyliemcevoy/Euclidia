@@ -66,6 +66,9 @@ public class TypedSelection implements UpdateVisitor {
 			ids.add(gso.getId());
 		}
 
+		for (GameSpaceObject gso : workers) {
+			ids.add(gso.getId());
+		}
 		return ids;
 	}
 

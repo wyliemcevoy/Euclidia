@@ -10,25 +10,38 @@ import euclid.two.dim.updater.UpdateVisitor;
 public class Worker extends Unit {
 	private int gasCollected;
 	private int mineralsCollected;
-	private WorkerState currentState, collecting, returningHome, returningToResources, idle;
 	private UUID currentResourcePatch;
+	private long collectionTime;
+
+	private enum WorkerState {
+		collecting, returningHome, travelingToResources, idle
+	};
+
+	private WorkerState currentState;
 
 	public Worker(Team team, EuVector position) {
 		super(team, position);
 		this.gasCollected = 0;
 		this.mineralsCollected = 0;
-		this.collecting = new Collecting();
-		this.returningHome = new ReturningHome();
-		this.returningToResources = new ReturningToResources();
-		this.idle = new Idle();
-		this.radius = 35;
-		this.health = new Health(500);
-		this.currentState = idle;
+		this.radius = 7;
+		this.health = new Health(75);
+		this.currentState = WorkerState.idle;
 
 	}
 
 	public Worker(Worker copy) {
 		super(copy);
+		this.gasCollected = copy.getGasCollected();
+		this.mineralsCollected = copy.getMineralsCollected();
+		this.radius = copy.getRadius();
+	}
+
+	private int getMineralsCollected() {
+		return this.mineralsCollected;
+	}
+
+	private int getGasCollected() {
+		return gasCollected;
 	}
 
 	@Override
@@ -41,24 +54,12 @@ public class Worker extends Unit {
 		return new Worker(this);
 	}
 
-	private abstract class WorkerState {
-
+	public void setResourcePatch(UUID targetResource) {
+		this.currentResourcePatch = targetResource;
+		this.currentState = WorkerState.travelingToResources;
 	}
 
-	private class Collecting extends WorkerState {
-
+	public UUID getResourceId() {
+		return currentResourcePatch;
 	}
-
-	private class ReturningHome extends WorkerState {
-
-	}
-
-	private class ReturningToResources extends WorkerState {
-
-	}
-
-	private class Idle extends WorkerState {
-
-	}
-
 }
