@@ -1,6 +1,5 @@
 package euclid.two.dim.model;
 
-import java.awt.Color;
 import java.util.Random;
 import java.util.UUID;
 
@@ -19,9 +18,7 @@ public abstract class GameSpaceObject implements Updatable {
 	protected EuVector futureVelocity;
 	protected double maxSpeed = Configuration.maxSpeed;
 	protected double mass;
-	protected Color color;
 	protected Path path;
-	protected boolean isSelected;
 	protected UUID id;
 	protected double theta;
 	protected boolean isAtRest;
@@ -53,29 +50,14 @@ public abstract class GameSpaceObject implements Updatable {
 		this.theta = theta;
 	}
 
-	/**
-	 * @return the isSelected
-	 */
-	public boolean isSelected() {
-		return isSelected;
-	}
-
 	public void setFutureVelocity(EuVector euVector) {
 		futureVelocity = euVector;
 	}
 
 	public abstract boolean hasExpired();
 
-	/**
-	 * @param isSelected the isSelected to set
-	 */
-	public void setSelected(boolean isSelected) {
-		this.isSelected = isSelected;
-	}
-
 	public GameSpaceObject() {
 		Random rand = new Random();
-		this.color = new Color(rand.nextInt(250), rand.nextInt(250), rand.nextInt(250));
 		this.id = UUID.randomUUID();
 		this.theta = 0;
 		this.isAtRest = true;
@@ -88,17 +70,12 @@ public abstract class GameSpaceObject implements Updatable {
 		return radius;
 	}
 
-	public Color getColor() {
-		return color;
-	}
-
 	public UUID getId() {
 		return id;
 	}
 
 	public GameSpaceObject(GameSpaceObject copy) {
 		this.position = new EuVector(copy.getPosition());
-		this.color = copy.getColor();
 		this.radius = copy.getRadius();
 		this.velocity = new EuVector(copy.getVelocity());
 		this.futurePosition = new EuVector(copy.getFuturePosition());
@@ -148,10 +125,6 @@ public abstract class GameSpaceObject implements Updatable {
 
 	public EuVector getVelocity() {
 		return velocity;
-	}
-
-	public void update(double timeStep) {
-
 	}
 
 	public void travelToTheFuture() {

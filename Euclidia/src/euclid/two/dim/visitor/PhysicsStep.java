@@ -67,7 +67,9 @@ public class PhysicsStep extends UpdateStep {
 
 	@Override
 	public void visit(Worker worker) {
-		visit((Unit) worker);
 
+		if (!worker.isGathering()) {
+			visit((Unit) worker);
+		}
 	}
 }

@@ -8,6 +8,7 @@ import euclid.two.dim.path.PathCalculator;
 import euclid.two.dim.team.Team;
 import euclid.two.dim.updater.Updatable;
 import euclid.two.dim.updater.UpdateVisitor;
+import euclid.two.dim.visitor.SingleTypeSelection;
 import euclid.two.dim.visitor.TypedSelection;
 import euclid.two.dim.world.WorldState;
 
@@ -30,7 +31,7 @@ public class Worker extends Unit {
 		this.mineralsCollected = 0;
 		this.timeToCollectResource = 1000;
 		this.radius = 7;
-		this.maxSpeed = 20;
+		this.maxSpeed = 14;
 		this.health = new Health(75);
 		this.currentState = WorkerState.idle;
 
@@ -97,6 +98,8 @@ public class Worker extends Unit {
 				if (home != null) {
 					this.path = PathCalculator.calculatePath(worldState, position.deepCopy(), home.getPosition());
 				}
+				ResourcePatch resource = (new SingleTypeSelection(worldState.getGso(currentResourcePatch))).getResourcePatch();
+				resource.freePatch();
 			}
 			break;
 		case returningHome:
@@ -111,13 +114,16 @@ public class Worker extends Unit {
 			}
 			break;
 		case travelingToResources:
-			GameSpaceObject resource = worldState.getGso(currentResourcePatch);
+			ResourcePatch resource = (new SingleTypeSelection(worldState.getGso(currentResourcePatch))).getResourcePatch();
 			if (resource != null) {
 				if (resource.getPosition().subtract(position).getMagnitudeSquared() < (radius + resource.getRadius()) * (radius + resource.getRadius())) {
 					// Arrived at resources
-					this.collectionTime = System.currentTimeMillis();
-					this.currentState = WorkerState.collecting;
-					this.path = new Path(position);
+					if (!resource.isInUse()) {
+						this.collectionTime = System.currentTimeMillis();
+						this.currentState = WorkerState.collecting;
+						this.path = new Path(position);
+						resource.setWorker(id);
+					}
 				}
 			}
 
@@ -141,4 +147,11 @@ public class Worker extends Unit {
 		this.path = path;
 	}
 
+	public boolean isGathering() {
+		return currentState != WorkerState.idle;
+	}
+
+	public boolean isCollecting() {
+		return currentState == WorkerState.collecting;
+	}
 }

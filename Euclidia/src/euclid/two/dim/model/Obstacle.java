@@ -2,6 +2,7 @@ package euclid.two.dim.model;
 
 public abstract class Obstacle extends GameSpaceObject {
 	public Obstacle(EuVector position) {
+		super();
 		this.position = position;
 		this.futurePosition = new EuVector(position);
 		this.velocity = new EuVector(0, 0);

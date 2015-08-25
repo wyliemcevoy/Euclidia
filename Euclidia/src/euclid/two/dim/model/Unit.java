@@ -43,7 +43,6 @@ public abstract class Unit extends GameSpaceObject {
 
 	private void initialize() {
 		this.radius = 8;
-		this.isSelected = true;
 		this.mass = 10;
 		this.detectionRange = 50;
 		this.combatBehavior = CombatBehavior.AttackIfInRange;

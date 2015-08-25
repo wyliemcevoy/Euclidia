@@ -6,6 +6,7 @@ import java.util.UUID;
 import euclid.two.dim.VectorMath;
 import euclid.two.dim.ability.internal.Ability;
 import euclid.two.dim.ability.request.AbilityRequest;
+import euclid.two.dim.behavior.CombatBehavior;
 import euclid.two.dim.command.AbilityCommand;
 import euclid.two.dim.command.AttackCommand;
 import euclid.two.dim.command.Command;
@@ -93,11 +94,23 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 		unit.getAttack().update(timeStep);
 
 		Unit target = worldStateN.getUnit(unit.getTarget());
+		if (unit.getCombatBehavior() == CombatBehavior.AttackIfInRange) {
 
-		// Check to see if the units target still is alive / exists
-		if (target == null || unit.getPosition() == null || target.getPosition() == null) {
-			// pickNewTarget(unit);
+			// Check to see if the units target still is alive / exists
+			if (target == null || unit.getPosition() == null || target.getPosition() == null) {
 
+				GameSpaceObject nextTarget = worldStateN.getClosestUnfriendly(unit);
+
+				if (nextTarget != null) {
+					unit.setTarget(nextTarget.getId());
+				}
+				else {
+					return;
+				}
+			}
+		}
+
+		if (target == null) {
 			return;
 		}
 
@@ -129,7 +142,19 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 
 	@Override
 	public void visit(ResourcePatch resourcePatch) {
-		resourcePatch.update(timeStep);
+
+		if (resourcePatch.getCurrentlyGathering() != null) {
+			GameSpaceObject gso = worldStateN.getGso(resourcePatch.getCurrentlyGathering());
+			if (gso != null) {
+				Worker worker = (new SingleTypeSelection(gso)).getWorker();
+				if (worker == null || worker.getPosition().subtract(resourcePatch.getPosition()).getMagnitudeSquared() > 1000 || !worker.isCollecting()) {
+					resourcePatch.freePatch();
+				}
+			}
+			else {
+				resourcePatch.freePatch();
+			}
+		}
 	}
 
 	@Override
@@ -191,6 +216,13 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 		for (UUID id : moveCommand.getIds()) {
 			Unit unit = worldStateN.getUnit(id);
 			if (unit != null && moveCommand.getLocation() != null) {
+				if (moveCommand.isAttackWhileMoving()) {
+					unit.setCombatBehavior(CombatBehavior.AttackIfInRange);
+				}
+				else {
+					unit.setCombatBehavior(CombatBehavior.NoAttack);
+					unit.setTarget(null);
+				}
 				unit.setPath(PathCalculator.calculatePath(worldStateN, unit.getPosition(), moveCommand.getLocation()));
 			}
 		}
@@ -216,7 +248,7 @@ public class UpdateEngine implements UpdateVisitor, EtherialVisitor, CommandVisi
 			for (UUID id : attackCommand.getIds()) {
 				Unit unit = worldStateN.getUnit(id);
 				Unit target = worldStateN.getUnit(attackCommand.getTargetId());
-				if (unit != null && unit.getTeam() != target.getTeam()) {
+				if (unit != null && target != null && unit.getTeam() != target.getTeam()) {
 					unit.setTarget(attackCommand.getTargetId());
 				}
 			}

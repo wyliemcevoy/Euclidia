@@ -8,23 +8,27 @@ import euclid.two.dim.ability.request.BasicAbilityRequest;
 import euclid.two.dim.ability.request.BuildUnitAbilityRequest;
 import euclid.two.dim.ability.request.LocationAbilityRequest;
 import euclid.two.dim.ability.request.TargetedAbilityRequest;
+import euclid.two.dim.factory.UnitFactory;
 import euclid.two.dim.model.CasterUnit;
 import euclid.two.dim.model.EuVector;
-import euclid.two.dim.model.Unit;
 import euclid.two.dim.world.WorldState;
 
 public abstract class BuildUnitAbility extends Ability {
 	protected BuildUnitAbilityRequest request;
 	protected int gasCost;
 	protected int mineralCost;
-	protected Unit unit;
+	protected UnitFactory unitFactory;
 
-	public BuildUnitAbility(Unit unit, int gasCost, int mineralCost) {
-		this.unit = unit;
+	public BuildUnitAbility(UnitFactory unitFactory, int gasCost, int mineralCost) {
+		this.unitFactory = unitFactory;
 
 		this.gasCost = gasCost;
 		this.mineralCost = mineralCost;
-		this.abilityType = AbilityType.build;
+		this.abilityType = unitFactory.getAbilityType();
+	}
+
+	public UnitFactory getUnitFactory() {
+		return unitFactory;
 	}
 
 	@Override

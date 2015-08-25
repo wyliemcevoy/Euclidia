@@ -38,7 +38,7 @@ public class WorldState {
 		this.players = new ArrayList<Player>();
 	}
 
-	public List<GameSpaceObject> getUnfriendliesInRage(Minion unit) {
+	public ArrayList<GameSpaceObject> getUnfriendliesInRage(Unit unit) {
 		ArrayList<GameSpaceObject> targets = new ArrayList<GameSpaceObject>();
 
 		EuVector unitLocation = new EuVector(unit.getPosition());
@@ -52,6 +52,28 @@ public class WorldState {
 		}
 
 		return targets;
+	}
+
+	public GameSpaceObject getNextTarget(Unit unit) {
+		ArrayList<GameSpaceObject> targets = getUnfriendliesInRage(unit);
+
+		GameSpaceObject target = null;
+
+		if (targets.size() > 0) {
+
+			double minDistSqrd = unit.getPosition().subtract(targets.get(0).getPosition()).getMagnitudeSquared();
+			target = targets.get(0);
+
+			for (int i = 0; i < targets.size(); i++) {
+				GameSpaceObject gso = targets.get(i);
+				double curDistSqrd = unit.getPosition().subtract(gso.getPosition()).getMagnitudeSquared();
+				if (curDistSqrd < minDistSqrd) {
+					target = gso;
+					minDistSqrd = curDistSqrd;
+				}
+			}
+		}
+		return target;
 	}
 
 	public void recalculateAABBTree() {
@@ -142,10 +164,18 @@ public class WorldState {
 	}
 
 	public Unit getUnit(UUID id) {
+
 		// Horrible implementation (change to map)
 		for (GameSpaceObject gso : gsos) {
+			if (gso.getId() == null) {
+				System.out.println(gso);
+			}
 			if (gso.getId().equals(id)) {
-				return (Unit) gso;
+				if (gso instanceof Unit) {
+
+					return (Unit) gso;
+				}
+
 			}
 		}
 		return null;

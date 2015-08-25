@@ -5,33 +5,27 @@ import java.util.UUID;
 
 import euclid.two.dim.Player;
 import euclid.two.dim.ability.internal.Ability;
-import euclid.two.dim.ability.internal.AbilityType;
 import euclid.two.dim.ability.internal.BuildUnitAbility;
 import euclid.two.dim.ability.request.AbilityRequest;
 import euclid.two.dim.ability.request.BuildUnitAbilityRequest;
+import euclid.two.dim.factory.UnitFactory;
 import euclid.two.dim.model.EuVector;
-import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.Unit;
-import euclid.two.dim.model.Worker;
 import euclid.two.dim.team.Team;
 import euclid.two.dim.world.WorldState;
 
 public class BuyUnitAbility extends BuildUnitAbility {
 
-	public BuyUnitAbility(Unit unit, int gasCost, int mineralCost) {
-		super(unit, gasCost, mineralCost);
+	public BuyUnitAbility(UnitFactory unitFactory, int gasCost, int mineralCost) {
+		super(unitFactory, gasCost, mineralCost);
 	}
 
 	public BuyUnitAbility(BuyUnitAbility clone) {
-		super(clone.getUnit(), clone.getGasCost(), clone.getMineralCost());
+		super(clone.getUnitFactory(), clone.getGasCost(), clone.getMineralCost());
 	}
 
 	private int getGasCost() {
 		return gasCost;
-	}
-
-	private Unit getUnit() {
-		return (Unit) unit.deepCopy();
 	}
 
 	private int getMineralCost() {
@@ -53,15 +47,7 @@ public class BuyUnitAbility extends BuildUnitAbility {
 
 			EuVector position = new EuVector(casterLocation.getX() + rand.nextInt(100), casterLocation.getY() + rand.nextInt(100));
 
-			if (unit instanceof Worker) {
-				Worker worker = new Worker(team, position);
-				System.out.println("worker created");
-				worldState.addObject(worker);
-			}
-			else if (unit instanceof Minion) {
-				Minion minion = new Minion(team, position);
-				worldState.addObject(minion);
-			}
+			worldState.addObject(unitFactory.build(team, position));
 
 		}
 		closeRequest();
@@ -72,7 +58,7 @@ public class BuyUnitAbility extends BuildUnitAbility {
 
 		BuildUnitAbilityRequest request = new BuildUnitAbilityRequest();
 		request.setHeroId(heroId);
-		request.setAbilityType(AbilityType.build);
+		request.setAbilityType(unitFactory.getAbilityType());
 		return request;
 	}
 

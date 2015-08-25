@@ -10,7 +10,7 @@ public class Building extends CasterUnit {
 	public Building(Team team, EuVector position) {
 		super(team, position);
 		this.radius = 35;
-		this.health = new Health(500);
+		this.health = new Health(5000);
 	}
 
 	public Building(Building clone) {

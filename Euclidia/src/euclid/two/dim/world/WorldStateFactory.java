@@ -6,6 +6,8 @@ import java.util.Random;
 import euclid.two.dim.ability.BlinkAbility;
 import euclid.two.dim.ability.BuyUnitAbility;
 import euclid.two.dim.ability.EplosiveProjectileAbility;
+import euclid.two.dim.factory.MinionFactory;
+import euclid.two.dim.factory.WorkerFactory;
 import euclid.two.dim.map.GameMap;
 import euclid.two.dim.model.Building;
 import euclid.two.dim.model.ConvexPoly;
@@ -100,9 +102,13 @@ public class WorldStateFactory {
 		worldState.addObject(buildHatchery(Team.Red, new EuVector(1450, 300)));
 		worldState.setGameMap(createSpacePlatform());
 		worldState.addObject(buildMineralPatch(new EuVector(212, 230)));
-		worldState.addObject(buildMineralPatch(new EuVector(1515, 230)));
+		worldState.addObject(buildMineralPatch(new EuVector(187, 245)));
+		worldState.addObject(buildMineralPatch(new EuVector(1525, 230)));
+		worldState.addObject(buildMineralPatch(new EuVector(1530, 245)));
 		worldState.addObject(buildMineralPatch(new EuVector(167, 260)));
 		worldState.addObject(buildMineralPatch(new EuVector(1560, 260)));
+		worldState.addObject(buildMineralPatch(new EuVector(152, 275)));
+		worldState.addObject(buildMineralPatch(new EuVector(1575, 275)));
 		worldState.addObject(buildMineralPatch(new EuVector(137, 290)));
 		worldState.addObject(buildMineralPatch(new EuVector(1590, 290)));
 
@@ -118,8 +124,8 @@ public class WorldStateFactory {
 
 	public Building buildHatchery(Team team, EuVector position) {
 		Building hatchery = new Building(team, position);
-		hatchery.addAbility(new BuyUnitAbility(new Minion(team, position), 0, 25));
-		hatchery.addAbility(new BuyUnitAbility(new Worker(team, position), 0, 50));
+		hatchery.addAbility(new BuyUnitAbility(new WorkerFactory(), 0, 25));
+		hatchery.addAbility(new BuyUnitAbility(new MinionFactory(), 0, 50));
 		return hatchery;
 
 	}

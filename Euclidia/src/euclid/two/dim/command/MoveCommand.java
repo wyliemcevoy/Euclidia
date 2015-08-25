@@ -10,6 +10,15 @@ import euclid.two.dim.model.GameSpaceObject;
 public class MoveCommand extends Command {
 	private List<UUID> ids;
 	private EuVector location;
+	private boolean attackWhileMoving;
+
+	public boolean isAttackWhileMoving() {
+		return attackWhileMoving;
+	}
+
+	public void setAttackWhileMoving(boolean attackWhileMoving) {
+		this.attackWhileMoving = attackWhileMoving;
+	}
 
 	public MoveCommand(ArrayList<GameSpaceObject> gsos, EuVector location) {
 
