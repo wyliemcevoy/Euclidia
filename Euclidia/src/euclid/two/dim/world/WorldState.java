@@ -359,4 +359,9 @@ public class WorldState {
 		return null;
 
 	}
+
+	public ArrayList<ResourcePatch> getResourcePatches() {
+
+		return (new TypedSelection(gsos)).getResourcePatches();
+	}
 }

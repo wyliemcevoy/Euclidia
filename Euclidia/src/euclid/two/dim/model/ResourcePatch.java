@@ -8,16 +8,18 @@ import euclid.two.dim.updater.UpdateVisitor;
 
 public class ResourcePatch extends Obstacle {
 
-	private int minerals;
+	private int totalRemaining;
 	private boolean inUse;
 	private UUID currentlyGathering;
+	private Resource type;
 
-	public ResourcePatch(EuVector position) {
+	public ResourcePatch(EuVector position, Resource type) {
 		super(position);
 		this.futurePosition = position.deepCopy();
 		this.futureVelocity = new EuVector(0, 0);
 		this.radius = 10;
 		this.inUse = false;
+		this.type = type;
 	}
 
 	public ResourcePatch(ResourcePatch clone) {
@@ -25,6 +27,12 @@ public class ResourcePatch extends Obstacle {
 		this.radius = clone.getRadius();
 		this.id = clone.getId();
 		this.inUse = clone.isInUse();
+		this.type = clone.getType();
+		this.totalRemaining = clone.getTotal();
+	}
+
+	public Resource getType() {
+		return type;
 	}
 
 	@Override
@@ -37,12 +45,12 @@ public class ResourcePatch extends Obstacle {
 		updateVisitor.visit(this);
 	}
 
-	public void setMinerals(int minerals) {
-		this.minerals = minerals;
+	public void setTotal(int minerals) {
+		this.totalRemaining = minerals;
 	}
 
-	public int getMinerals() {
-		return minerals;
+	public int getTotal() {
+		return totalRemaining;
 	}
 
 	@Override
@@ -66,5 +74,9 @@ public class ResourcePatch extends Obstacle {
 	public void freePatch() {
 		currentlyGathering = null;
 		inUse = false;
+	}
+
+	public void request(int amount) {
+		this.totalRemaining -= amount;
 	}
 }

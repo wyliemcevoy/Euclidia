@@ -1,5 +1,6 @@
 package euclid.two.dim;
 
+import euclid.two.dim.model.Resource;
 import euclid.two.dim.team.Team;
 
 public class Player {
@@ -33,8 +34,16 @@ public class Player {
 		return team;
 	}
 
-	public void addMinerals(int addedMinerals) {
-		this.minerals += addedMinerals;
+	public void addResource(Resource type, int amount) {
+		switch (type) {
+		case GAS:
+			this.gas += amount;
+			break;
+		case MINERALS:
+			this.minerals += amount;
+			break;
+		default:
+			break;
+		}
 	}
-
 }

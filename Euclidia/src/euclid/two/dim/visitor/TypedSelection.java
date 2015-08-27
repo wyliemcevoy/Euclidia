@@ -132,4 +132,14 @@ public class TypedSelection implements UpdateVisitor {
 		return ids;
 	}
 
+	public ArrayList<UUID> getMinionIds() {
+		ArrayList<UUID> ids = new ArrayList<UUID>();
+
+		for (GameSpaceObject gso : minions) {
+			ids.add(gso.getId());
+		}
+
+		return ids;
+	}
+
 }

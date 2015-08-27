@@ -16,6 +16,7 @@ import euclid.two.dim.model.EuVector;
 import euclid.two.dim.model.Hero;
 import euclid.two.dim.model.Minion;
 import euclid.two.dim.model.NavMesh;
+import euclid.two.dim.model.Resource;
 import euclid.two.dim.model.ResourcePatch;
 import euclid.two.dim.model.Worker;
 import euclid.two.dim.team.Team;
@@ -37,7 +38,7 @@ public class WorldStateFactory {
 	public WorldState createURoomsWorldState() {
 		WorldState worldState = new WorldState();
 		Team blueTeam = Team.Blue;
-		for (int i = 0; i < 200; i++) {
+		for (int i = 0; i < 10; i++) {
 			Minion fish = new Minion(blueTeam, randVect(100, 200, 100, 200));
 			worldState.addObject(fish);
 		}
@@ -88,19 +89,19 @@ public class WorldStateFactory {
 	public WorldState createVsWorldState(Team team) {
 		WorldState worldState = new WorldState();
 
-		for (int i = 0; i < 50; i++) {
+		for (int i = 0; i < 0; i++) {
 			Minion unit = new Minion(team, randVect(300, 400, 300, 400));
 
 			worldState.addObject(unit);
 		}
 		worldState.addObject(createHero(Team.Blue));
-		worldState.addObject(new Worker(Team.Blue, new EuVector(100, 100)));
-		worldState.addObject(new Worker(Team.Blue, new EuVector(110, 100)));
-		worldState.addObject(new Worker(Team.Blue, new EuVector(120, 100)));
+		buildBase(worldState, Team.Blue, new EuVector(277, 300));
+		buildBase(worldState, Team.Red, new EuVector(1450, 300));
 
-		worldState.addObject(buildHatchery(Team.Blue, new EuVector(277, 300)));
-		worldState.addObject(buildHatchery(Team.Red, new EuVector(1450, 300)));
 		worldState.setGameMap(createSpacePlatform());
+
+		worldState.addObject(buildGasGeyser(new EuVector(242, 210)));
+		worldState.addObject(buildGasGeyser(new EuVector(1475, 210)));
 		worldState.addObject(buildMineralPatch(new EuVector(212, 230)));
 		worldState.addObject(buildMineralPatch(new EuVector(187, 245)));
 		worldState.addObject(buildMineralPatch(new EuVector(1525, 230)));
@@ -115,9 +116,24 @@ public class WorldStateFactory {
 		return worldState;
 	}
 
+	public void buildBase(WorldState worldState, Team team, EuVector position) {
+		worldState.addObject(buildHatchery(team, position));
+
+		for (int i = 0; i < 5; i++) {
+			worldState.addObject(new Worker(team, new EuVector(position.getX() + rand.nextDouble() * 30, position.getY() + rand.nextDouble() * 30)));
+		}
+	}
+
 	public ResourcePatch buildMineralPatch(EuVector location) {
-		ResourcePatch rp = new ResourcePatch(location);
-		rp.setMinerals(5000);
+		ResourcePatch rp = new ResourcePatch(location, Resource.MINERALS);
+		rp.setTotal(5000);
+
+		return rp;
+	}
+
+	public ResourcePatch buildGasGeyser(EuVector location) {
+		ResourcePatch rp = new ResourcePatch(location, Resource.GAS);
+		rp.setTotal(5000);
 
 		return rp;
 	}

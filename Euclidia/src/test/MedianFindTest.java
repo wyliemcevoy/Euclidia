@@ -12,7 +12,7 @@ import euclid.two.dim.datastructure.HashList;
 
 public class MedianFindTest {
 
-	private static final int TEST_SIZE = 10000;
+	private static final int TEST_SIZE = 100;
 	private Random rand;
 	private HashList<IntegerBox> integers;
 

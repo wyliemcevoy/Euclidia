@@ -13,6 +13,12 @@ public class GatherCommand extends Command {
 		this.targetResource = targetResource;
 	}
 
+	public GatherCommand(UUID id, UUID targetResource) {
+		this.workers = new ArrayList<UUID>();
+		this.targetResource = targetResource;
+		workers.add(id);
+	}
+
 	@Override
 	public void accept(CommandVisitor commandVisitor) {
 		commandVisitor.visit(this);

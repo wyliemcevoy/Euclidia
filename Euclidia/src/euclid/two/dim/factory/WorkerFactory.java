@@ -10,7 +10,9 @@ public class WorkerFactory implements UnitFactory {
 
 	@Override
 	public Unit build(Team team, EuVector position) {
-		return new Worker(team, position);
+		Worker worker = new Worker(team, position);
+		worker.setIdle();
+		return worker;
 	}
 
 	@Override
