@@ -6,7 +6,7 @@ import euclid.two.dim.model.EuVector;
 public class Camera {
 	private double mapX, mapY;
 	private double width, height;
-	private double zoom;
+	private double scale;
 	private double rotation;
 	private double mapWidth, mapHeight;
 
@@ -15,7 +15,7 @@ public class Camera {
 		this.mapY = clone.getMapY();
 		this.width = clone.getWidth();
 		this.height = clone.getHeight();
-		this.zoom = clone.getZoom();
+		this.scale = clone.getScale();
 		this.rotation = clone.getRotation();
 		this.mapWidth = clone.getMapWidth();
 		this.mapHeight = clone.getMapHeight();
@@ -34,7 +34,7 @@ public class Camera {
 		this.mapY = 0;
 		this.width = 1000;
 		this.height = 1000;
-		this.zoom = Configuration.initialZoom;
+		this.scale = Configuration.initialZoom;
 		this.rotation = Configuration.rotation;
 		this.mapWidth = 2000;
 		this.mapHeight = 2000;
@@ -49,15 +49,24 @@ public class Camera {
 	}
 
 	public void setMapX(double mapX) {
-		this.mapX = Math.max(Math.min(mapX, mapWidth * 1.5 * zoom), -.5 * mapWidth * zoom);
+		this.mapX = Math.max(Math.min(mapX, mapWidth * 1.5), -.5 * mapWidth);
 	}
 
 	public double getMapY() {
 		return mapY;
 	}
 
+	public void translate(EuVector translation) {
+		translate(translation.getX(), translation.getY());
+	}
+
+	public void translate(double x, double y) {
+		this.mapX += x;
+		this.mapY += y;
+	}
+
 	public void setMapY(double mapY) {
-		this.mapY = Math.max(Math.min(mapY, mapHeight * 1.5 * zoom), -.5 * mapHeight * zoom);
+		this.mapY = Math.max(Math.min(mapY, mapHeight * 1.5), -.5 * mapHeight);
 	}
 
 	public double getWidth() {
@@ -76,24 +85,30 @@ public class Camera {
 		this.height = height;
 	}
 
-	public double getZoom() {
-		return zoom;
+	public double getScale() {
+		return scale;
 	}
 
-	public void setZoom(double zoom) {
-		this.zoom = Math.max(Math.min(zoom, 4), .5);
+	public void zoom(double zoom) {
+
+		EuVector oldBounds = screenToMap(new EuVector(width, height));
+		this.scale = Math.max(Math.min(zoom, 4), .5);
+		EuVector newBounds = screenToMap(new EuVector(width, height));
+
+		this.mapX = mapX + (oldBounds.getX() - newBounds.getX()) / 2;
+		this.mapY = mapY + (oldBounds.getY() - newBounds.getY()) / 2;
 	}
 
-	public EuVector veiwToMap(EuVector vect) {
-		double x = -mapX / zoom + vect.getX() / zoom;
-		double y = -mapY / zoom + vect.getY() / zoom;
+	public EuVector screenToMap(EuVector vect) {
 
+		double x = mapX + vect.getX() / scale;
+		double y = mapY + vect.getY() / scale;
 		return new EuVector(x, y);
 	}
 
-	public EuVector mapToView(EuVector euVector) {
-		double x = 0;
-		double y = 0;
+	public EuVector mapToScreen(EuVector vect) {
+		double x = (-mapX + vect.getX()) * scale;
+		double y = (-mapY + vect.getY()) * scale;
 
 		return new EuVector(x, y);
 	}
